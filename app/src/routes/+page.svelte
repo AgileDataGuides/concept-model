@@ -1,17 +1,19 @@
 <script lang="ts">
 	import { onMount, setContext } from 'svelte';
-	import { createConceptModelStore } from '$lib/stores/concept-model.svelte';
+	import { createConceptModelStore, UnsavedChangesError } from '$lib/stores/concept-model.svelte';
 	import { createStandaloneAdapter } from '$lib/adapters/standalone-adapter';
 	import { conceptModelToContextPlane, contextPlaneToConceptModel } from '$lib/converters/context-plane';
 	import type { DataAdapter, ContextNode, ContextLink } from '$lib/cp-shared';
 	import Toolbar from '$lib/components/Toolbar.svelte';
+	import Instructions from '$lib/components/Instructions.svelte';
 	import ConceptModelLayout from '$lib/components/canvas/ConceptModelLayout.svelte';
 	import { applyConceptModelDemoSeeds } from '$lib/stores/demo-seed';
 
 	const store = createConceptModelStore();
 	setContext('cmStore', store);
 
-	let activeTab = $state<string>('concept-model');
+	let activeTab = $state<string>('steps');
+	const canvasView = $derived(activeTab === 'map' || activeTab === 'definitions' ? activeTab : 'steps');
 	let loaded = $state(false);
 	let version = $state(0);
 
@@ -25,17 +27,42 @@
 		if (!target.closest('[data-model-switcher]')) showSwitcher = false;
 	}
 
-	function handleNew() {
-		const name = newModelName.trim();
-		if (!name) return;
-		store.newModel(name);
-		newModelName = '';
-		showNew = false;
+	/** A failed save before a switch keeps the current model open, and says why. */
+	function failureMessage(e: unknown, fallback: string): string {
+		return e instanceof UnsavedChangesError ? e.message : fallback;
 	}
 
-	function handleDelete() {
+	async function handleSwitch(id: string) {
+		showSwitcher = false;
+		try {
+			await store.switchTo(id);
+		} catch (e) {
+			alert(failureMessage(e, 'Could not open that model'));
+		}
+	}
+
+	async function handleNew() {
+		const name = newModelName.trim();
+		if (!name) return;
+		try {
+			await store.newModel(name);
+			newModelName = '';
+			showNew = false;
+		} catch (e) {
+			alert(failureMessage(e, 'Could not create the model'));
+		}
+	}
+
+	async function handleDelete() {
+		const id = store.getModel().id;
 		if (!confirm(`Delete "${store.getModel().name}"?`)) return;
-		store.deleteModel(store.getModel().id);
+		try {
+			await store.deleteModel(id);
+		} catch {
+			// The delete itself can succeed and opening the next model fail
+			const deleted = !store.getSavedList().some((s) => s.id === id);
+			alert(deleted ? 'The model was deleted, but the next one could not be opened. Reload the page.' : 'Could not delete the model');
+		}
 	}
 
 	/**
@@ -67,8 +94,8 @@
 				} else {
 					await store.importJSON(text);
 				}
-			} catch {
-				alert('Could not parse JSON file');
+			} catch (e) {
+				alert(failureMessage(e, 'Could not import that file'));
 			}
 		};
 		input.click();
@@ -84,24 +111,16 @@
 	const links = $derived(graphData.links);
 
 	let realAdapter: DataAdapter | null = null;
-	let orderSaveTimer: ReturnType<typeof setTimeout>;
 
 	const proxyAdapter: DataAdapter = {
 		async getNodes(filter) { return realAdapter?.getNodes(filter) ?? []; },
 		async getNode(id) { return realAdapter?.getNode(id) ?? null; },
 		async createNode(input) { const result = await realAdapter!.createNode(input); version++; return result; },
-		async updateNode(id, updates) {
-			const result = await realAdapter!.updateNode(id, updates);
-			version++;
-			if (updates.properties && typeof updates.properties.order === 'number') {
-				clearTimeout(orderSaveTimer);
-				orderSaveTimer = setTimeout(() => store.saveModel(), 300);
-			}
-			return result;
-		},
+		async updateNode(id, updates) { const result = await realAdapter!.updateNode(id, updates); version++; return result; },
 		async deleteNode(id) { await realAdapter!.deleteNode(id); version++; },
 		async getLinks(filter) { return realAdapter?.getLinks(filter) ?? []; },
 		async createLink(input) { const result = await realAdapter!.createLink(input); version++; return result; },
+		async updateLink(id, updates) { const result = await realAdapter!.updateLink!(id, updates); version++; return result; },
 		async deleteLink(id) { await realAdapter!.deleteLink(id); version++; },
 		async exportAll() { return realAdapter?.exportAll() ?? { nodes: [], links: [] }; },
 		async importAll(data) { await realAdapter?.importAll(data); version++; }
@@ -118,12 +137,6 @@
 		realAdapter = sa.adapter;
 		loaded = true;
 	});
-
-	function handleSelectNode(id: string) {}
-
-	async function handleAddNode(entityLabel: string, name: string) {
-		await proxyAdapter.createNode({ label: entityLabel, name });
-	}
 </script>
 
 <svelte:window onclick={handleClickOutsideSwitcher} />
@@ -133,7 +146,7 @@
 	<div class="flex items-center justify-between">
 		<div>
 			<h1 class="text-lg font-bold tracking-tight">Concept Model</h1>
-			<p class="text-xs text-slate-400 mt-0.5">Define business concepts, relationships, and cardinality</p>
+			<p class="text-xs text-slate-400 mt-0.5">Model the things the organisation cares about, and how they relate</p>
 		</div>
 		{#if loaded}
 			<div class="flex items-center gap-2" data-model-switcher>
@@ -151,7 +164,7 @@
 						<div class="absolute top-full right-0 mt-1.5 bg-white rounded-xl border border-slate-200 shadow-xl z-50 py-1 min-w-[200px]">
 							{#each store.getSavedList() as item}
 								<button
-									onclick={() => { store.switchTo(item.id); showSwitcher = false; }}
+									onclick={() => handleSwitch(item.id)}
 									class="w-full text-left px-4 py-2 text-sm transition-colors {item.id === store.getModel().id ? 'bg-slate-100 font-semibold text-slate-800' : 'text-slate-600 hover:bg-slate-50'}"
 								>{item.name}</button>
 							{/each}
@@ -184,12 +197,13 @@
 		<Toolbar bind:activeTab />
 	</div>
 	<div class="flex-1 overflow-hidden">
-		<ConceptModelLayout
-			{nodes}
-			{links}
-			onSelectNode={handleSelectNode}
-			onAddNode={handleAddNode}
-		/>
+		{#if activeTab === 'instructions'}
+			<div class="h-full overflow-y-auto p-6">
+				<Instructions />
+			</div>
+		{:else}
+			<ConceptModelLayout {nodes} {links} view={canvasView} />
+		{/if}
 	</div>
 {:else}
 	<div class="flex items-center justify-center h-64 text-slate-400 text-sm">Loading...</div>

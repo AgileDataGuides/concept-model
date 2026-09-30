@@ -5,13 +5,17 @@
 	const store = getContext<ConceptModelStore>('cmStore');
 
 	let {
-		activeTab = $bindable('concept-model'),
+		activeTab = $bindable('steps'),
 	}: {
 		activeTab: string;
 	} = $props();
 
+	// Steps is the way in. Map and Definitions are the book's two pattern templates.
 	const tabs = [
-		{ id: 'concept-model', label: 'Concept Model' }
+		{ id: 'steps', label: 'Steps' },
+		{ id: 'map', label: 'Map' },
+		{ id: 'definitions', label: 'Definitions' },
+		{ id: 'instructions', label: 'Instructions' }
 	];
 
 	let model = $derived(store.getModel());
@@ -65,7 +69,14 @@
 
 	async function handleSave() {
 		saving = true;
-		try { await store.saveModel(); } catch (e) { console.error('Save failed:', e); } finally { saving = false; }
+		try {
+			await store.saveModel();
+		} catch (e) {
+			console.error('Save failed:', e);
+			alert('Could not save the model. Your changes are still here, so try Save again.');
+		} finally {
+			saving = false;
+		}
 	}
 
 	function exportTimestamp(): string {

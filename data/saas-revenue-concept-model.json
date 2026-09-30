@@ -1,8 +1,8 @@
 {
-  "version": "1.0",
+  "version": "2.0",
   "id": "saas-revenue-concept-model",
   "name": "SaaS Revenue Concept Model",
-  "description": "Conceptual data model underpinning the SaaS Revenue Metrics Information Product. Captures the business objects, relationships, events, processes, and domains that drive MRR / ARR / ARPU / NRR metrics for a subscription business.",
+  "description": "The Concept Model behind the SaaS Revenue Metrics Information Product: the things a subscription company counts, how they relate, and the moments that drive MRR, ARR, ARPU and NRR.",
   "concepts": [
     {
       "id": "prospect",
@@ -14,7 +14,19 @@
       ],
       "order": 1,
       "definitionCategory": "Person",
-      "definitionDifferentiator": "has expressed interest but has not yet purchased"
+      "definitionDifferentiator": "has expressed interest but has not yet purchased",
+      "domainId": "dom-marketing",
+      "storyIds": [
+        "s-prospect-to-customer"
+      ],
+      "examples": [
+        "Someone who clicked a LinkedIn ad and read the pricing page",
+        "A company that booked a demo but has not started a Trial"
+      ],
+      "specialCases": [
+        "A person on a Trial is still a Prospect until they subscribe to a paid Plan"
+      ],
+      "definitionStatus": "agreed"
     },
     {
       "id": "customer",
@@ -27,7 +39,22 @@
       ],
       "order": 2,
       "definitionCategory": "Person",
-      "definitionDifferentiator": "has purchased at least one @{Subscription}"
+      "definitionDifferentiator": "has purchased at least one @{Subscription}",
+      "domainId": "dom-sales",
+      "storyIds": [
+        "s-prospect-to-customer",
+        "s-upgrade-mid-period",
+        "s-cancel-at-renewal"
+      ],
+      "examples": [
+        "A startup paying monthly for the Starter Plan",
+        "A company that cancelled last year"
+      ],
+      "specialCases": [
+        "A Prospect on a free Trial is not a Customer yet",
+        "A Customer who cancels stays a Customer, with no active Subscription"
+      ],
+      "definitionStatus": "agreed"
     },
     {
       "id": "account",
@@ -39,7 +66,15 @@
       ],
       "order": 3,
       "definitionCategory": "Record",
-      "definitionDifferentiator": "binds a @{Customer} to their @{Subscription} and usage"
+      "definitionDifferentiator": "binds a @{Customer} to their @{Subscription} and usage",
+      "domainId": "dom-customer-success",
+      "storyIds": [
+        "s-prospect-to-customer"
+      ],
+      "examples": [
+        "The Acme account, holding five users and one Subscription"
+      ],
+      "definitionStatus": "agreed"
     },
     {
       "id": "trial",
@@ -51,7 +86,18 @@
       ],
       "order": 4,
       "definitionCategory": "Agreement",
-      "definitionDifferentiator": "gives a @{Prospect} time-boxed free access before converting"
+      "definitionDifferentiator": "gives a @{Prospect} time-boxed free access before converting",
+      "domainId": "dom-sales",
+      "storyIds": [
+        "s-prospect-to-customer"
+      ],
+      "examples": [
+        "A 14-day free Trial of the Pro Plan"
+      ],
+      "specialCases": [
+        "A Trial that Sales extends is still one Trial"
+      ],
+      "definitionStatus": "agreed"
     },
     {
       "id": "subscription",
@@ -63,7 +109,21 @@
       ],
       "order": 5,
       "definitionCategory": "Agreement",
-      "definitionDifferentiator": "binds a @{Customer} to a @{Plan} for a recurring @{Billing Period}"
+      "definitionDifferentiator": "binds a @{Customer} to a @{Plan} for a recurring @{Billing Period}",
+      "domainId": "dom-customer-success",
+      "storyIds": [
+        "s-prospect-to-customer",
+        "s-upgrade-mid-period",
+        "s-cancel-at-renewal"
+      ],
+      "examples": [
+        "Acme on the monthly Pro Plan, started 1 March"
+      ],
+      "specialCases": [
+        "An upgrade moves the same Subscription to a new Plan, it does not start a new one",
+        "A cancelled Subscription stays active until its Billing Period ends"
+      ],
+      "definitionStatus": "agreed"
     },
     {
       "id": "plan",
@@ -76,7 +136,17 @@
       ],
       "order": 6,
       "definitionCategory": "Offering",
-      "definitionDifferentiator": "defines the price, features, and limits of a @{Subscription}"
+      "definitionDifferentiator": "defines the price, features, and limits of a @{Subscription}",
+      "domainId": "dom-product",
+      "storyIds": [
+        "s-upgrade-mid-period"
+      ],
+      "examples": [
+        "Starter",
+        "Pro",
+        "Enterprise"
+      ],
+      "definitionStatus": "agreed"
     },
     {
       "id": "billing-period",
@@ -88,7 +158,20 @@
       ],
       "order": 7,
       "definitionCategory": "Time Span",
-      "definitionDifferentiator": "defines when a @{Subscription} is charged"
+      "definitionDifferentiator": "defines when a @{Subscription} is charged",
+      "domainId": "dom-finance",
+      "storyIds": [
+        "s-prospect-to-customer",
+        "s-upgrade-mid-period"
+      ],
+      "examples": [
+        "Monthly",
+        "Annual"
+      ],
+      "specialCases": [
+        "Is a Billing Period the cadence (monthly) or one actual period (March)? The expert has not ruled yet"
+      ],
+      "definitionStatus": "flagged"
     },
     {
       "id": "invoice",
@@ -99,7 +182,19 @@
       ],
       "order": 8,
       "definitionCategory": "Document",
-      "definitionDifferentiator": "records charges owed by a @{Customer} for a @{Billing Period}"
+      "definitionDifferentiator": "records charges owed by a @{Customer} for a @{Billing Period}",
+      "domainId": "dom-finance",
+      "storyIds": [
+        "s-prospect-to-customer",
+        "s-upgrade-mid-period"
+      ],
+      "examples": [
+        "The March invoice for Acme's Pro Subscription"
+      ],
+      "specialCases": [
+        "A prorated upgrade charge goes on the next Invoice, not a new one"
+      ],
+      "definitionStatus": "agreed"
     },
     {
       "id": "payment",
@@ -111,7 +206,15 @@
       ],
       "order": 9,
       "definitionCategory": "Financial Transaction",
-      "definitionDifferentiator": "settles an @{Invoice} with money from a @{Customer}"
+      "definitionDifferentiator": "settles an @{Invoice} with money from a @{Customer}",
+      "domainId": "dom-finance",
+      "storyIds": [
+        "s-prospect-to-customer"
+      ],
+      "examples": [
+        "Acme's card payment for the March invoice"
+      ],
+      "definitionStatus": "agreed"
     },
     {
       "id": "recurring-revenue",
@@ -123,7 +226,19 @@
       ],
       "order": 10,
       "definitionCategory": "Revenue",
-      "definitionDifferentiator": "is generated by active @{Subscription}s on a predictable cadence"
+      "definitionDifferentiator": "is generated by active @{Subscription}s on a predictable cadence",
+      "domainId": "dom-finance",
+      "storyIds": [
+        "s-prospect-to-customer",
+        "s-cancel-at-renewal"
+      ],
+      "examples": [
+        "Acme's Pro Subscription for March"
+      ],
+      "specialCases": [
+        "Is Recurring Revenue one amount per Subscription per month, or a running total? It has to be countable to be a Concept"
+      ],
+      "definitionStatus": "flagged"
     },
     {
       "id": "one-time-revenue",
@@ -134,19 +249,36 @@
       ],
       "order": 11,
       "definitionCategory": "Revenue",
-      "definitionDifferentiator": "is not generated by an active @{Subscription}"
+      "definitionDifferentiator": "is not generated by an active @{Subscription}",
+      "domainId": "dom-finance",
+      "storyIds": [
+        "s-upgrade-mid-period"
+      ],
+      "examples": [
+        "An onboarding fee",
+        "A paid training session"
+      ],
+      "definitionStatus": "draft"
     },
     {
       "id": "discount",
       "name": "Discount",
-      "description": "A reduction applied to a subscription's list price — included in revenue calculations per the IP's scope decisions.",
+      "description": "A reduction applied to a subscription's list price. It is included in revenue calculations, per the IP's scope decisions.",
       "aliases": [
         "Promotion",
         "Price Adjustment"
       ],
       "order": 12,
       "definitionCategory": "Price Adjustment",
-      "definitionDifferentiator": "reduces the price of a @{Subscription} for a @{Customer}"
+      "definitionDifferentiator": "reduces the price of a @{Subscription} for a @{Customer}",
+      "domainId": "dom-sales",
+      "storyIds": [
+        "s-upgrade-mid-period"
+      ],
+      "examples": [
+        "20% off the first year of the Pro Plan"
+      ],
+      "definitionStatus": "draft"
     },
     {
       "id": "channel",
@@ -158,7 +290,17 @@
       ],
       "order": 13,
       "definitionCategory": "Source",
-      "definitionDifferentiator": "first brought a @{Prospect} to the product"
+      "definitionDifferentiator": "first brought a @{Prospect} to the product",
+      "domainId": "dom-marketing",
+      "storyIds": [
+        "s-prospect-to-customer"
+      ],
+      "examples": [
+        "LinkedIn ads",
+        "A partner referral",
+        "Organic search"
+      ],
+      "definitionStatus": "agreed"
     },
     {
       "id": "ad",
@@ -170,30 +312,42 @@
       ],
       "order": 14,
       "definitionCategory": "Marketing Asset",
-      "definitionDifferentiator": "is the creative a @{Prospect} clicks on a @{Channel}"
+      "definitionDifferentiator": "is the creative a @{Prospect} clicks on a @{Channel}",
+      "domainId": "dom-marketing",
+      "storyIds": [
+        "s-prospect-to-customer"
+      ],
+      "examples": [
+        "The \"Close your month faster\" LinkedIn campaign creative"
+      ],
+      "definitionStatus": "agreed"
     },
     {
       "id": "segment",
       "name": "Customer Segment",
-      "description": "A grouping of customers based on demographic attributes — explicitly NOT acquisition cohorts per the IP's scope decisions.",
+      "description": "A grouping of customers based on demographic attributes, never acquisition cohorts, per the IP's scope decisions.",
       "aliases": [
         "Demographic Segment"
       ],
       "order": 15,
       "definitionCategory": "Grouping",
-      "definitionDifferentiator": "groups @{Customer}s by demographic attribute"
+      "definitionDifferentiator": "groups @{Customer}s by demographic attribute",
+      "domainId": "dom-sales",
+      "definitionStatus": "draft"
     },
     {
       "id": "product",
       "name": "Product",
-      "description": "The SaaS application itself — the thing subscribers subscribe to.",
+      "description": "The SaaS application itself: the thing subscribers subscribe to.",
       "aliases": [
         "Service",
         "Offering"
       ],
       "order": 16,
       "definitionCategory": "Offering",
-      "definitionDifferentiator": "is the SaaS application sold via @{Plan}s"
+      "definitionDifferentiator": "is the SaaS application sold via @{Plan}s",
+      "domainId": "dom-product",
+      "definitionStatus": "draft"
     }
   ],
   "relationships": [
@@ -201,164 +355,388 @@
       "id": "r-prospect-becomes-customer",
       "sourceConceptId": "prospect",
       "targetConceptId": "customer",
-      "label": "becomes a",
-      "cardinality": "0..1 : 0..1"
+      "label": "becomes",
+      "cardinality": "0..1 : 0..1",
+      "inverseLabel": "was",
+      "rule": {
+        "forward": {
+          "min": "zero",
+          "max": "one"
+        },
+        "inverse": {
+          "min": "zero",
+          "max": "one"
+        }
+      }
     },
     {
       "id": "r-prospect-clicks-ad",
       "sourceConceptId": "prospect",
       "targetConceptId": "ad",
       "label": "clicks on",
-      "cardinality": "0..* : 1..*"
+      "cardinality": "0..* : 1..*",
+      "inverseLabel": "is clicked by",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "zero",
+          "max": "many"
+        }
+      }
     },
     {
       "id": "r-ad-belongs-to-channel",
       "sourceConceptId": "ad",
       "targetConceptId": "channel",
       "label": "runs on",
-      "cardinality": "1..* : 1"
+      "cardinality": "1..* : 1",
+      "inverseLabel": "runs",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "one"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "many"
+        }
+      }
     },
     {
       "id": "r-prospect-acquired-via-channel",
       "sourceConceptId": "prospect",
       "targetConceptId": "channel",
-      "label": "acquired via",
-      "cardinality": "0..* : 1"
+      "label": "is acquired through",
+      "cardinality": "0..* : 1",
+      "inverseLabel": "acquires",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "one"
+        },
+        "inverse": {
+          "min": "zero",
+          "max": "many"
+        }
+      }
     },
     {
       "id": "r-prospect-has-trial",
       "sourceConceptId": "prospect",
       "targetConceptId": "trial",
-      "label": "starts a",
-      "cardinality": "1 : 0..1"
+      "label": "starts",
+      "cardinality": "1 : 0..1",
+      "inverseLabel": "is started by",
+      "rule": {
+        "forward": {
+          "min": "zero",
+          "max": "one"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "one"
+        }
+      }
     },
     {
       "id": "r-customer-has-account",
       "sourceConceptId": "customer",
       "targetConceptId": "account",
       "label": "owns",
-      "cardinality": "1 : 1..*"
+      "cardinality": "1 : 1..*",
+      "inverseLabel": "is owned by",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "one"
+        }
+      }
     },
     {
       "id": "r-account-has-subscription",
       "sourceConceptId": "account",
       "targetConceptId": "subscription",
       "label": "holds",
-      "cardinality": "1 : 1..*"
+      "cardinality": "1 : 1..*",
+      "inverseLabel": "is held in",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "one"
+        }
+      }
     },
     {
       "id": "r-customer-has-subscription",
       "sourceConceptId": "customer",
       "targetConceptId": "subscription",
       "label": "subscribes to",
-      "cardinality": "1 : 1..*"
+      "cardinality": "1 : 1..*",
+      "inverseLabel": "belongs to",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "one"
+        }
+      }
     },
     {
       "id": "r-subscription-has-plan",
       "sourceConceptId": "subscription",
       "targetConceptId": "plan",
-      "label": "on",
-      "cardinality": "1..* : 1"
+      "label": "is on",
+      "cardinality": "1..* : 1",
+      "inverseLabel": "is taken up by",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "one"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "many"
+        }
+      }
     },
     {
       "id": "r-plan-of-product",
       "sourceConceptId": "plan",
       "targetConceptId": "product",
       "label": "packages",
-      "cardinality": "1..* : 1"
+      "cardinality": "1..* : 1",
+      "inverseLabel": "is packaged in",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "one"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "many"
+        }
+      }
     },
     {
       "id": "r-subscription-billing-period",
       "sourceConceptId": "subscription",
       "targetConceptId": "billing-period",
-      "label": "billed on",
-      "cardinality": "1 : 1"
+      "label": "is billed in",
+      "cardinality": "1 : 1",
+      "inverseLabel": "covers",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "one"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "one"
+        }
+      }
     },
     {
       "id": "r-subscription-produces-invoice",
       "sourceConceptId": "subscription",
       "targetConceptId": "invoice",
       "label": "produces",
-      "cardinality": "1 : 1..*"
+      "cardinality": "1 : 1..*",
+      "inverseLabel": "is produced by",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "one"
+        }
+      }
     },
     {
       "id": "r-payment-settles-invoice",
       "sourceConceptId": "payment",
       "targetConceptId": "invoice",
       "label": "settles",
-      "cardinality": "1..* : 1"
+      "cardinality": "1..* : 1",
+      "inverseLabel": "is settled by",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "one"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "many"
+        }
+      }
     },
     {
       "id": "r-subscription-generates-mrr",
       "sourceConceptId": "subscription",
       "targetConceptId": "recurring-revenue",
       "label": "generates",
-      "cardinality": "1 : 0..*"
+      "cardinality": "1 : 0..*",
+      "inverseLabel": "is generated by",
+      "rule": {
+        "forward": {
+          "min": "zero",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "one"
+        }
+      }
     },
     {
       "id": "r-discount-applied-to-sub",
       "sourceConceptId": "discount",
       "targetConceptId": "subscription",
-      "label": "applied to",
-      "cardinality": "0..* : 1"
+      "label": "is applied to",
+      "cardinality": "0..* : 1",
+      "inverseLabel": "receives",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "one"
+        },
+        "inverse": {
+          "min": "zero",
+          "max": "many"
+        }
+      },
+      "flagged": true
     },
     {
       "id": "r-customer-belongs-to-segment",
       "sourceConceptId": "customer",
       "targetConceptId": "segment",
       "label": "belongs to",
-      "cardinality": "1..* : 0..*"
+      "cardinality": "1..* : 0..*",
+      "inverseLabel": "groups",
+      "rule": {
+        "forward": {
+          "min": "zero",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "many"
+        }
+      }
     },
     {
-      "id": "r-product-excluded-one-time",
-      "sourceConceptId": "one-time-revenue",
-      "targetConceptId": "recurring-revenue",
-      "label": "is disjoint from",
-      "cardinality": "0..* : 0..*"
+      "id": "r-invoice-includes-one-time",
+      "sourceConceptId": "invoice",
+      "targetConceptId": "one-time-revenue",
+      "label": "includes",
+      "cardinality": "1 : 0..*",
+      "inverseLabel": "is included in",
+      "rule": {
+        "forward": {
+          "min": "zero",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "one"
+        }
+      }
     }
   ],
   "coreBusinessEvents": [
     {
       "id": "cbe-prospect-clicks-ad",
       "name": "Prospect Clicks on Ad",
-      "description": "Funnel-top event — a prospect engages with a marketing creative on a channel.",
-      "order": 1
+      "description": "Funnel-top event: a prospect engages with a marketing creative on a channel.",
+      "order": 1,
+      "conceptIds": [
+        "prospect",
+        "ad",
+        "channel"
+      ],
+      "relationshipId": "r-prospect-clicks-ad"
     },
     {
       "id": "cbe-prospect-signs-up-trial",
       "name": "Prospect Signs-up for Trial",
       "description": "Prospect provides their details and starts a time-boxed free evaluation.",
-      "order": 2
+      "order": 2,
+      "conceptIds": [
+        "prospect",
+        "trial"
+      ],
+      "relationshipId": "r-prospect-has-trial"
     },
     {
       "id": "cbe-customer-activates-account",
       "name": "Customer Activates Account",
       "description": "User confirms email, sets up their account, becomes addressable.",
-      "order": 3
+      "order": 3,
+      "conceptIds": [
+        "customer",
+        "account"
+      ],
+      "relationshipId": "r-customer-has-account"
     },
     {
       "id": "cbe-customer-subscribes-paid",
       "name": "Customer Subscribes to a Paid Plan",
-      "description": "Conversion event — trial or prospect commits money to a plan.",
-      "order": 4
+      "description": "Conversion event: a trial or prospect commits money to a plan.",
+      "order": 4,
+      "conceptIds": [
+        "customer",
+        "subscription",
+        "plan"
+      ],
+      "conceptId": "subscription"
     },
     {
       "id": "cbe-customer-upgrades-downgrades",
       "name": "Customer Upgrades or Downgrades their Subscription",
       "description": "Plan change that drives expansion or contraction MRR.",
-      "order": 5
+      "order": 5,
+      "conceptIds": [
+        "customer",
+        "subscription",
+        "plan"
+      ]
     },
     {
       "id": "cbe-customer-cancels-sub",
       "name": "Customer Cancels their Subscription",
-      "description": "Churn event — recurring revenue stops at the end of the current period.",
-      "order": 6
+      "description": "Churn event: recurring revenue stops at the end of the current period.",
+      "order": 6,
+      "conceptIds": [
+        "customer",
+        "subscription"
+      ]
     },
     {
       "id": "cbe-customer-renews-sub",
       "name": "Customer Renews their Subscription",
       "description": "Continuation of recurring revenue at the end of a billing period.",
-      "order": 7
+      "order": 7,
+      "conceptIds": [
+        "customer",
+        "subscription",
+        "billing-period"
+      ]
     }
   ],
   "coreBusinessProcesses": [
@@ -371,7 +749,7 @@
     {
       "id": "cbp-subscription-lifecycle",
       "name": "Subscription Lifecycle",
-      "description": "Managing a customer's subscription over time — renewals, upgrades, downgrades, cancellations. Owns Upgrades/Downgrades, Cancellations, and Renewals.",
+      "description": "Managing a customer's subscription over time: renewals, upgrades, downgrades and cancellations. Owns Upgrades/Downgrades, Cancellations, and Renewals.",
       "order": 2
     },
     {
@@ -415,14 +793,310 @@
     {
       "id": "dom-finance",
       "name": "Finance",
-      "description": "Invoicing, payments, and recognised revenue — the source of MRR / ARR / ARPU / NRR.",
+      "description": "Invoicing, payments and recognised revenue: the source of MRR, ARR, ARPU and NRR.",
       "order": 4
     },
     {
       "id": "dom-product",
       "name": "Product",
-      "description": "The SaaS application itself — the plans, features, and usage limits customers subscribe to.",
+      "description": "The SaaS application itself: the plans, features and usage limits customers subscribe to.",
       "order": 5
     }
-  ]
+  ],
+  "scope": {
+    "statement": "Lead to revenue for a SaaS subscription company: from the first ad a prospect clicks, through trial and subscription, to the invoices, payments and recurring revenue that MRR, ARR and churn are counted from.",
+    "slicedBy": "business-process"
+  },
+  "participants": [
+    {
+      "id": "p-cro",
+      "name": "Chief Revenue Officer",
+      "roles": [
+        "subject-matter-expert",
+        "stakeholder"
+      ]
+    },
+    {
+      "id": "p-finance-analyst",
+      "name": "Finance Analyst",
+      "roles": [
+        "subject-matter-expert",
+        "stakeholder"
+      ],
+      "notes": "Knows billing and revenue recognition"
+    },
+    {
+      "id": "p-revops-analyst",
+      "name": "RevOps Analyst",
+      "roles": [
+        "facilitator"
+      ]
+    },
+    {
+      "id": "p-data-engineer",
+      "name": "Data Engineer",
+      "roles": [
+        "data-team"
+      ]
+    }
+  ],
+  "stories": [
+    {
+      "id": "s-prospect-to-customer",
+      "name": "A prospect becomes a paying customer",
+      "kind": "happy-path",
+      "toldBy": "p-cro",
+      "order": 1,
+      "text": "A prospect clicks on one of our ads on a channel like LinkedIn and signs up for a free trial. During the trial they set up their account and invite their team.\nBefore the trial ends they subscribe to a paid plan. From then on, every billing period produces an invoice, the customer pays it, and the subscription generates recurring revenue every month."
+    },
+    {
+      "id": "s-upgrade-mid-period",
+      "name": "A customer upgrades mid-period",
+      "kind": "variation",
+      "toldBy": "p-finance-analyst",
+      "order": 2,
+      "text": "Halfway through a billing period, a customer moves from the Starter plan to the Pro plan. The subscription changes plan straight away, and the next invoice carries a prorated charge for the rest of the period. The discount they had on Starter no longer applies."
+    },
+    {
+      "id": "s-cancel-at-renewal",
+      "name": "A customer cancels at renewal",
+      "kind": "variation",
+      "toldBy": "p-cro",
+      "order": 3,
+      "text": "A customer decides not to renew. They cancel before the end of the billing period, and the subscription stays active until the period ends. No new invoice is produced and the recurring revenue stops, but they are still a customer in our history."
+    }
+  ],
+  "businessQuestions": [
+    {
+      "id": "q-mrr-by-plan",
+      "name": "What is our Monthly Recurring Revenue by Plan?",
+      "askedBy": "p-cro",
+      "order": 1
+    },
+    {
+      "id": "q-trial-conversion",
+      "name": "How many Trials become a paid Subscription each month?",
+      "askedBy": "p-cro",
+      "order": 2
+    },
+    {
+      "id": "q-churn-by-segment",
+      "name": "What is our monthly churn by Customer Segment?",
+      "askedBy": "p-cro",
+      "order": 3
+    },
+    {
+      "id": "q-late-invoices",
+      "name": "Which Invoices are paid late?",
+      "askedBy": "p-finance-analyst",
+      "order": 4
+    },
+    {
+      "id": "q-cost-to-serve",
+      "name": "What does it cost to serve each Customer?",
+      "askedBy": "p-finance-analyst",
+      "order": 5
+    }
+  ],
+  "walks": [
+    {
+      "id": "walk-story",
+      "subject": {
+        "type": "story",
+        "id": "s-prospect-to-customer"
+      },
+      "result": "holds"
+    },
+    {
+      "id": "walk-story-2",
+      "subject": {
+        "type": "story",
+        "id": "s-upgrade-mid-period"
+      },
+      "result": "stuck",
+      "finding": "The prorated charge had nowhere to go on the Map",
+      "resolution": "drawn"
+    },
+    {
+      "id": "walk-story-3",
+      "subject": {
+        "type": "story",
+        "id": "s-cancel-at-renewal"
+      },
+      "result": "holds"
+    },
+    {
+      "id": "walk-question",
+      "subject": {
+        "type": "question",
+        "id": "q-mrr-by-plan"
+      },
+      "result": "holds"
+    },
+    {
+      "id": "walk-question-2",
+      "subject": {
+        "type": "question",
+        "id": "q-trial-conversion"
+      },
+      "result": "holds"
+    },
+    {
+      "id": "walk-question-3",
+      "subject": {
+        "type": "question",
+        "id": "q-churn-by-segment"
+      },
+      "result": "holds"
+    },
+    {
+      "id": "walk-question-4",
+      "subject": {
+        "type": "question",
+        "id": "q-late-invoices"
+      },
+      "result": "stuck",
+      "finding": "Needs a due date and a paid date: information about an Invoice, for the DESIGN stage",
+      "resolution": "parked"
+    },
+    {
+      "id": "walk-question-5",
+      "subject": {
+        "type": "question",
+        "id": "q-cost-to-serve"
+      },
+      "result": "stuck",
+      "finding": "Needs cost data from outside this Scope",
+      "resolution": "parked"
+    }
+  ],
+  "parked": [
+    {
+      "id": "customer-email",
+      "text": "Customer email",
+      "kind": "attribute",
+      "note": "Step 4, from the story \"A prospect becomes a paying customer\""
+    },
+    {
+      "id": "sales-tax",
+      "text": "Sales tax on Invoices",
+      "kind": "out-of-scope",
+      "note": "Step 3, from the story \"A customer upgrades mid-period\""
+    },
+    {
+      "id": "from-walk-question-4",
+      "text": "Needs a due date and a paid date: information about an Invoice, for the DESIGN stage",
+      "kind": "attribute",
+      "note": "Step 10, walking \"Which Invoices are paid late?\""
+    },
+    {
+      "id": "from-walk-question-5",
+      "text": "Needs cost data from outside this Scope",
+      "kind": "future-map",
+      "note": "Step 10, walking \"What does it cost to serve each Customer?\""
+    }
+  ],
+  "stepNotes": {
+    "map": {
+      "note": "Arranged by Domain, so the story reads left to right from the first ad click to recognised revenue."
+    }
+  },
+  "layout": {
+    "concepts": {
+      "channel": {
+        "x": 180,
+        "y": 135
+      },
+      "ad": {
+        "x": 450,
+        "y": 135
+      },
+      "segment": {
+        "x": 1050,
+        "y": 495
+      },
+      "prospect": {
+        "x": 450,
+        "y": 330
+      },
+      "customer": {
+        "x": 780,
+        "y": 135
+      },
+      "trial": {
+        "x": 780,
+        "y": 330
+      },
+      "discount": {
+        "x": 1050,
+        "y": 330
+      },
+      "account": {
+        "x": 1350,
+        "y": 135
+      },
+      "subscription": {
+        "x": 1350,
+        "y": 330
+      },
+      "plan": {
+        "x": 1350,
+        "y": 615
+      },
+      "product": {
+        "x": 1350,
+        "y": 795
+      },
+      "billing-period": {
+        "x": 1695,
+        "y": 135
+      },
+      "invoice": {
+        "x": 1695,
+        "y": 330
+      },
+      "payment": {
+        "x": 1995,
+        "y": 330
+      },
+      "recurring-revenue": {
+        "x": 1695,
+        "y": 525
+      },
+      "one-time-revenue": {
+        "x": 1995,
+        "y": 525
+      }
+    },
+    "events": {
+      "cbe-prospect-clicks-ad": {
+        "x": 270,
+        "y": 285
+      },
+      "cbe-prospect-signs-up-trial": {
+        "x": 600,
+        "y": 450
+      },
+      "cbe-customer-activates-account": {
+        "x": 1065,
+        "y": -30
+      },
+      "cbe-customer-subscribes-paid": {
+        "x": 1185,
+        "y": 592
+      },
+      "cbe-customer-upgrades-downgrades": {
+        "x": 960,
+        "y": 660
+      },
+      "cbe-customer-cancels-sub": {
+        "x": 1575,
+        "y": 720
+      },
+      "cbe-customer-renews-sub": {
+        "x": 1515,
+        "y": -30
+      }
+    }
+  }
 }

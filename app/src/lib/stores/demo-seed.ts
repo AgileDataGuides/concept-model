@@ -22,8 +22,8 @@ import saasRevenueSeed from '$data/saas-revenue-concept-model.json';
 const LS_KEY = 'concept-model-demo-models';
 const SEED_VERSION_KEY = 'concept-model-demo-seed-version';
 
-/** Bump when bundled JSONs change. ISO date format. */
-const SEED_VERSION = '2026-09-30';
+/** Bump when bundled JSONs change. ISO date, with a suffix for a second change on one day. */
+const SEED_VERSION = '2026-09-30.3';
 
 const SEEDS: ConceptModel[] = [
 	saasRevenueSeed as unknown as ConceptModel
