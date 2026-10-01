@@ -9,6 +9,10 @@
 	// With `picture`, it draws the same Map as a plain SVG with nothing to
 	// move and no pan or zoom. Export SVG (map-svg.ts) saves that picture, so
 	// the file always matches the Map on screen.
+	//
+	// It draws only the layers that are on (map-layers.svelte.ts): on screen
+	// the ones the switches in its top bar show, in a picture the `layers` it
+	// is given. Turning a layer off never moves anything.
 	import '@fontsource/caveat-brush';
 	import { getContext } from 'svelte';
 	import type { Attachment } from 'svelte/attachments';
@@ -40,9 +44,13 @@
 	import { relationshipSentences, relationshipTriple } from '$lib/model/rules';
 	import { colorOf } from '$lib/constants/context-types';
 	import type { Point } from '$lib/types';
-	import { BUTTON, CONCEPT_MAP, INPUT } from '$lib/ui/tokens';
+	import { BUTTON, CARD, CONCEPT_MAP, INPUT } from '$lib/ui/tokens';
+	import ToggleSwitch from '../ui/ToggleSwitch.svelte';
+	import { MAP_LAYERS, showLayer, shownLayers, type MapLayer } from './map-layers.svelte';
 
-	let { cm, picture = false }: { cm: CmView; picture?: boolean } = $props();
+	let { cm, picture = false, layers }: { cm: CmView; picture?: boolean; layers?: readonly MapLayer[] } = $props();
+
+	const shown = $derived(new Set(layers ?? shownLayers()));
 
 	const adapter = getContext<DataAdapter>('dataAdapter');
 
@@ -183,9 +191,11 @@
 
 	const lineMid = $derived(new Map(lines.map((l) => [l.rel.id, { x: l.mx, y: l.my }])));
 
-	// Thin dashed connectors from each diamond to what it joins or sits on
+	// Thin dashed connectors from each diamond to what it joins or sits on.
+	// Each one is drawn only while the layer at its far end is on, so a
+	// connector never points at nothing.
 	const connectors = $derived.by(() => {
-		const out: { key: string; x1: number; y1: number; x2: number; y2: number }[] = [];
+		const out: { key: string; to: MapLayer; x1: number; y1: number; x2: number; y2: number }[] = [];
 		for (const ev of cm.events) {
 			const d = geometry.events.get(ev.id);
 			if (!d) continue;
@@ -195,10 +205,10 @@
 				const c = geometry.concepts.get(conceptId);
 				if (!c) continue;
 				const p = edgePoint(c, d);
-				out.push({ key: `${ev.id}-${conceptId}`, x1: d.x, y1: d.y, x2: p.x, y2: p.y });
+				out.push({ key: `${ev.id}-${conceptId}`, to: 'concepts', x1: d.x, y1: d.y, x2: p.x, y2: p.y });
 			}
 			const mid = ev.relationshipId ? lineMid.get(ev.relationshipId) : undefined;
-			if (mid) out.push({ key: `${ev.id}-rel`, x1: d.x, y1: d.y, x2: mid.x, y2: mid.y });
+			if (mid) out.push({ key: `${ev.id}-rel`, to: 'relationships', x1: d.x, y1: d.y, x2: mid.x, y2: mid.y });
 		}
 		return out;
 	});
@@ -366,9 +376,56 @@
 	</defs>
 {/snippet}
 
-<!-- The Map itself, the same on screen and in a picture -->
+<!-- The Map itself, the same on screen and in a picture, one layer at a time -->
 {#snippet drawing()}
 	<!-- Domains: pinned sheets of paper around their notes, faint so the notes stand out -->
+	{#if shown.has('domains')}{@render domains()}{/if}
+
+	<!-- Connectors from diamonds, each while the layer at its far end is on -->
+	{#if shown.has('events')}
+		{#each connectors as c (c.key)}
+			{#if shown.has(c.to)}
+				<line x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2} stroke="{EVENT}40" stroke-width="1" stroke-dasharray="3 3" />
+			{/if}
+		{/each}
+	{/if}
+
+	<!-- Relationships: green curves, each with its verbs. Either can show without the other.
+	     The hover sentences are text too, so they go with the verbs. -->
+	{#if shown.has('relationships') || shown.has('verbs')}
+		{#each lines as line (line.rel.id)}
+			<g>
+				{#if shown.has('verbs')}
+					<title>{lineTitle(line.rel)}</title>
+				{/if}
+				{#if shown.has('relationships')}
+					<path d={line.path} fill="none" stroke={relationshipLine.stroke} stroke-width={relationshipLine.strokeWidth} />
+				{/if}
+				{#if shown.has('verbs')}
+					{#each line.labels as l, i (i)}
+						<rect x={l.x - l.w / 2} y={l.y - LABEL_H / 2} width={l.w} height={LABEL_H} rx={relationshipLabel.rx} fill={relationshipLabel.backing} fill-opacity={relationshipLabel.backingOpacity} />
+						<text
+							x={l.x}
+							y={l.y + 4.5}
+							text-anchor="middle"
+							font-family={relationshipLabel.fontFamily}
+							font-size={relationshipLabel.size}
+							fill={relationshipLabel.fill}>{l.text}</text
+						>
+					{/each}
+				{/if}
+			</g>
+		{/each}
+	{/if}
+
+	<!-- Concepts: sticky notes, each turned a little -->
+	{#if shown.has('concepts')}{@render concepts()}{/if}
+
+	<!-- Core Business Events -->
+	{#if shown.has('events')}{@render events()}{/if}
+{/snippet}
+
+{#snippet domains()}
 	{#each geometry.domains as domain (domain.id)}
 		{@const r = domain.rect}
 		<g transform="rotate({tilt(domain.id, domainCard.tiltMaxDeg)} {(r.left + r.right) / 2} {(r.top + r.bottom) / 2})">
@@ -439,32 +496,9 @@
 			</g>
 		</g>
 	{/each}
+{/snippet}
 
-	<!-- Connectors from diamonds -->
-	{#each connectors as c (c.key)}
-		<line x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2} stroke="{EVENT}40" stroke-width="1" stroke-dasharray="3 3" />
-	{/each}
-
-	<!-- Relationships: green curves, each with its verbs -->
-	{#each lines as line (line.rel.id)}
-		<g>
-			<title>{lineTitle(line.rel)}</title>
-			<path d={line.path} fill="none" stroke={relationshipLine.stroke} stroke-width={relationshipLine.strokeWidth} />
-			{#each line.labels as l, i (i)}
-				<rect x={l.x - l.w / 2} y={l.y - LABEL_H / 2} width={l.w} height={LABEL_H} rx={relationshipLabel.rx} fill={relationshipLabel.backing} fill-opacity={relationshipLabel.backingOpacity} />
-				<text
-					x={l.x}
-					y={l.y + 4.5}
-					text-anchor="middle"
-					font-family={relationshipLabel.fontFamily}
-					font-size={relationshipLabel.size}
-					fill={relationshipLabel.fill}>{l.text}</text
-				>
-			{/each}
-		</g>
-	{/each}
-
-	<!-- Concepts: sticky notes, each turned a little -->
+{#snippet concepts()}
 	{#each cm.concepts as concept (concept.id)}
 		{@const box = geometry.concepts.get(concept.id)}
 		{#if box}
@@ -505,8 +539,9 @@
 			</g>
 		{/if}
 	{/each}
+{/snippet}
 
-	<!-- Core Business Events -->
+{#snippet events()}
 	{#each cm.events as ev (ev.id)}
 		{@const d = geometry.events.get(ev.id)}
 		{#if d}
@@ -550,9 +585,16 @@
 	</svg>
 {:else}
 	<div class="relative w-full h-full min-h-96 {CONCEPT_MAP.canvas} overflow-hidden" bind:clientWidth={width} bind:clientHeight={height}>
-		<div class="absolute top-2 left-3 right-3 z-10 flex items-center justify-between gap-3 pointer-events-none">
-			<p class={INPUT.label}>Drag a note, a diamond, or a Domain by its name to move it, or use the arrow keys. Drag the background to pan, scroll to zoom.</p>
-			<div class="flex items-center gap-2 pointer-events-auto">
+		<!-- On a narrow Map the controls wrap under the hint rather than squeeze it -->
+		<div class="absolute top-2 left-3 right-3 z-10 flex flex-wrap items-center justify-between gap-3 pointer-events-none">
+			<p class="{INPUT.label} basis-64 grow">Drag a note, a diamond, or a Domain by its name to move it, or use the arrow keys. Drag the background to pan, scroll to zoom.</p>
+			<div class="flex items-stretch gap-2 ml-auto pointer-events-auto">
+				<!-- One switch per layer: off hides it here, on every other Map and in Export SVG -->
+				<div class="{CARD} flex items-center" role="group" aria-label="Layers on the Map">
+					{#each MAP_LAYERS as layer (layer.id)}
+						<ToggleSwitch checked={shown.has(layer.id)} label={layer.label} title={layer.title} onChange={(on) => showLayer(layer.id, on)} />
+					{/each}
+				</div>
 				<button type="button" class={BUTTON.secondary} onclick={() => zoomBy(1 / 1.2)} aria-label="Zoom out">&minus;</button>
 				<button type="button" class={BUTTON.secondary} onclick={() => zoomBy(1.2)} aria-label="Zoom in">+</button>
 				<button type="button" class={BUTTON.secondary} onclick={fit}>Fit</button>

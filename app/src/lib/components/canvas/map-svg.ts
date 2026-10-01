@@ -9,6 +9,11 @@
 // curve bows past the notes it joins, and a long Domain name runs past its
 // sheet.
 //
+// The file holds only the layers it is given, the ones the Map shows. Its
+// frame is the whole Map's whichever layers are on, so every set of layers
+// gives the same page: the Blue Book's figures for Steps 4, 6, 7 and 8 line
+// up when they come from one model.
+//
 // Mode-agnostic like the canvas: it reads the view model, never the store.
 
 import { mount, unmount } from 'svelte';
@@ -19,6 +24,7 @@ import unicode from '@fontsource/caveat-brush/unicode.json';
 import type { CmView } from '$lib/model/graph-view';
 import { CONCEPT_MAP } from '$lib/ui/tokens';
 import MapView from './MapView.svelte';
+import { ALL_MAP_LAYERS, type MapLayer } from './map-layers.svelte';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
@@ -76,15 +82,32 @@ async function fontFaces(text: string): Promise<string> {
 	return rules.join('\n');
 }
 
-/**
- * The whole Map of `cm` as the text of an SVG file: every Domain, note,
- * curve and diamond, with space round them, on white. `adapter` is the one
- * the canvas has, which MapView reads from context.
- */
-export async function mapSvg(cm: CmView, adapter: DataAdapter): Promise<string> {
-	// Measure with the font the picture uses, so a name is as wide as it will be
-	await document.fonts.load(`${CONCEPT_MAP.noteLabel.sizeMax}px 'Caveat Brush'`);
+interface Frame {
+	x: number;
+	y: number;
+	w: number;
+	h: number;
+}
 
+/** The box round everything drawn in `svg`, with the picture's padding on each side. */
+function frameOf(svg: SVGSVGElement): Frame {
+	const box = svg.getBBox();
+	const pad = CONCEPT_MAP.picture.padding;
+	const x = Math.floor(box.x) - pad;
+	const y = Math.floor(box.y) - pad;
+	return { x, y, w: Math.ceil(box.x + box.width) + pad - x, h: Math.ceil(box.y + box.height) + pad - y };
+}
+
+/**
+ * Draw the Map of `cm` as a still picture with `layers` on, hand its <svg>
+ * to `use`, then take the picture away.
+ */
+async function withPicture<T>(
+	cm: CmView,
+	adapter: DataAdapter,
+	layers: readonly MapLayer[],
+	use: (svg: SVGSVGElement) => T | Promise<T>
+): Promise<T> {
 	// The picture has to be in the page to be measured, so it is drawn out of sight
 	const host = document.createElement('div');
 	host.setAttribute('aria-hidden', 'true');
@@ -92,16 +115,31 @@ export async function mapSvg(cm: CmView, adapter: DataAdapter): Promise<string> 
 	document.body.append(host);
 	let picture: Record<string, unknown> | undefined;
 	try {
-		picture = mount(MapView, { target: host, props: { cm, picture: true }, context: new Map([['dataAdapter', adapter]]) });
+		picture = mount(MapView, { target: host, props: { cm, picture: true, layers }, context: new Map([['dataAdapter', adapter]]) });
 		const svg = host.querySelector('svg');
 		if (!svg) throw new Error('The Map drew no picture');
+		return await use(svg);
+	} finally {
+		if (picture) unmount(picture);
+		host.remove();
+	}
+}
 
-		const box = svg.getBBox();
-		const pad = CONCEPT_MAP.picture.padding;
-		const x = Math.floor(box.x) - pad;
-		const y = Math.floor(box.y) - pad;
-		const w = Math.ceil(box.x + box.width) + pad - x;
-		const h = Math.ceil(box.y + box.height) + pad - y;
+/**
+ * The Map of `cm` as the text of an SVG file: each Domain, note, curve,
+ * verb and diamond in `layers`, with space round the whole Map, on white.
+ * `adapter` is the one the canvas has, which MapView reads from context.
+ */
+export async function mapSvg(cm: CmView, adapter: DataAdapter, layers: readonly MapLayer[] = ALL_MAP_LAYERS): Promise<string> {
+	// Measure with the font the picture uses, so a name is as wide as it will be
+	await document.fonts.load(`${CONCEPT_MAP.noteLabel.sizeMax}px 'Caveat Brush'`);
+
+	// With a layer off, the frame comes from a picture with every layer on
+	const everyLayer = ALL_MAP_LAYERS.every((layer) => layers.includes(layer));
+	const frame = everyLayer ? null : await withPicture(cm, adapter, ALL_MAP_LAYERS, frameOf);
+
+	return withPicture(cm, adapter, layers, async (svg) => {
+		const { x, y, w, h } = frame ?? frameOf(svg);
 		svg.setAttribute('viewBox', `${x} ${y} ${w} ${h}`);
 		svg.setAttribute('width', String(w));
 		svg.setAttribute('height', String(h));
@@ -116,13 +154,16 @@ export async function mapSvg(cm: CmView, adapter: DataAdapter): Promise<string> 
 		for (const [name, value] of Object.entries({ x, y, width: w, height: h, fill: CONCEPT_MAP.picture.background })) {
 			background.setAttribute(name, String(value));
 		}
+		// Caveat Brush goes in for the text drawn in it, so a file with no notes or verbs carries none
+		const handwriting = [...svg.querySelectorAll('text')]
+			.filter((text) => text.getAttribute('font-family')?.includes('Caveat Brush'))
+			.map((text) => text.textContent ?? '')
+			.join('');
+		const faces = await fontFaces(handwriting);
 		const style = document.createElementNS(SVG_NS, 'style');
-		style.textContent = await fontFaces(svg.textContent ?? '');
-		svg.prepend(style, background);
+		style.textContent = faces;
+		svg.prepend(...(faces ? [style] : []), background);
 
 		return `<?xml version="1.0" encoding="UTF-8"?>\n${new XMLSerializer().serializeToString(svg).replace(NOT_XML, '')}\n`;
-	} finally {
-		if (picture) unmount(picture);
-		host.remove();
-	}
+	});
 }

@@ -11,7 +11,7 @@ An [AgileDataGuides](https://agiledataguides.com/agiledata-templates/) Pattern T
 | Tab | What it is for |
 |---------|---------|
 | **Steps** | The eleven Modeling Business Concepts steps, down the left with a status for each. Pick any step to capture what it produces. The steps are a checklist, not a wizard |
-| **Map** | The Concept Map, drawn the way the Blue Book draws it: Concepts as blue sticky notes, Domains as pinned sheets of paper, Core Business Events as diamonds, and each Relationship a green curve carrying its verbs, one read from each end once the inverse verb is in. Drag to arrange, and click **Export SVG** to save the whole Map as one file |
+| **Map** | The Concept Map, drawn the way the Blue Book draws it: Concepts as blue sticky notes, Domains as pinned sheets of paper, Core Business Events as diamonds, and each Relationship a green curve carrying its verbs, one read from each end once the inverse verb is in. Drag to arrange, turn layers on and off, and click **Export SVG** to save the whole Map as one file |
 | **Definitions** | The Definitions: every Concept's Definition in three parts, every Relationship as two sentences, every Core Business Event |
 | **Instructions** | How to run a session, and questions to ask Claude |
 
@@ -47,7 +47,8 @@ The app starts at [http://localhost:5116](http://localhost:5116).
 - **Quiet hints** from the book's rules of thumb, such as ten to twenty Concepts. They never block you
 - **Multiple models**: create, switch between, and delete models. Switching saves your changes first, and if that save fails the current model stays open
 - **Export JSON / CSV / Excel**: JSON holds the whole model and can be imported again. The Excel workbook has a sheet for each part of the Model
-- **Export SVG**: the whole Concept Map as one picture file, from any tab. It is sharp at any size, has only the Map on a white page, and carries the handwritten font inside, so the handwriting looks the same in any browser, even on a computer without the font. Open it in a browser or put it in a slide or a document. Some slide and drawing tools ignore the font inside the file and use one of their own
+- **Layers on the Map**: switches turn the Domains, Concepts, Relationships, Verbs and Events on and off, so one model draws the picture for each step of the book, from Concepts on their Domains (Step 4) to the full Map with its Events (Step 8). Nothing moves when a layer goes, and the app remembers your choice in this browser
+- **Export SVG**: the whole Concept Map as one picture file, from any tab, with the layers the Map shows. The page is the same size whichever layers are on, so the pictures for each step line up. It is sharp at any size, has only the Map on a white page, and carries the handwritten font inside, so the handwriting looks the same in any browser, even on a computer without the font. Open it in a browser or put it in a slide or a document. Some slide and drawing tools ignore the font inside the file and use one of their own
 - **Import JSON**: load a model as a new one, never over the current one. Files from before the eleven steps (version 1.0) still load
 
 ## Works With Claude

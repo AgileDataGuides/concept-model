@@ -4,6 +4,7 @@
 	import type { ConceptModelStore } from '$lib/stores/concept-model.svelte';
 	import { readView } from '$lib/model/graph-view';
 	import { mapSvg } from '$lib/components/canvas/map-svg';
+	import { shownLayers } from '$lib/components/canvas/map-layers.svelte';
 
 	const store = getContext<ConceptModelStore>('cmStore');
 	const adapter = getContext<DataAdapter>('dataAdapter');
@@ -116,10 +117,10 @@
 		download(store.exportAsCsv(), `${slugifyName(model.name)}-concept-model-${exportTimestamp()}.csv`, 'text/csv');
 	}
 
-	/** The whole Concept Map as one SVG file, drawn by the Map itself (map-svg.ts), from any tab. */
+	/** The whole Concept Map as one SVG file, drawn by the Map itself (map-svg.ts) with the layers it shows, from any tab. */
 	async function handleExportSvg() {
 		try {
-			const svg = await mapSvg(readView(nodes, links), adapter);
+			const svg = await mapSvg(readView(nodes, links), adapter, shownLayers());
 			download(svg, `${slugifyName(model.name)}-concept-model-${exportTimestamp()}.svg`, 'image/svg+xml');
 		} catch (e) {
 			console.error('SVG export failed:', e);
@@ -159,7 +160,7 @@
 			<button onclick={handleExportJSON} class="px-3 py-1.5 text-sm font-medium rounded-lg bg-white text-slate-600 border border-slate-300 hover:bg-slate-50 transition-colors">Export JSON</button>
 			<button onclick={handleExportCsv} class="px-3 py-1.5 text-sm font-medium rounded-lg bg-white text-slate-600 border border-slate-300 hover:bg-slate-50 transition-colors">Export CSV</button>
 			<button onclick={() => store.exportAsXlsx()} class="px-3 py-1.5 text-sm font-medium rounded-lg bg-white text-slate-600 border border-slate-300 hover:bg-slate-50 transition-colors">Export Excel</button>
-			<button onclick={handleExportSvg} class="px-3 py-1.5 text-sm font-medium rounded-lg bg-white text-slate-600 border border-slate-300 hover:bg-slate-50 transition-colors" title="Save the whole Concept Map as one SVG picture">Export SVG</button>
+			<button onclick={handleExportSvg} class="px-3 py-1.5 text-sm font-medium rounded-lg bg-white text-slate-600 border border-slate-300 hover:bg-slate-50 transition-colors" title="Save the whole Concept Map as one SVG picture, with the layers the Map shows">Export SVG</button>
 			<!-- Import button moved to the app header (next to New Model) — see +page.svelte.
 			     That location better communicates that Import creates a NEW model rather
 			     than mutating the current one. -->
