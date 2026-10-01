@@ -32,7 +32,7 @@
 			<p>The app opens on the <strong>SaaS Revenue Concept Model</strong>, which takes every step.</p>
 			<ol>
 				<li>The <strong>Steps</strong> tab lists the eleven steps down the left. Each row says how far that step has got. Click any row to open it.</li>
-				<li>The <strong>Map</strong> tab shows the Concept Map the way the Blue Book draws it: Concepts as sticky notes, Domains as pinned sheets of paper, Core Business Events as diamonds, and the verbs on every line: read from a Concept, the nearest verb starts the sentence. Drag a Domain by its name to move its whole sheet.</li>
+				<li>The <strong>Map</strong> tab shows the Concept Map the way the Blue Book draws it: Concepts as sticky notes, Domains as pinned sheets of paper, Core Business Events as diamonds, and the verbs on every line: read from a Concept, the nearest verb starts the sentence. Drag a Domain by its name to move its whole sheet. <strong>Export SVG</strong> saves the whole Map as one picture file.</li>
 				<li>The <strong>Definitions</strong> tab reads the whole Model one thing at a time: each Concept's Definition, each Relationship as two sentences, each Event.</li>
 			</ol>
 		</section>
@@ -94,6 +94,7 @@
 				<li><strong>Export JSON</strong> downloads the whole model, every step included, to share or import again.</li>
 				<li><strong>Export CSV</strong> downloads the Concepts with their Definitions.</li>
 				<li><strong>Export Excel</strong> downloads a workbook: Concepts, Relationships with their rules in words, Events, Domains, the Scope and the people, stories, Business Questions, walks and the parked list.</li>
+				<li><strong>Export SVG</strong> downloads the whole Concept Map as one picture file, from any tab: every note, sheet, curve and diamond, on a white page, with none of the Map's buttons. It is sharp at any size, and it carries the handwritten font inside, so the handwriting looks the same in any browser, even on a computer without the font. Open it in a browser, or put it in a slide or a document. Some slide and drawing tools ignore the font inside the file and use one of their own.</li>
 			</ul>
 		</section>
 

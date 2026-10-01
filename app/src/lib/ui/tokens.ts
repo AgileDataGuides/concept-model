@@ -160,5 +160,9 @@ export const CONCEPT_MAP = {
 	domainTitle: { fontFamily: "'Comic Sans MS', 'Comic Neue', 'Chalkboard SE', cursive", fontWeight: 700, size: 22, fill: '#33302a', opacity: 0.45 },
 	relationshipLine: { stroke: '#1bb31b', strokeWidth: 1.5, bend: 0.12 },
 	relationshipLabel: { fontFamily: "'Caveat Brush', 'Comic Sans MS', cursive", size: 13, fill: '#2a2a2a', backing: '#ffffff', backingOpacity: 0.85, rx: 3 },
-	selected: { noteStroke: '#4ca5dc', noteStrokeWidth: 2, diamondStrokeWidth: 2.5, sheetStroke: '#4ca5dc', sheetStrokeWidth: 2 }
+	/** SVG attributes, not a class, so an exported SVG keeps them. The family is the app's body font. */
+	eventLabel: { fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", size: 10, fontWeight: 500 },
+	selected: { noteStroke: '#4ca5dc', noteStrokeWidth: 2, diamondStrokeWidth: 2.5, sheetStroke: '#4ca5dc', sheetStrokeWidth: 2 },
+	/** Export SVG: space round everything drawn, and the page behind it. */
+	picture: { padding: 40, background: '#ffffff' }
 };

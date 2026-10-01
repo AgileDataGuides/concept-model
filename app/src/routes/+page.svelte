@@ -194,7 +194,7 @@
 
 {#if loaded}
 	<div class="px-6 py-3 border-b border-slate-200 bg-white shrink-0">
-		<Toolbar bind:activeTab />
+		<Toolbar bind:activeTab {nodes} {links} />
 	</div>
 	<div class="flex-1 overflow-hidden">
 		{#if activeTab === 'instructions'}
