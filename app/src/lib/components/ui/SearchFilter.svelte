@@ -4,7 +4,12 @@
 	// show it. The border takes the list's entity colour at 40.
 	import { SEARCH_FILTER } from '$lib/ui/tokens';
 
-	let { value = $bindable(''), color, label }: { value?: string; color: string; label: string } = $props();
+	let {
+		value = $bindable(''),
+		color,
+		label,
+		placeholder = 'Search...'
+	}: { value?: string; color: string; label: string; placeholder?: string } = $props();
 </script>
 
 <div class={SEARCH_FILTER.wrapper}>
@@ -13,7 +18,7 @@
 	</svg>
 	<input
 		type="text"
-		placeholder="Search..."
+		{placeholder}
 		aria-label={label}
 		bind:value
 		class={SEARCH_FILTER.input}

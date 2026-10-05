@@ -29,7 +29,7 @@
 	 * Promoted from BEM-app-local BemCardEditModal → shared so every canvas
 	 * that touches Concept-family cards renders the SAME popup.
 	 */
-	import { getContext } from 'svelte';
+	import { getContext, type Snippet } from 'svelte';
 	import type { ContextNode, DataAdapter } from '$lib/cp-shared';
 	import { getNodeLabels } from '$lib/cp-shared';
 
@@ -50,7 +50,9 @@
 		allNodes,
 		onClose,
 		onSaved,
-		onDeleted
+		onDeleted,
+		extraFields,
+		wOptional = false
 	}: {
 		node: ContextNode;
 		/** All nodes — used to populate autocomplete (concept categories,
@@ -59,6 +61,13 @@
 		onClose: () => void;
 		onSaved?: () => void;
 		onDeleted?: () => void;
+		/** An app's own type-specific fields, drawn after the W's and Definition
+		 *  and before Notes (DESIGN_SYSTEM § 10). The app keeps their values and
+		 *  writes them in onSaved, so Save and Cancel cover them too. */
+		extraFields?: Snippet;
+		/** True where a Concept need not have a W's (the Concept Model): "Not set"
+		 *  is always on offer, so a W's set by mistake can be cleared. */
+		wOptional?: boolean;
 	} = $props();
 
 	const adapter = getContext<DataAdapter>('dataAdapter');
@@ -90,7 +99,10 @@
 	let descValue = $state(node.description ?? '');
 	let aliasesValue = $state(((node.properties?.aliases as string[]) ?? []).join(', '));
 	let ownerValue = $state((node.properties?.owner as string) ?? '');
-	let wValue = $state<W>(((node.properties?.w as W) ?? 'who'));
+	// A Concept with no W's stays without one until someone picks it, rather
+	// than becoming Who on its first save (the Concept Model sets it rarely)
+	const hadW = !!node.properties?.w;
+	let wValue = $state<W | ''>((node.properties?.w as W | undefined) ?? '');
 	let notesValue = $state((node.properties?.notes as string) ?? '');
 	let defCategory = $state((node.properties?.definitionCategory as string) ?? '');
 	let defDifferentiator = $state((node.properties?.definitionDifferentiator as string) ?? '');
@@ -248,7 +260,11 @@
 			properties.owner = ownerValue;
 		}
 		if (cardType === 'concept') {
-			properties.w = wValue;
+			if (wValue) properties.w = wValue;
+			// Not set on a Concept that had a W's: keep the key, as undefined, so an
+			// adapter that merges properties (the Concept Model's) clears it too
+			else if (hadW) properties.w = undefined;
+			else delete properties.w;
 			properties.definitionCategory = defCategory;
 			properties.definitionDifferentiator = defDifferentiator;
 		}
@@ -327,6 +343,9 @@
 				bind:value={wValue}
 				class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
 			>
+				{#if !hadW || wOptional}
+					<option value="">Not set</option>
+				{/if}
 				{#each WS as wt}
 					<option value={wt}>{W_LABELS[wt]}</option>
 				{/each}
@@ -409,6 +428,10 @@
 					</div>
 				</div>
 			</div>
+		{/if}
+
+		{#if extraFields}
+			{@render extraFields()}
 		{/if}
 
 		<label class="block text-xs font-medium text-slate-500 mb-1 mt-3" for="bem-edit-notes">Notes</label>

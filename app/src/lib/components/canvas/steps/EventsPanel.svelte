@@ -1,6 +1,6 @@
 <script lang="ts">
 	// Step 8 - Surface the Core Business Events: the moments that matter, each
-	// said as who-does-what. A diamond rarely floats: it joins Concepts or sits
+	// said as who-does-what. A diamond rarely floats: it involves Concepts or sits
 	// on a Relationship, and some Events are Concepts too (a Sales Order).
 	import { getContext } from 'svelte';
 	import type { DataAdapter } from '$lib/cp-shared';
@@ -34,7 +34,7 @@
 		return adapter.createNode({ label: 'global_core_business_event', name });
 	}
 
-	// Bumped after each join so the picker clears for the next one
+	// Bumped after each add so the picker clears for the next one
 	let pickerKey = $state(0);
 
 	function nameOf(conceptId: string): string {
@@ -51,7 +51,7 @@
 		const node = await addConcept(adapter, name);
 		await joinEvent(adapter, ev.id, node.id);
 		pickerKey++;
-		return null; // already joined, nothing more for the picker to do
+		return null; // already added, nothing more for the picker to do
 	}
 </script>
 
@@ -96,12 +96,12 @@
 					</div>
 
 					<div class="space-y-1">
-						<span class={INPUT.label}>Joins</span>
+						<span class={INPUT.label}>Involves</span>
 						<div class="flex flex-wrap items-center gap-1.5">
 							{#each ev.conceptIds as conceptId (conceptId)}
 								<span class="{CHOICE_CHIPS.base} {CHOICE_CHIPS.active} {CHOICE_CHIPS.removable}">
 									{nameOf(conceptId)}
-									<button type="button" class={CHOICE_CHIPS.removeButton} aria-label="Unjoin {nameOf(conceptId)}" onclick={() => unjoinEvent(adapter, ev, conceptId)}>
+									<button type="button" class={CHOICE_CHIPS.removeButton} aria-label="Remove {nameOf(conceptId)} from {ev.name}" onclick={() => unjoinEvent(adapter, ev, conceptId)}>
 										<svg class={CHOICE_CHIPS.removeIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
 										</svg>
@@ -112,8 +112,8 @@
 								{#key pickerKey}
 									<ConceptPicker
 										concepts={cm.concepts}
-										label="Join a Concept to {ev.name}"
-										placeholder="Join a Concept"
+										label="Add a Concept that {ev.name} involves"
+										placeholder="Add a Concept"
 										exclude={ev.conceptIds}
 										onPick={(id) => join(ev, id)}
 										onCreate={(name) => createAndJoin(ev, name)}

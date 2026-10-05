@@ -10,6 +10,7 @@ import {
 	PARKED_LIST_NAME,
 	PARTICIPANT_ROLES,
 	SCOPE_SLICES,
+	SEVEN_WS,
 	STORY_KINDS,
 	WALK_RESOLUTIONS,
 	WALK_RESULTS
@@ -489,6 +490,7 @@ export function createConceptModelStore(options: ConceptModelStoreOptions = {}) 
 		return model.concepts.map((c) => [
 			c.name,
 			domainName(c.domainId),
+			labelOf(SEVEN_WS, c.w),
 			c.description || '',
 			(c.examples ?? []).join('; '),
 			(c.specialCases ?? []).join('; '),
@@ -500,7 +502,7 @@ export function createConceptModelStore(options: ConceptModelStoreOptions = {}) 
 		]);
 	}
 
-	const CONCEPT_HEADERS = ['Concept Name', 'Domain', 'Definition', 'Examples', 'Special Cases', 'Status', 'Stories', 'Aliases', 'Definition Category', 'Definition Differentiator'];
+	const CONCEPT_HEADERS = ['Concept Name', 'Domain', '7W', 'Definition', 'Examples', 'Special Cases', 'Status', 'Stories', 'Aliases', 'Definition Category', 'Definition Differentiator'];
 
 	function exportAsCsv(): string {
 		const csvEscape = (val: string) => `"${val.replace(/"/g, '""')}"`;
@@ -527,7 +529,7 @@ export function createConceptModelStore(options: ConceptModelStoreOptions = {}) 
 			sheets.push({
 				title: 'Core Business Events',
 				rows: [
-					['Event', 'Joins', 'Sits on Relationship', 'Is also the Concept', 'Description'],
+					['Event', 'Involves', 'Sits on Relationship', 'Is also the Concept', 'Description'],
 					...model.coreBusinessEvents.map((e) => {
 						const rel = model.relationships.find((r) => r.id === e.relationshipId);
 						return [
@@ -537,6 +539,29 @@ export function createConceptModelStore(options: ConceptModelStoreOptions = {}) 
 							e.conceptId ? conceptName(e.conceptId) : '',
 							e.description || ''
 						];
+					})
+				]
+			});
+		}
+
+		if (model.coreBusinessEvents.length > 0 && model.concepts.length > 0) {
+			// The Event Matrix tab's grid: Concepts by Domain in the Steps' order, ✓ involves, ✭ is also the Concept
+			const inOrder = <T extends { order?: number }>(list: T[]) =>
+				list.map((item, i) => ({ item, at: item.order ?? i + 1 })).sort((a, b) => a.at - b.at).map((x) => x.item);
+			const domains = inOrder(model.domains);
+			const concepts = inOrder(model.concepts);
+			const columns = [
+				...domains.flatMap((d) => concepts.filter((c) => c.domainId === d.id).map((c) => ({ c, domain: d.name }))),
+				...concepts.filter((c) => !c.domainId || !domains.some((d) => d.id === c.domainId)).map((c) => ({ c, domain: '' }))
+			];
+			sheets.push({
+				title: 'Event Matrix',
+				rows: [
+					['Domain', '', ...columns.map((col) => col.domain)],
+					['Core Business Event', 'Concepts', ...columns.map((col) => col.c.name)],
+					...inOrder(model.coreBusinessEvents).map((e) => {
+						const marks = columns.map((col) => (e.conceptId === col.c.id ? '✭' : (e.conceptIds ?? []).includes(col.c.id) ? '✓' : ''));
+						return [e.name, String(marks.filter(Boolean).length), ...marks];
 					})
 				]
 			});

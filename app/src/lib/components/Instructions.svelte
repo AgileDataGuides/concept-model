@@ -10,7 +10,7 @@
 		stories: 'Read these stories. Which variations are missing?',
 		concepts: 'Which nouns in the stories are Concepts, and which are information about a Concept?',
 		definitions: 'Check each Definition for tautologies and for system words like table, flag or status code.',
-		relationships: 'Which Concepts have no Relationship yet? What verbs join them in real life?',
+		relationships: 'Which Concepts have no Relationship yet? What verbs connect them in real life?',
 		'relationship-rules': 'Read each Relationship Rule aloud. Which ones look wrong for this organisation?',
 		events: 'Which Core Business Events are missing, and which have nothing attached?',
 		map: 'Which Concepts start the story, and which depend on others? Suggest how to arrange the Map.',
@@ -23,7 +23,7 @@
 	<h2>Concept Model</h2>
 	<p>
 		The companion app for the Blue Book, an Agile Data Guide to Modeling Business Concepts. Capture a Concept Model with a
-		Subject Matter Expert, eleven steps at a time, then read it as a Concept Map and as Definitions.
+		Subject Matter Expert, eleven steps at a time, then read it as a Concept Map, as Definitions and as a Business Event Matrix.
 	</p>
 
 	<div class="options">
@@ -32,8 +32,9 @@
 			<p>The app opens on the <strong>SaaS Revenue Concept Model</strong>, which takes every step.</p>
 			<ol>
 				<li>The <strong>Steps</strong> tab lists the eleven steps down the left. Each row says how far that step has got. Click any row to open it.</li>
-				<li>The <strong>Map</strong> tab shows the Concept Map the way the Blue Book draws it: Concepts as sticky notes, Domains as pinned sheets of paper, Core Business Events as diamonds, and the verbs on every line: read from a Concept, the nearest verb starts the sentence. Drag a Domain by its name to move its whole sheet. The switches at the top of the Map turn its layers on and off: Domains, Concepts, Relationships, Verbs and Events. Turn on only what a step adds to draw that step's picture, such as Domains and Concepts for Step 4. <strong>Export SVG</strong> saves the whole Map as one picture file, with the layers that are on.</li>
+				<li>The <strong>Map</strong> tab shows the Concept Map the way the Blue Book draws it: Concepts as sticky notes, Domains as pinned sheets of paper, Core Business Events as diamonds, and the verbs on every line, each with its Relationship Rule under it: read from a Concept, the nearest verb and rule start the sentence, "Customer places one or many" Sales Orders. Drag a Domain by its name to move its whole sheet. The switches at the top of the Map turn its layers on and off: Domains, Concepts, Relationships, Verbs and Events. Turn on only what a step adds to draw that step's picture, such as Domains and Concepts for Step 4. <strong>Export SVG</strong> saves the whole Map as one picture file, with the layers that are on.</li>
 				<li>The <strong>Definitions</strong> tab reads the whole Model one thing at a time: each Concept's Definition, each Relationship as two sentences, each Event.</li>
+				<li>The <strong>Event Matrix</strong> tab shows the same Model as a Business Event Matrix, with the features and the words of the Business Event Matrix app. Every change you make there changes the Model itself, so the Steps, the Map and the Definitions follow. Each row is a Core Business Event and each column a Concept, under a band for its Domain, or for its 7W with <strong>Group by 7W's</strong>. Click a cell to mark it: ✓ the Event involves the Concept, ✭ the Event is also that Concept (the "Is also the Concept" of Step 8, one per Event), then clear. Add an Event, a Concept (with its Domain and its 7W: Who, What, When, Where, Why, How or How Many) or a Domain above the grid. Click any name to rename it, change its 7W or other details, or delete it. Drag ⠿ to reorder the Events, the Concepts within their Domain, or the Domains. Search the Events, Domains and Concepts, turn on <strong>Hide unmarked</strong> to drop the empty rows and columns, and click ◂ to fold a band away. <strong>Concepts</strong> counts the Concepts each Event marks, and turns amber for an Event with nothing attached. <strong>Event Count</strong> counts the Events that mark each Concept.</li>
 			</ol>
 		</section>
 
@@ -55,7 +56,7 @@
 				<li><strong>Skip on purpose.</strong> A step can be marked skipped, with a note on why, so it is dropped knowingly rather than by accident.</li>
 				<li><strong>Park what belongs elsewhere.</strong> Information about a Concept ("Customer name") waits for the DESIGN stage. Out of scope and future Map items go on the same list.</li>
 				<li><strong>Quiet hints</strong> show the book's rules of thumb, like ten to twenty Concepts, when the Model drifts outside them. They never stop you.</li>
-				<li><strong>Details</strong> on a Concept, Domain or Event opens the full editor: aliases, the Aristotelian helper for the Definition, W's and notes.</li>
+				<li><strong>Details</strong> on a Concept, Domain or Event opens the full editor: aliases, the Aristotelian helper for the Definition, W's and notes. For a Concept it also holds its Domain and the stories it came from, as Step 4 does. It is the same popup on every tab, the Event Matrix included.</li>
 			</ul>
 		</section>
 
@@ -93,7 +94,7 @@
 				<li><strong>Save</strong> writes the model as JSON to <code>data/</code>. The button says <em>Saved</em> when nothing has changed.</li>
 				<li><strong>Export JSON</strong> downloads the whole model, every step included, to share or import again.</li>
 				<li><strong>Export CSV</strong> downloads the Concepts with their Definitions.</li>
-				<li><strong>Export Excel</strong> downloads a workbook: Concepts, Relationships with their rules in words, Events, Domains, the Scope and the people, stories, Business Questions, walks and the parked list.</li>
+				<li><strong>Export Excel</strong> downloads a workbook: Concepts, Relationships with their rules in words, Events, the Event Matrix grid, Domains, the Scope and the people, stories, Business Questions, walks and the parked list.</li>
 				<li><strong>Export SVG</strong> downloads the whole Concept Map as one picture file, from any tab: every note, sheet, curve, verb and diamond in the layers the Map shows, on a white page, with none of the Map's buttons. A layer that is off is not in the file, and the page stays the same size whichever layers are on, so the pictures for each step line up. It is sharp at any size, and it carries the handwritten font inside, so the handwriting looks the same in any browser, even on a computer without the font. Open it in a browser, or put it in a slide or a document. Some slide and drawing tools ignore the font inside the file and use one of their own.</li>
 			</ul>
 		</section>

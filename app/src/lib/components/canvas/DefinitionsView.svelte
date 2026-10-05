@@ -114,7 +114,7 @@
 						<li class="px-4 py-2 text-sm text-slate-700">
 							<p class="font-medium text-slate-800">{ev.name}</p>
 							{#if ev.conceptIds.length > 0}
-								<p class="text-[11px] text-slate-500">Joins {ev.conceptIds.map(nameOf).join(', ')}</p>
+								<p class="text-[11px] text-slate-500">Involves {ev.conceptIds.map(nameOf).join(', ')}</p>
 							{/if}
 						</li>
 					{/each}

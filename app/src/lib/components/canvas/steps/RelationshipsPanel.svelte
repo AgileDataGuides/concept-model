@@ -81,7 +81,7 @@
 				<input bind:value={inverseVerb} type="text" placeholder="the other way, like is placed by" aria-label="Inverse verb" class={INPUT.text} onkeydown={handleKeydown} />
 			</div>
 			<button type="button" class={ready ? BUTTON.add : BUTTON.disabled} disabled={!ready} onclick={submit}>Add</button>
-			<p class={INPUT.label}>Pick two Concepts and the verb that joins them in real life.</p>
+			<p class={INPUT.label}>Pick two Concepts and the verb that connects them in real life.</p>
 		</div>
 	</section>
 

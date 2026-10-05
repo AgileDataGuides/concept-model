@@ -1,8 +1,9 @@
 <script lang="ts">
-	// THE Concept Model canvas: one Concept Model, three views.
+	// THE Concept Model canvas: one Concept Model, four views.
 	//   - steps:       the eleven Modeling Business Concepts steps, the way in
 	//   - map:         the Concept Map pattern template
 	//   - definitions: the Definitions pattern template
+	//   - matrix:      the Core Business Events and Concepts as a Business Event Matrix
 	//
 	// Mode-agnostic: it reads the { nodes, links } it is given and writes only
 	// through the DataAdapter from context, so the same component works in the
@@ -13,6 +14,7 @@
 	import StepsView from './StepsView.svelte';
 	import MapView from './MapView.svelte';
 	import DefinitionsView from './DefinitionsView.svelte';
+	import MatrixView from './MatrixView.svelte';
 
 	let {
 		nodes,
@@ -21,7 +23,7 @@
 	}: {
 		nodes: ContextNode[];
 		links?: ContextLink[];
-		view?: 'steps' | 'map' | 'definitions';
+		view?: 'steps' | 'map' | 'definitions' | 'matrix';
 	} = $props();
 
 	const cm = $derived(readView(nodes, links));
@@ -35,6 +37,8 @@
 	<MapView {cm} />
 {:else if view === 'definitions'}
 	<DefinitionsView {cm} />
+{:else if view === 'matrix'}
+	<MatrixView {cm} {nodes} />
 {:else}
 	<StepsView {cm} {nodes} />
 {/if}

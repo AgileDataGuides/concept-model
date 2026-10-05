@@ -66,13 +66,13 @@
 	}
 
 	async function parkConcept(concept: CmConcept) {
-		if (conceptIsReferenced(cm, concept.id) && !confirm(`Park "${concept.name}"? Its Relationships and Event joins are removed.`)) return;
+		if (conceptIsReferenced(cm, concept.id) && !confirm(`Park "${concept.name}"? Its Relationships and its involvement in Events are removed.`)) return;
 		await park(adapter, cm, { text: concept.name, kind: 'attribute', note: 'Step 4, parked from the Concept list' });
 		await adapter.deleteNode(concept.id);
 	}
 
 	async function remove(concept: CmConcept) {
-		if (conceptIsReferenced(cm, concept.id) && !confirm(`Remove "${concept.name}"? Its Relationships and Event joins are removed too.`)) return;
+		if (conceptIsReferenced(cm, concept.id) && !confirm(`Remove "${concept.name}"? Its Relationships and its involvement in Events are removed too.`)) return;
 		await adapter.deleteNode(concept.id);
 	}
 </script>

@@ -30,7 +30,8 @@
 		domainMembers,
 		edgePoint,
 		LABEL_H,
-		labelWidth,
+		LABEL_LINE,
+		labelBox,
 		lineLabels,
 		mapGeometry,
 		NOTE,
@@ -39,9 +40,10 @@
 		wrap,
 		type Box,
 		type LineLabel,
+		type LineRules,
 		type Placed
 	} from '$lib/model/map-layout';
-	import { relationshipSentences, relationshipTriple } from '$lib/model/rules';
+	import { relationshipSentences, relationshipTriple, ruleWords } from '$lib/model/rules';
 	import { colorOf } from '$lib/constants/context-types';
 	import type { Point } from '$lib/types';
 	import { BUTTON, CARD, CONCEPT_MAP, INPUT } from '$lib/ui/tokens';
@@ -139,10 +141,19 @@
 		return [s.forward ?? relationshipTriple(source, rel.verb, target), s.inverse].filter(Boolean).join('\n');
 	}
 
+	/** The Step 7 rule words under each verb, for the ends of the rule that are set. */
+	function rulesOf(rel: CmRelationship): LineRules {
+		return {
+			forward: rel.rule?.forward ? ruleWords(rel.rule.forward) : undefined,
+			inverse: rel.rule?.inverse && rel.inverseVerb ? ruleWords(rel.rule.inverse) : undefined
+		};
+	}
+
 	// Relationship curves. A single curve bows gently, to a side worked out from
 	// the pair so it stays put. Curves between the same two Concepts bow apart.
 	// Each curve carries both Step 6 verbs, the verb near its source Concept and
-	// the inverse verb near its target (lineLabels).
+	// the inverse verb near its target, each with its Step 7 rule words under it
+	// (lineLabels), so it reads as the book's sentence: "places / one or many".
 	const lines = $derived.by(() => {
 		const byPair = new Map<string, CmRelationship[]>();
 		for (const rel of cm.relationships) {
@@ -162,12 +173,15 @@
 					const x = a.x + a.w / 2;
 					const lift = i * 16;
 					const mx = x + 48 + lift;
+					const rules = rulesOf(rel);
+					const forward = { text: rel.verb, rule: rules.forward, x: mx, ...labelBox(rel.verb, rules.forward) };
+					const inverse = { text: rel.inverseVerb, rule: rules.inverse, x: mx, ...labelBox(rel.inverseVerb, rules.inverse) };
 					const labels: LineLabel[] = rel.inverseVerb
 						? [
-								{ text: rel.verb, x: mx, y: a.y - LABEL_H / 2, w: labelWidth(rel.verb) },
-								{ text: rel.inverseVerb, x: mx, y: a.y + LABEL_H / 2, w: labelWidth(rel.inverseVerb) }
+								{ ...forward, y: a.y - forward.h / 2 },
+								{ ...inverse, y: a.y + inverse.h / 2 }
 							]
-						: [{ text: rel.verb, x: mx, y: a.y, w: labelWidth(rel.verb) }];
+						: [{ ...forward, y: a.y }];
 					out.push({ rel, path: `M ${x} ${a.y - 10} C ${x + 60 + lift} ${a.y - 50 - lift}, ${x + 60 + lift} ${a.y + 50 + lift}, ${x} ${a.y + 10}`, mx, my: a.y, labels });
 					return;
 				}
@@ -182,7 +196,7 @@
 					path: `M ${p1.x} ${p1.y} Q ${ctrl.x} ${ctrl.y} ${p2.x} ${p2.y}`,
 					mx: mid.x,
 					my: mid.y,
-					labels: lineLabels(p1, p2, rel.verb, rel.inverseVerb, ctrl)
+					labels: lineLabels(p1, p2, rel.verb, rel.inverseVerb, ctrl, rulesOf(rel))
 				});
 			});
 		}
@@ -403,15 +417,26 @@
 				{/if}
 				{#if shown.has('verbs')}
 					{#each line.labels as l, i (i)}
-						<rect x={l.x - l.w / 2} y={l.y - LABEL_H / 2} width={l.w} height={LABEL_H} rx={relationshipLabel.rx} fill={relationshipLabel.backing} fill-opacity={relationshipLabel.backingOpacity} />
+						<rect x={l.x - l.w / 2} y={l.y - l.h / 2} width={l.w} height={l.h} rx={relationshipLabel.rx} fill={relationshipLabel.backing} fill-opacity={relationshipLabel.backingOpacity} />
+						<!-- The verb, then under it the rule words: the book's Step 7 sentence -->
 						<text
 							x={l.x}
-							y={l.y + 4.5}
+							y={l.y - l.h / 2 + LABEL_H / 2 + 4.5}
 							text-anchor="middle"
 							font-family={relationshipLabel.fontFamily}
 							font-size={relationshipLabel.size}
 							fill={relationshipLabel.fill}>{l.text}</text
 						>
+						{#if l.rule}
+							<text
+								x={l.x}
+								y={l.y - l.h / 2 + LABEL_H / 2 + LABEL_LINE + 4.5}
+								text-anchor="middle"
+								font-family={relationshipLabel.fontFamily}
+								font-size={relationshipLabel.size}
+								fill={relationshipLabel.fill}>{l.rule}</text
+							>
+						{/if}
 					{/each}
 				{/if}
 			</g>

@@ -19,7 +19,8 @@ import type {
 	DefinitionStatus,
 	WalkResult,
 	WalkResolution,
-	ParkedKind
+	ParkedKind,
+	W
 } from '$lib/types';
 
 export interface StepCanon {
@@ -173,6 +174,29 @@ export const DEFINITION_STATUSES: { id: DefinitionStatus; label: string }[] = [
 	{ id: 'agreed', label: 'Agreed' },
 	{ id: 'flagged', label: 'Flagged' }
 ];
+
+/**
+ * The 7W's: the kind of thing a Concept is. The Business Event Matrix
+ * groups its columns by them, in this order and with these labels. The
+ * Blue Book's 7W's check (s33) names the same seven, with who, what and
+ * where as Concepts.
+ */
+export const SEVEN_WS: { id: W; label: string }[] = [
+	{ id: 'who', label: 'Who' },
+	{ id: 'what', label: 'What' },
+	{ id: 'when', label: 'When' },
+	{ id: 'where', label: 'Where' },
+	{ id: 'why', label: 'Why' },
+	{ id: 'how', label: 'How' },
+	{ id: 'how many', label: 'How Many' }
+];
+
+/** A Concept whose 7W nobody has picked. */
+export const NO_SEVEN_W_LABEL = 'No 7W yet';
+
+export function sevenWLabel(w: W | undefined): string {
+	return SEVEN_WS.find((s) => s.id === w)?.label ?? NO_SEVEN_W_LABEL;
+}
 
 /** Step 7: the words a rule reads as, in the book's order of "one" and "many". */
 export const RULE_WORDS = {

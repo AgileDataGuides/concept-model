@@ -15,8 +15,8 @@ export const MAP_LAYERS: { id: MapLayer; label: string; title: string }[] = [
 	{ id: 'domains', label: 'Domains', title: 'The pinned sheets of paper, each with its name' },
 	{ id: 'concepts', label: 'Concepts', title: 'The sticky notes' },
 	{ id: 'relationships', label: 'Relationships', title: 'The green lines between Concepts' },
-	{ id: 'verbs', label: 'Verbs', title: 'The verbs on each Relationship line, and its rule sentences on hover' },
-	{ id: 'events', label: 'Events', title: 'The Core Business Event diamonds, their names and their dashed joins' }
+	{ id: 'verbs', label: 'Verbs', title: 'The verbs on each Relationship line, the rule words under each verb, and its rule sentences on hover' },
+	{ id: 'events', label: 'Events', title: 'The Core Business Event diamonds, their names and their dashed lines' }
 ];
 
 export const ALL_MAP_LAYERS: readonly MapLayer[] = MAP_LAYERS.map((layer) => layer.id);

@@ -26,7 +26,8 @@
       "specialCases": [
         "A person on a Trial is still a Prospect until they subscribe to a paid Plan"
       ],
-      "definitionStatus": "agreed"
+      "definitionStatus": "agreed",
+      "w": "who"
     },
     {
       "id": "customer",
@@ -54,7 +55,8 @@
         "A Prospect on a free Trial is not a Customer yet",
         "A Customer who cancels stays a Customer, with no active Subscription"
       ],
-      "definitionStatus": "agreed"
+      "definitionStatus": "agreed",
+      "w": "who"
     },
     {
       "id": "account",
@@ -74,7 +76,8 @@
       "examples": [
         "The Acme account, holding five users and one Subscription"
       ],
-      "definitionStatus": "agreed"
+      "definitionStatus": "agreed",
+      "w": "what"
     },
     {
       "id": "trial",
@@ -97,7 +100,8 @@
       "specialCases": [
         "A Trial that Sales extends is still one Trial"
       ],
-      "definitionStatus": "agreed"
+      "definitionStatus": "agreed",
+      "w": "what"
     },
     {
       "id": "subscription",
@@ -123,7 +127,8 @@
         "An upgrade moves the same Subscription to a new Plan, it does not start a new one",
         "A cancelled Subscription stays active until its Billing Period ends"
       ],
-      "definitionStatus": "agreed"
+      "definitionStatus": "agreed",
+      "w": "what"
     },
     {
       "id": "plan",
@@ -146,7 +151,8 @@
         "Pro",
         "Enterprise"
       ],
-      "definitionStatus": "agreed"
+      "definitionStatus": "agreed",
+      "w": "what"
     },
     {
       "id": "billing-period",
@@ -171,7 +177,8 @@
       "specialCases": [
         "Is a Billing Period the cadence (monthly) or one actual period (March)? The expert has not ruled yet"
       ],
-      "definitionStatus": "flagged"
+      "definitionStatus": "flagged",
+      "w": "when"
     },
     {
       "id": "invoice",
@@ -194,7 +201,8 @@
       "specialCases": [
         "A prorated upgrade charge goes on the next Invoice, not a new one"
       ],
-      "definitionStatus": "agreed"
+      "definitionStatus": "agreed",
+      "w": "what"
     },
     {
       "id": "payment",
@@ -214,7 +222,8 @@
       "examples": [
         "Acme's card payment for the March invoice"
       ],
-      "definitionStatus": "agreed"
+      "definitionStatus": "agreed",
+      "w": "what"
     },
     {
       "id": "recurring-revenue",
@@ -238,7 +247,8 @@
       "specialCases": [
         "Is Recurring Revenue one amount per Subscription per month, or a running total? It has to be countable to be a Concept"
       ],
-      "definitionStatus": "flagged"
+      "definitionStatus": "flagged",
+      "w": "how many"
     },
     {
       "id": "one-time-revenue",
@@ -258,7 +268,8 @@
         "An onboarding fee",
         "A paid training session"
       ],
-      "definitionStatus": "draft"
+      "definitionStatus": "draft",
+      "w": "how many"
     },
     {
       "id": "discount",
@@ -278,7 +289,8 @@
       "examples": [
         "20% off the first year of the Pro Plan"
       ],
-      "definitionStatus": "draft"
+      "definitionStatus": "draft",
+      "w": "why"
     },
     {
       "id": "channel",
@@ -300,7 +312,8 @@
         "A partner referral",
         "Organic search"
       ],
-      "definitionStatus": "agreed"
+      "definitionStatus": "agreed",
+      "w": "where"
     },
     {
       "id": "ad",
@@ -320,7 +333,8 @@
       "examples": [
         "The \"Close your month faster\" LinkedIn campaign creative"
       ],
-      "definitionStatus": "agreed"
+      "definitionStatus": "agreed",
+      "w": "what"
     },
     {
       "id": "segment",
@@ -333,7 +347,8 @@
       "definitionCategory": "Grouping",
       "definitionDifferentiator": "groups @{Customer}s by demographic attribute",
       "domainId": "dom-sales",
-      "definitionStatus": "draft"
+      "definitionStatus": "draft",
+      "w": "who"
     },
     {
       "id": "product",
@@ -347,7 +362,8 @@
       "definitionCategory": "Offering",
       "definitionDifferentiator": "is the SaaS application sold via @{Plan}s",
       "domainId": "dom-product",
-      "definitionStatus": "draft"
+      "definitionStatus": "draft",
+      "w": "what"
     }
   ],
   "relationships": [

@@ -5,7 +5,6 @@
 	// step blocks another. Each row's status is derived from the data.
 	import { getContext } from 'svelte';
 	import type { ContextNode, DataAdapter } from '$lib/cp-shared';
-	import ConceptCardEditModal from '$lib/components/canvas/ConceptCardEditModal.svelte';
 	import type { CmView } from '$lib/model/graph-view';
 	import { setStepNote } from '$lib/model/graph-actions';
 	import { stepStatus } from '$lib/model/status';
@@ -13,6 +12,7 @@
 	import type { StepId } from '$lib/types';
 	import { STEP_PANEL, STEP_RAIL } from '$lib/ui/tokens';
 	import QuietHint from '../ui/QuietHint.svelte';
+	import DetailsPopup from '../ui/DetailsPopup.svelte';
 	import MapView from './MapView.svelte';
 	import StepHeader from './steps/StepHeader.svelte';
 	import ScopePanel from './steps/ScopePanel.svelte';
@@ -60,7 +60,8 @@
 	const step = $derived(active === 'parked' ? null : getStep(active));
 	const status = $derived(step ? statuses.get(step.id) : undefined);
 
-	// Details opens the shared edit modal (aliases, the Aristotelian helper, W's, notes)
+	// Details opens the app's Details popup: the shared editor (aliases, the
+	// Aristotelian helper, W's, notes) plus a Concept's Domain and stories
 	let detailsId = $state<string | null>(null);
 	const detailsNode = $derived(detailsId ? nodes.find((n) => n.id === detailsId) : undefined);
 
@@ -158,5 +159,5 @@
 </div>
 
 {#if detailsNode}
-	<ConceptCardEditModal node={detailsNode} allNodes={nodes} onClose={() => (detailsId = null)} />
+	<DetailsPopup node={detailsNode} {nodes} {cm} onClose={() => (detailsId = null)} />
 {/if}

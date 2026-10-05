@@ -1,8 +1,10 @@
-// Class strings from design/tokens.md, for the Steps, Map and Definitions views.
+// Class strings from design/tokens.md, for the Steps, Map, Definitions and Event Matrix views.
 //
 // tokens.md is the authority: if this file and tokens.md ever disagree,
 // tokens.md wins and this file is stale. The app keeps its own copy because
 // the public repo does not bundle @context-plane/shared/design-tokens.
+
+import type { W } from '$lib/types';
 
 export const BUTTON = {
 	/** buttons.secondary_slate */
@@ -15,11 +17,11 @@ export const BUTTON = {
 
 export const INPUT = {
 	/** form_inputs.text */
-	text: 'w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none',
+	text: 'w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white',
 	/** form_inputs.select */
 	select: 'w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white',
 	/** form_inputs.textarea */
-	textarea: 'w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none',
+	textarea: 'w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none bg-white',
 	/** form_inputs.label_small */
 	label: 'block text-[10px] font-medium text-slate-500 mb-1',
 	/** form_inputs.edit_inline_input */
@@ -139,7 +141,10 @@ export const DRAG_REORDER = {
 	row: 'relative group/drag',
 	dragging: 'opacity-30',
 	dropBefore: 'border-t-2 border-t-blue-500',
-	dropAfter: 'border-b-2 border-b-blue-500'
+	dropAfter: 'border-b-2 border-b-blue-500',
+	/** A column dragged sideways. */
+	dropLeft: 'border-l-2 !border-l-blue-500',
+	dropRight: 'border-r-2 !border-r-blue-500'
 };
 
 /**
@@ -165,4 +170,63 @@ export const CONCEPT_MAP = {
 	selected: { noteStroke: '#4ca5dc', noteStrokeWidth: 2, diamondStrokeWidth: 2.5, sheetStroke: '#4ca5dc', sheetStrokeWidth: 2 },
 	/** Export SVG: space round everything drawn, and the page behind it. */
 	picture: { padding: 40, background: '#ffffff' }
+};
+
+/**
+ * tokens.md event_matrix: the Model as a Business Event Matrix, in the BEM
+ * app's own table classes and words. Bands are Domains or, grouped by 7W's,
+ * the BEM's 7W bands (DESIGN_SYSTEM.md § 18).
+ */
+export const EVENT_MATRIX = {
+	wrapper: 'overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm',
+	table: 'w-auto min-w-full border-collapse text-sm',
+	cornerHeader: 'sticky left-0 z-20 bg-slate-100 text-slate-600 px-4 py-2 text-left min-w-[220px] border-r border-slate-200 text-[10px] font-semibold uppercase tracking-wider',
+	countHeader: 'bg-slate-100 text-slate-600 text-[10px] font-semibold uppercase tracking-wider px-3 py-2 whitespace-nowrap border-r border-slate-200',
+	band: 'text-[11px] font-bold uppercase tracking-wider px-3 py-2 text-center whitespace-nowrap border-r',
+	bandDomain: 'bg-violet-50 text-violet-600 border-violet-200',
+	bandNoDomain: 'bg-slate-50 text-slate-500 border-slate-200',
+	conceptHeader: 'px-2 py-2 text-xs font-semibold whitespace-nowrap border-r border-t-2',
+	conceptHeaderDomain: 'bg-violet-50 text-violet-600 border-violet-200 border-t-violet-600',
+	conceptHeaderNoDomain: 'bg-slate-50 text-slate-500 border-slate-200 border-t-slate-400',
+	row: 'hover:bg-blue-50/50 transition-colors border-b border-slate-100',
+	eventCell: 'sticky left-0 z-10 bg-white px-4 py-2 text-left text-xs font-semibold text-slate-800 border-r border-slate-200',
+	countCell: 'text-center text-xs font-semibold px-3 py-2 border-r border-slate-100',
+	countOk: 'text-slate-700',
+	/** An Event with nothing attached, the Step 8 hint. */
+	countWarning: 'text-amber-600',
+	markCell: 'relative p-0 w-[60px] min-w-[60px] border-r border-slate-100',
+	/** Fills the cell, so a click anywhere in it marks or unmarks it. */
+	markButton: 'absolute inset-0 flex items-center justify-center hover:bg-blue-100/60 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500',
+	/** ✓, the BEM's check mark. */
+	check: 'text-emerald-500 text-base',
+	summaryRow: 'bg-slate-50 border-t-2 border-slate-300',
+	summaryLabel: 'sticky left-0 z-10 bg-slate-50 px-4 py-2 text-left font-bold text-xs uppercase tracking-wider text-slate-500 border-r border-slate-200',
+	summaryCell: 'text-center text-xs font-semibold text-slate-700 px-3 py-2 border-r border-slate-200',
+	/** ✭, the Event is also this Concept, the BEM's star. */
+	star: 'text-amber-500 text-lg',
+	/** The Event's place in the Step 8 order. */
+	rowNumber: 'inline-flex items-center justify-end w-4 shrink-0 text-[10px] text-slate-400 font-mono select-none',
+	/** A row or column name: one click opens the Details editor. */
+	nameButton: 'text-left cursor-pointer hover:underline decoration-dotted underline-offset-2',
+	/** The ◂ that collapses a band. */
+	bandToggle: 'ml-1 text-[9px] opacity-40 hover:opacity-80 transition-opacity cursor-pointer',
+	/** A collapsed band, a 28px strip with its name and count. */
+	bandCollapsed: 'text-[11px] font-bold uppercase tracking-wider px-1 py-2 text-center border-r cursor-pointer hover:brightness-95 transition-all [writing-mode:vertical-lr] w-7 min-w-7',
+	collapsedCell: 'w-7 min-w-7 border-r border-slate-100',
+	/** ⠿ before the name of a Concept column or a Domain band. */
+	columnGrip: 'inline-flex items-center justify-center w-3 mr-1 text-[10px] text-slate-400 hover:text-slate-600 cursor-grab select-none',
+	/** A Concept's or Domain's details, on hover over its header. */
+	hoverCard: 'fixed z-50 w-60 pointer-events-none bg-white border border-slate-200 rounded-lg shadow-lg px-3 py-2.5 text-[11px] leading-relaxed text-slate-700',
+	hoverCardTitle: 'font-semibold text-slate-800 mb-1',
+	hoverCardLabel: 'text-[10px] text-slate-400 uppercase tracking-wider',
+	/** Grouped by 7W's: the BEM's band colours. */
+	wBands: {
+		'who': { band: 'bg-green-50 text-green-600 border-green-200', header: 'bg-green-50 text-green-600 border-green-200 border-t-green-600' },
+		'what': { band: 'bg-blue-50 text-blue-600 border-blue-200', header: 'bg-blue-50 text-blue-600 border-blue-200 border-t-blue-600' },
+		'when': { band: 'bg-amber-50 text-amber-600 border-amber-200', header: 'bg-amber-50 text-amber-600 border-amber-200 border-t-amber-600' },
+		'where': { band: 'bg-cyan-50 text-cyan-600 border-cyan-200', header: 'bg-cyan-50 text-cyan-600 border-cyan-200 border-t-cyan-600' },
+		'why': { band: 'bg-purple-50 text-purple-500 border-purple-200', header: 'bg-purple-50 text-purple-500 border-purple-200 border-t-purple-500' },
+		'how': { band: 'bg-gray-50 text-gray-500 border-gray-200', header: 'bg-gray-50 text-gray-500 border-gray-200 border-t-gray-500' },
+		'how many': { band: 'bg-orange-50 text-orange-500 border-orange-200', header: 'bg-orange-50 text-orange-500 border-orange-200 border-t-orange-500' }
+	} as Record<W, { band: string; header: string }>
 };

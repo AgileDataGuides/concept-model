@@ -375,6 +375,8 @@ export function bendsFor(count: number, single: number): number[] {
 
 /** The height of a verb label's backing rect. */
 export const LABEL_H = 18;
+/** What a second line adds to it: the Step 7 rule words under the verb. */
+export const LABEL_LINE = 15;
 const LABEL_GAP = 6;
 
 /** Width of a verb label's backing rect, in Caveat Brush at the label size. */
@@ -384,62 +386,81 @@ export function labelWidth(text: string): number {
 
 export interface LineLabel {
 	text: string;
+	/** The Step 7 rule words under the verb ("one or many"), once that end of the rule is set. */
+	rule?: string;
 	/** Centre of the label. */
 	x: number;
 	y: number;
 	w: number;
+	h: number;
 }
 
-function label(text: string, at: Point): LineLabel {
-	return { text, x: at.x, y: at.y, w: labelWidth(text) };
+/** The rule words under each verb, by direction. */
+export interface LineRules {
+	forward?: string;
+	inverse?: string;
+}
+
+/** A label's backing rect: as wide as its longer line, one line tall or two. */
+export function labelBox(text: string, rule?: string): { w: number; h: number } {
+	return { w: Math.max(labelWidth(text), rule ? labelWidth(rule) : 0), h: rule ? LABEL_H + LABEL_LINE : LABEL_H };
+}
+
+function label(text: string, at: Point, rule?: string): LineLabel {
+	return { text, rule, x: at.x, y: at.y, ...labelBox(text, rule) };
 }
 
 /**
  * Where a Relationship's two verbs (Step 6) sit on its line, from `p1` at the
  * source Concept to `p2` at the target, following the curve through `ctrl`
  * when there is one. The verb sits near the source and the inverse verb near
- * the target, so reading from either note the nearest verb starts the
- * sentence: "Customer places", "Sales Order is placed by". Each sits a third
- * of the way along, or nearer its end when a third would crowd the other.
- * On a line too short for both, they stack at the middle with a mark showing
- * which way each one reads. A line with no inverse verb keeps the one verb
- * at its middle.
+ * the target, each with its Step 7 rule words under it (`rules`), so reading
+ * from either note the nearest label starts the sentence: "Customer places
+ * one or many", "Sales Order is placed by one". Each sits a third of the way
+ * along, or nearer its end when a third would crowd the other. On a line too
+ * short for both, they stack at the middle with a mark showing which way
+ * each one reads. A line with no inverse verb keeps the one verb, and the
+ * forward rule words, at its middle.
  */
-export function lineLabels(p1: Point, p2: Point, verb: string, inverse: string, ctrl?: Point): LineLabel[] {
+export function lineLabels(p1: Point, p2: Point, verb: string, inverse: string, ctrl?: Point, rules: LineRules = {}): LineLabel[] {
 	const len = Math.hypot(p2.x - p1.x, p2.y - p1.y) || 1;
 	// A position `s` along the chord, moved onto the curve
 	const onCurve = (s: number): Point => (ctrl ? curvePoint(p1, p2, ctrl, s / len) : { x: p1.x + ((p2.x - p1.x) * s) / len, y: p1.y + ((p2.y - p1.y) * s) / len });
 	const mid = onCurve(len / 2);
-	if (!inverse.trim()) return [label(verb, mid)];
+	if (!inverse.trim()) return [label(verb, mid, rules.forward)];
 
 	const ux = (p2.x - p1.x) / len;
 	const uy = (p2.y - p1.y) / len;
-	// How far a label reaches along the line
-	const half = (text: string) => (Math.abs(labelWidth(text) * ux) + Math.abs(LABEL_H * uy)) / 2;
+	// How far a label reaches along the line, by the size of its backing rect
+	const reach = (box: { w: number; h: number }) => (Math.abs(box.w * ux) + Math.abs(box.h * uy)) / 2;
+	const forwardReach = reach(labelBox(verb, rules.forward));
+	const inverseReach = reach(labelBox(inverse, rules.inverse));
 
-	const minF = half(verb) + LABEL_GAP;
-	const minI = half(inverse) + LABEL_GAP;
-	const fits = (sF: number, sI: number) => sF >= minF && len - sI >= minI && sI - sF >= half(verb) + half(inverse) + LABEL_GAP;
+	const minF = forwardReach + LABEL_GAP;
+	const minI = inverseReach + LABEL_GAP;
+	const fits = (sF: number, sI: number) => sF >= minF && len - sI >= minI && sI - sF >= forwardReach + inverseReach + LABEL_GAP;
 
 	for (const s of [0.3, 0]) {
 		const sF = Math.max(minF, len * s);
 		const sI = Math.min(len - minI, len * (1 - s));
-		if (fits(sF, sI)) return [label(verb, onCurve(sF)), label(inverse, onCurve(sI))];
+		if (fits(sF, sI)) return [label(verb, onCurve(sF), rules.forward), label(inverse, onCurve(sI), rules.inverse)];
 	}
 
 	// Too short: stack at the middle, each with a mark pointing the way it reads
 	if (Math.abs(ux) >= Math.abs(uy)) {
 		// A mostly level line: one above the other, the mark on the side it reads towards
 		const targetIsRight = ux >= 0;
+		const above = label(targetIsRight ? `${verb} ›` : `‹ ${verb}`, mid, rules.forward);
+		const below = label(targetIsRight ? `‹ ${inverse}` : `${inverse} ›`, mid, rules.inverse);
 		return [
-			label(targetIsRight ? `${verb} ›` : `‹ ${verb}`, { x: mid.x, y: mid.y - LABEL_H / 2 }),
-			label(targetIsRight ? `‹ ${inverse}` : `${inverse} ›`, { x: mid.x, y: mid.y + LABEL_H / 2 })
+			{ ...above, y: mid.y - above.h / 2 },
+			{ ...below, y: mid.y + below.h / 2 }
 		];
 	}
 	// A mostly upright line: side by side, marked up or down
 	const targetIsBelow = uy >= 0;
-	const forward = label(`${verb} ${targetIsBelow ? '↓' : '↑'}`, mid);
-	const backward = label(`${inverse} ${targetIsBelow ? '↑' : '↓'}`, mid);
+	const forward = label(`${verb} ${targetIsBelow ? '↓' : '↑'}`, mid, rules.forward);
+	const backward = label(`${inverse} ${targetIsBelow ? '↑' : '↓'}`, mid, rules.inverse);
 	return [
 		{ ...forward, x: mid.x - forward.w / 2 - 3 },
 		{ ...backward, x: mid.x + backward.w / 2 + 3 }

@@ -13,7 +13,7 @@
 	setContext('cmStore', store);
 
 	let activeTab = $state<string>('steps');
-	const canvasView = $derived(activeTab === 'map' || activeTab === 'definitions' ? activeTab : 'steps');
+	const canvasView = $derived(activeTab === 'map' || activeTab === 'definitions' || activeTab === 'matrix' ? activeTab : 'steps');
 	let loaded = $state(false);
 	let version = $state(0);
 

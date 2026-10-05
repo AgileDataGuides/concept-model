@@ -9,11 +9,13 @@ export type DropPosition = 'before' | 'after';
 /**
  * `onMove` gets the dragged id, the id it was dropped on, and which side.
  * `canDrop` limits where an item may land (Step 4 keeps a Concept in its
- * own Domain group).
+ * own Domain group). `axis` is 'y' for a list and 'x' for columns dragged
+ * sideways (the Event Matrix's Concept columns and Domain bands).
  */
 export function createReorder(
 	onMove: (dragId: string, targetId: string, position: DropPosition) => unknown,
-	canDrop: (dragId: string, targetId: string) => boolean = () => true
+	canDrop: (dragId: string, targetId: string) => boolean = () => true,
+	axis: 'x' | 'y' = 'y'
 ) {
 	let dragId = $state<string | null>(null);
 	let dropTargetId = $state<string | null>(null);
@@ -34,12 +36,13 @@ export function createReorder(
 				e.dataTransfer.setData('text/plain', id);
 			}
 		},
-		/** On each row's dragover: the top half drops before it, the bottom half after. */
+		/** On each row's dragover: the top half (left half for columns) drops before it, the rest after. */
 		over(e: DragEvent, targetId: string) {
 			if (!dragId || dragId === targetId || !canDrop(dragId, targetId)) return;
 			e.preventDefault();
 			const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-			dropPosition = e.clientY < rect.top + rect.height / 2 ? 'before' : 'after';
+			const before = axis === 'x' ? e.clientX < rect.left + rect.width / 2 : e.clientY < rect.top + rect.height / 2;
+			dropPosition = before ? 'before' : 'after';
 			dropTargetId = targetId;
 		},
 		/** On each row's drop. */
@@ -56,7 +59,13 @@ export function createReorder(
 		/** A row's classes: faded while it is dragged, a blue line on the side the drop will land. */
 		rowClass(id: string): string {
 			if (dragId === id) return `${DRAG_REORDER.row} ${DRAG_REORDER.dragging}`;
-			if (dropTargetId === id) return `${DRAG_REORDER.row} ${dropPosition === 'before' ? DRAG_REORDER.dropBefore : DRAG_REORDER.dropAfter}`;
+			if (dropTargetId === id) {
+				const line =
+					axis === 'x'
+						? dropPosition === 'before' ? DRAG_REORDER.dropLeft : DRAG_REORDER.dropRight
+						: dropPosition === 'before' ? DRAG_REORDER.dropBefore : DRAG_REORDER.dropAfter;
+				return `${DRAG_REORDER.row} ${line}`;
+			}
 			return DRAG_REORDER.row;
 		}
 	};

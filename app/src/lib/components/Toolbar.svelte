@@ -21,10 +21,12 @@
 	} = $props();
 
 	// Steps is the way in. Map and Definitions are the book's two pattern templates.
+	// Event Matrix shows the same Events and Concepts as a Business Event Matrix.
 	const tabs = [
 		{ id: 'steps', label: 'Steps' },
 		{ id: 'map', label: 'Map' },
 		{ id: 'definitions', label: 'Definitions' },
+		{ id: 'matrix', label: 'Event Matrix' },
 		{ id: 'instructions', label: 'Instructions' }
 	];
 
