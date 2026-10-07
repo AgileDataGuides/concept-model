@@ -4,6 +4,8 @@
 	import { createStandaloneAdapter } from '$lib/adapters/standalone-adapter';
 	import { conceptModelToContextPlane, contextPlaneToConceptModel } from '$lib/converters/context-plane';
 	import type { DataAdapter, ContextNode, ContextLink } from '$lib/cp-shared';
+	// By name rather than through the registry, so the bundler can leave out most of the languages this app never uses
+	import { detectRdfLanguage, rdfXml, turtle } from '$lib/languages';
 	import Toolbar from '$lib/components/Toolbar.svelte';
 	import Instructions from '$lib/components/Instructions.svelte';
 	import ConceptModelLayout from '$lib/components/canvas/ConceptModelLayout.svelte';
@@ -71,13 +73,15 @@
 	 * calls apiCreateModel, so the existing model stays in the list and the
 	 * new one lands alongside it.
 	 *
-	 * Accepts native Concept Model JSON or a Context Plane graph export
-	 * ({ nodes, links }) — the latter is converted via contextPlaneToConceptModel.
+	 * Accepts native Concept Model JSON, a Context Plane graph export
+	 * ({ nodes, links }), or Turtle and RDF/XML: this app's own exports, an OWL
+	 * ontology or a SKOS vocabulary. Graphs and RDF go through
+	 * contextPlaneToConceptModel.
 	 */
 	function handleImport() {
 		const input = document.createElement('input');
 		input.type = 'file';
-		input.accept = '.json';
+		input.accept = '.json,.ttl,.rdf,.owl,.xml';
 		input.onchange = async () => {
 			const file = input.files?.[0];
 			if (!file) return;
@@ -87,6 +91,14 @@
 			}
 			try {
 				const text = await file.text();
+				const rdf = detectRdfLanguage(file.name, text);
+				if (rdf) {
+					const graph = (rdf === 'turtle' ? turtle : rdfXml).import(text);
+					// A file with no title is named after the file
+					const title = graph.nodes.find((n) => n.label === 'cm_model')?.name;
+					await store.importJSON(JSON.stringify(contextPlaneToConceptModel(graph, title || file.name.replace(/\.[^.]+$/, ''))));
+					return;
+				}
 				const data = JSON.parse(text);
 				if (data.nodes && data.links) {
 					const cmModel = contextPlaneToConceptModel(data);
@@ -95,7 +107,7 @@
 					await store.importJSON(text);
 				}
 			} catch (e) {
-				alert(failureMessage(e, 'Could not import that file'));
+				alert(failureMessage(e, `Could not import that file. ${e instanceof Error ? e.message : ''}`.trim()));
 			}
 		};
 		input.click();
@@ -183,7 +195,7 @@
 					<button
 						onclick={handleImport}
 						class="px-3 py-1.5 text-sm font-medium rounded-lg text-slate-300 border border-slate-600 hover:bg-slate-800 transition-colors"
-						title="Import a Concept Model JSON file as a new model"
+						title="Import a Concept Model as a new model: JSON, Turtle (.ttl) or RDF/XML (.rdf, .owl)"
 					>Import</button>
 				{/if}
 				<button onclick={handleDelete} class="px-3 py-1.5 text-sm font-medium rounded-lg text-red-400 border border-slate-600 hover:bg-slate-800 transition-colors">Delete</button>

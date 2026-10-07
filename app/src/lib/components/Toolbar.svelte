@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import type { ContextLink, ContextNode, DataAdapter } from '$lib/cp-shared';
+	// By name rather than through the registry, so the bundler can leave out most of the languages this app never uses
+	import { rdfXml, turtle } from '$lib/languages';
 	import type { ConceptModelStore } from '$lib/stores/concept-model.svelte';
 	import { readView } from '$lib/model/graph-view';
 	import { mapSvg } from '$lib/components/canvas/map-svg';
@@ -130,6 +132,21 @@
 		}
 	}
 
+	/**
+	 * The whole model as Turtle or RDF/XML: each Concept an OWL class and a SKOS
+	 * concept (design/architecture.md, Turtle and RDF). Like Export SVG, it
+	 * reads the graph the canvas draws, never the store.
+	 */
+	function handleExportRdf(languageId: 'turtle' | 'rdf-xml') {
+		const language = languageId === 'turtle' ? turtle : rdfXml;
+		try {
+			download(language.export({ nodes, links }), `${slugifyName(model.name)}-concept-model-${exportTimestamp()}.${language.fileExtension}`, language.mimeType);
+		} catch (e) {
+			console.error(`${language.name} export failed:`, e);
+			alert(`Could not export the model as ${language.name}. Try again.`);
+		}
+	}
+
 	// Import handling moved to +page.svelte where it's wired to the header's
 	// Import button (next to New Model). This toolbar now only handles
 	// exports + save / rename / description editing.
@@ -163,6 +180,9 @@
 			<button onclick={handleExportCsv} class="px-3 py-1.5 text-sm font-medium rounded-lg bg-white text-slate-600 border border-slate-300 hover:bg-slate-50 transition-colors">Export CSV</button>
 			<button onclick={() => store.exportAsXlsx()} class="px-3 py-1.5 text-sm font-medium rounded-lg bg-white text-slate-600 border border-slate-300 hover:bg-slate-50 transition-colors">Export Excel</button>
 			<button onclick={handleExportSvg} class="px-3 py-1.5 text-sm font-medium rounded-lg bg-white text-slate-600 border border-slate-300 hover:bg-slate-50 transition-colors" title="Save the whole Concept Map as one SVG picture, with the layers the Map shows">Export SVG</button>
+			<!-- Standards exports take the teal token (tokens.md buttons.secondary_teal_export), like the Data Contract's Export ODCS -->
+			<button onclick={() => handleExportRdf('turtle')} class="px-3 py-1.5 text-sm font-medium rounded-lg bg-white text-teal-600 border border-teal-300 hover:bg-teal-50 transition-colors" title="Save the model as Turtle (.ttl): each Concept an OWL class and a SKOS concept, for ontology and knowledge graph tools">Export Turtle</button>
+			<button onclick={() => handleExportRdf('rdf-xml')} class="px-3 py-1.5 text-sm font-medium rounded-lg bg-white text-teal-600 border border-teal-300 hover:bg-teal-50 transition-colors" title="Save the model as RDF/XML (.rdf), the format Protégé opens and saves">Export RDF</button>
 			<!-- Import button moved to the app header (next to New Model) — see +page.svelte.
 			     That location better communicates that Import creates a NEW model rather
 			     than mutating the current one. -->

@@ -87,6 +87,7 @@
 				<li>Click the model name in the dark header to switch. Unsaved changes are saved first, and if that save fails you stay on the current model.</li>
 				<li><strong>New Model</strong> creates a blank model alongside the others.</li>
 				<li><strong>Import</strong> loads a JSON file as a NEW model, never over the current one. Files from before the eleven steps (version 1.0) load too: a cardinality like <code>1 : 1..*</code> becomes a Relationship Rule, and anything that cannot be read without guessing shows in Step 7 as "To restate".</li>
+				<li><strong>Import</strong> also reads Turtle (<code>.ttl</code>) and RDF/XML (<code>.rdf</code>, <code>.owl</code>). A file this app exported comes back whole. An ontology from another tool, such as Protégé, or a SKOS vocabulary becomes a new model: each class or SKOS concept is a Concept, each object property between two of them is a Relationship with its rule read from the cardinality restrictions, and each SKOS collection is a Domain. Protégé can also save a <code>.owl</code> file as OWL/XML. This app does not read OWL/XML, so save the file as RDF/XML or Turtle first.</li>
 				<li><strong>Delete</strong> (red, in the dark header) removes the current model.</li>
 			</ul>
 			<h4>Saving and Exporting</h4>
@@ -96,6 +97,7 @@
 				<li><strong>Export CSV</strong> downloads the Concepts with their Definitions.</li>
 				<li><strong>Export Excel</strong> downloads a workbook: Concepts, Relationships with their rules in words, Events, the Event Matrix grid, Domains, the Scope and the people, stories, Business Questions, walks and the parked list.</li>
 				<li><strong>Export SVG</strong> downloads the whole Concept Map as one picture file, from any tab: every note, sheet, curve, verb and diamond in the layers the Map shows, on a white page, with none of the Map's buttons. A layer that is off is not in the file, and the page stays the same size whichever layers are on, so the pictures for each step line up. It is sharp at any size, and it carries the handwritten font inside, so the handwriting looks the same in any browser, even on a computer without the font. Open it in a browser, or put it in a slide or a document. Some slide and drawing tools ignore the font inside the file and use one of their own.</li>
+				<li><strong>Export Turtle</strong> and <strong>Export RDF</strong> download the whole model for ontology and knowledge graph tools, as Turtle (<code>.ttl</code>) or RDF/XML (<code>.rdf</code>, the format Protégé opens). Each Concept is an OWL class and a SKOS concept with its Definition, examples and special cases. Each Relationship is an OWL property in both directions, and its Relationship Rule becomes OWL cardinality restrictions. Everything else, from the stories to the Map positions, rides along in the file, so importing it gives the same model back. The model's own terms sit under <code>urn:concept-model:</code> and its name. Replace that with your own namespace before you publish the file.</li>
 			</ul>
 		</section>
 
