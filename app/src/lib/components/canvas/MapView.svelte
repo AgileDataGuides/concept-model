@@ -32,6 +32,7 @@
 		LABEL_H,
 		LABEL_LINE,
 		labelBox,
+		labelWidth,
 		lineLabels,
 		mapGeometry,
 		NOTE,
@@ -137,8 +138,11 @@
 	function lineTitle(rel: CmRelationship): string {
 		const source = nameOf(rel.sourceId);
 		const target = nameOf(rel.targetId);
-		const s = relationshipSentences({ label: rel.verb, inverseLabel: rel.inverseVerb, rule: rel.rule }, source, target);
-		return [s.forward ?? relationshipTriple(source, rel.verb, target), s.inverse].filter(Boolean).join('\n');
+		// With Relationship Rules off, the hover carries the verbs and no rule words
+		const rule = shown.has('rules') ? rel.rule : undefined;
+		const s = relationshipSentences({ label: rel.verb, inverseLabel: rel.inverseVerb, rule }, source, target);
+		const inverse = s.inverse ?? (rel.inverseVerb ? relationshipTriple(target, rel.inverseVerb, source) : undefined);
+		return [s.forward ?? relationshipTriple(source, rel.verb, target), inverse].filter(Boolean).join('\n');
 	}
 
 	/** The Step 7 rule words under each verb, for the ends of the rule that are set. */
@@ -147,6 +151,31 @@
 			forward: rel.rule?.forward ? ruleWords(rel.rule.forward) : undefined,
 			inverse: rel.rule?.inverse && rel.inverseVerb ? ruleWords(rel.rule.inverse) : undefined
 		};
+	}
+
+	type LabelPiece = { x: number; rect: { x: number; y: number; w: number; h: number }; lines: { text: string; y: number }[] };
+
+	/**
+	 * What a label draws, by the Relationship Verbs and Relationship Rules
+	 * layers. Every label is laid out with its verb and its rule words, so a
+	 * switch never moves anything: it only picks which line of the label to
+	 * draw. Both on: the verb with the rule words under it. Verbs only: the
+	 * verb line. Rules only: the rule-words line, with the verb's direction
+	 * mark when there is one. Nothing when the label has no line to draw.
+	 */
+	function labelPiece(l: LineLabel): LabelPiece | null {
+		const verbOn = shown.has('verbs');
+		const ruleOn = shown.has('rules') && !!l.rule;
+		if (!verbOn && !ruleOn) return null;
+		const top = l.y - l.h / 2;
+		const verbLine = { text: l.text, y: top + LABEL_H / 2 + 4.5 };
+		const mark = verbOn ? undefined : l.text.match(/[‹›↑↓]/u)?.[0];
+		const ruleText = !mark ? (l.rule ?? '') : l.text.startsWith(mark) ? `${mark} ${l.rule}` : `${l.rule} ${mark}`;
+		const ruleLine = { text: ruleText, y: top + LABEL_H / 2 + LABEL_LINE + 4.5 };
+		if (verbOn && ruleOn) return { x: l.x, rect: { x: l.x - l.w / 2, y: top, w: l.w, h: l.h }, lines: [verbLine, ruleLine] };
+		const [line, y] = verbOn ? [verbLine, top] : [ruleLine, top + LABEL_LINE];
+		const w = labelWidth(line.text);
+		return { x: l.x, rect: { x: l.x - w / 2, y, w, h: LABEL_H }, lines: [line] };
 	}
 
 	// Relationship curves. A single curve bows gently, to a side worked out from
@@ -202,6 +231,9 @@
 		}
 		return out;
 	});
+
+	// What each line's labels draw with the layers that are on. The layout above never reads the layers.
+	const linePieces = $derived(new Map(lines.map((l) => [l.rel.id, l.labels.map(labelPiece).filter((p): p is LabelPiece => !!p)])));
 
 	const lineMid = $derived(new Map(lines.map((l) => [l.rel.id, { x: l.mx, y: l.my }])));
 
@@ -404,9 +436,10 @@
 		{/each}
 	{/if}
 
-	<!-- Relationships: green curves, each with its verbs. Either can show without the other.
-	     The hover sentences are text too, so they go with the verbs. -->
-	{#if shown.has('relationships') || shown.has('verbs')}
+	<!-- Relationships: green curves, each with its Step 6 verbs and Step 7 rule words.
+	     Each of the three can show without the others. The hover sentences are text
+	     too, so they go with the verbs. -->
+	{#if shown.has('relationships') || shown.has('verbs') || shown.has('rules')}
 		{#each lines as line (line.rel.id)}
 			<g>
 				{#if shown.has('verbs')}
@@ -415,28 +448,13 @@
 				{#if shown.has('relationships')}
 					<path d={line.path} fill="none" stroke={relationshipLine.stroke} stroke-width={relationshipLine.strokeWidth} />
 				{/if}
-				{#if shown.has('verbs')}
-					{#each line.labels as l, i (i)}
-						<rect x={l.x - l.w / 2} y={l.y - l.h / 2} width={l.w} height={l.h} rx={relationshipLabel.rx} fill={relationshipLabel.backing} fill-opacity={relationshipLabel.backingOpacity} />
+				{#if shown.has('verbs') || shown.has('rules')}
+					{#each linePieces.get(line.rel.id) ?? [] as piece, i (i)}
+						<rect x={piece.rect.x} y={piece.rect.y} width={piece.rect.w} height={piece.rect.h} rx={relationshipLabel.rx} fill={relationshipLabel.backing} fill-opacity={relationshipLabel.backingOpacity} />
 						<!-- The verb, then under it the rule words: the book's Step 7 sentence -->
-						<text
-							x={l.x}
-							y={l.y - l.h / 2 + LABEL_H / 2 + 4.5}
-							text-anchor="middle"
-							font-family={relationshipLabel.fontFamily}
-							font-size={relationshipLabel.size}
-							fill={relationshipLabel.fill}>{l.text}</text
-						>
-						{#if l.rule}
-							<text
-								x={l.x}
-								y={l.y - l.h / 2 + LABEL_H / 2 + LABEL_LINE + 4.5}
-								text-anchor="middle"
-								font-family={relationshipLabel.fontFamily}
-								font-size={relationshipLabel.size}
-								fill={relationshipLabel.fill}>{l.rule}</text
-							>
-						{/if}
+						{#each piece.lines as t, j (j)}
+							<text x={piece.x} y={t.y} text-anchor="middle" font-family={relationshipLabel.fontFamily} font-size={relationshipLabel.size} fill={relationshipLabel.fill}>{t.text}</text>
+						{/each}
 					{/each}
 				{/if}
 			</g>

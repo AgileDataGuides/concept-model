@@ -1,7 +1,8 @@
 <script lang="ts">
 	// Step 7 - Describe the Relationship Rules: how many, and could there be
 	// none, read aloud in both directions. Words win over notation: an expert
-	// can confirm a sentence and cannot confirm a crow's foot.
+	// can confirm a sentence and cannot confirm a crow's foot. The verbs are
+	// Step 6's, so here they only read: this step adds the how-many.
 	import { getContext } from 'svelte';
 	import type { DataAdapter } from '$lib/cp-shared';
 	import type { CmRelationship, CmView } from '$lib/model/graph-view';
@@ -10,9 +11,8 @@
 	import { toRestate } from '$lib/model/status';
 	import { RULE_WORDS } from '$lib/canon/steps';
 	import type { RuleEnd } from '$lib/types';
-	import { CARD, EMPTY_HINT, TYPE } from '$lib/ui/tokens';
+	import { CARD, EMPTY_HINT, HINT, TYPE } from '$lib/ui/tokens';
 	import ChoiceChips from '../../ui/ChoiceChips.svelte';
-	import EditableText from '../../ui/EditableText.svelte';
 	import StateChip from '../../ui/StateChip.svelte';
 	import ToggleSwitch from '../../ui/ToggleSwitch.svelte';
 
@@ -69,15 +69,11 @@
 
 				<div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-700">
 					<span>Each <span class="font-semibold">{target}</span></span>
-					<div class="w-44">
-						<EditableText
-							value={rel.inverseVerb}
-							label="Inverse verb"
-							placeholder="add the verb"
-							textClass="text-sm italic text-slate-700"
-							onSave={(v) => patchLink(adapter, rel.link, { inverseLabel: v })}
-						/>
-					</div>
+					{#if rel.inverseVerb}
+						<span class="italic">{rel.inverseVerb}</span>
+					{:else}
+						<span class={HINT.quiet}>No verb this way yet. Add it in Step 6.</span>
+					{/if}
 					<ChoiceChips
 						{options}
 						value={rel.rule?.inverse ? ruleEndToChoice(rel.rule.inverse) : undefined}

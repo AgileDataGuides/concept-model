@@ -1,7 +1,8 @@
 <script lang="ts">
 	// Step 6 - Identify the Relationships: the verbs from the stories. Every
 	// line carries its reason, and the verb goes on straight away. Two verbs
-	// between the same two Concepts are two lines.
+	// between the same two Concepts are two lines. Both verbs, each way, are
+	// set here. Step 7 adds only the how-many, and reads the verbs from here.
 	import { getContext } from 'svelte';
 	import type { DataAdapter } from '$lib/cp-shared';
 	import type { CmRelationship, CmView } from '$lib/model/graph-view';

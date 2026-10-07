@@ -461,9 +461,13 @@ export function lineLabels(p1: Point, p2: Point, verb: string, inverse: string, 
 	const targetIsBelow = uy >= 0;
 	const forward = label(`${verb} ${targetIsBelow ? '↓' : '↑'}`, mid, rules.forward);
 	const backward = label(`${inverse} ${targetIsBelow ? '↑' : '↓'}`, mid, rules.inverse);
+	// Room for the rule words with the mark too, as the Map draws them with its
+	// verbs switched off, so side-by-side labels never overlap
+	const roomy = (l: LineLabel): LineLabel => ({ ...l, w: Math.max(l.w, l.rule ? labelWidth(`${l.rule} ↓`) : 0) });
+	const [f, b] = [roomy(forward), roomy(backward)];
 	return [
-		{ ...forward, x: mid.x - forward.w / 2 - 3 },
-		{ ...backward, x: mid.x + backward.w / 2 + 3 }
+		{ ...f, x: mid.x - f.w / 2 - 3 },
+		{ ...b, x: mid.x + b.w / 2 + 3 }
 	];
 }
 
