@@ -27,28 +27,43 @@
 	import WalkPanel from './steps/WalkPanel.svelte';
 	import ParkedPanel from './steps/ParkedPanel.svelte';
 
-	let { cm, nodes }: { cm: CmView; nodes: ContextNode[] } = $props();
+	type Selection = StepId | 'parked';
+
+	let {
+		cm,
+		nodes,
+		selected = $bindable()
+	}: {
+		cm: CmView;
+		nodes: ContextNode[];
+		/** The selected step. A host binds it to put the step in a link; an unknown value falls back to the remembered step. */
+		selected?: string;
+	} = $props();
 
 	const adapter = getContext<DataAdapter>('dataAdapter');
 
-	// The selected step is a per-viewer convenience, remembered in this browser
-	type Selection = StepId | 'parked';
+	// Without a step from the host, the selected step is a per-viewer convenience, remembered in this browser
 	const STORAGE_KEY = 'cm-active-step';
+
+	function isSelection(value: string | null | undefined): value is Selection {
+		return value === 'parked' || STEPS.some((s) => s.id === value);
+	}
 
 	function remembered(): Selection {
 		try {
 			const saved = localStorage.getItem(STORAGE_KEY);
-			if (saved === 'parked' || STEPS.some((s) => s.id === saved)) return saved as Selection;
+			if (isSelection(saved)) return saved;
 		} catch {
 			// no storage: start at Step 1
 		}
 		return 'scope';
 	}
 
-	let active = $state<Selection>(remembered());
+	if (!isSelection(selected)) selected = remembered();
+	const active = $derived<Selection>(isSelection(selected) ? selected : 'scope');
 
 	function select(selection: Selection) {
-		active = selection;
+		selected = selection;
 		try {
 			localStorage.setItem(STORAGE_KEY, selection);
 		} catch {

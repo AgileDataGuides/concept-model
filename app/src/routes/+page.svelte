@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { onMount, setContext } from 'svelte';
+	import { page } from '$app/state';
+	import { replaceState } from '$app/navigation';
 	import { createConceptModelStore, UnsavedChangesError } from '$lib/stores/concept-model.svelte';
 	import { createStandaloneAdapter } from '$lib/adapters/standalone-adapter';
 	import { conceptModelToContextPlane, contextPlaneToConceptModel } from '$lib/converters/context-plane';
 	import type { DataAdapter, ContextNode, ContextLink } from '$lib/cp-shared';
 	// By name rather than through the registry, so the bundler can leave out most of the languages this app never uses
 	import { detectRdfLanguage, rdfXml, turtle } from '$lib/languages';
-	import Toolbar from '$lib/components/Toolbar.svelte';
+	import Toolbar, { TABS } from '$lib/components/Toolbar.svelte';
 	import Instructions from '$lib/components/Instructions.svelte';
 	import ConceptModelLayout from '$lib/components/canvas/ConceptModelLayout.svelte';
 	import { applyConceptModelDemoSeeds } from '$lib/stores/demo-seed';
@@ -14,7 +16,20 @@
 	const store = createConceptModelStore();
 	setContext('cmStore', store);
 
-	let activeTab = $state<string>('steps');
+	// The tab and step live in the link (?tab=steps&step=concepts), so a copied link opens the same place
+	const linkedTab = page.url.searchParams.get('tab');
+	let activeTab = $state<string>(TABS.some((t) => t.id === linkedTab) ? linkedTab! : 'steps');
+	let activeStep = $state<string | undefined>(page.url.searchParams.get('step') ?? undefined);
+
+	$effect(() => {
+		if (!loaded) return;
+		// Compare against the real address bar: replaceState does not update page.url
+		const url = new URL(window.location.href);
+		url.searchParams.set('tab', activeTab);
+		if (activeTab === 'steps' && activeStep) url.searchParams.set('step', activeStep);
+		else url.searchParams.delete('step');
+		if (url.href !== window.location.href) replaceState(url, page.state);
+	});
 	const canvasView = $derived(activeTab === 'map' || activeTab === 'definitions' || activeTab === 'parked' || activeTab === 'matrix' ? activeTab : 'steps');
 	let loaded = $state(false);
 	let version = $state(0);
@@ -214,7 +229,7 @@
 				<Instructions />
 			</div>
 		{:else}
-			<ConceptModelLayout {nodes} {links} view={canvasView} />
+			<ConceptModelLayout {nodes} {links} view={canvasView} bind:step={activeStep} />
 		{/if}
 	</div>
 {:else}

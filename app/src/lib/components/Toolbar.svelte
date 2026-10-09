@@ -1,3 +1,17 @@
+<script module lang="ts">
+	// Steps is the way in. Map and Definitions are the book's two pattern templates.
+	// Parked Details lists the detailed attributes parked for the DESIGN stage.
+	// Event Matrix shows the same Events and Concepts as a Business Event Matrix.
+	export const TABS = [
+		{ id: 'steps', label: 'Steps' },
+		{ id: 'map', label: 'Map' },
+		{ id: 'definitions', label: 'Definitions' },
+		{ id: 'parked', label: 'Parked Details' },
+		{ id: 'matrix', label: 'Event Matrix' },
+		{ id: 'instructions', label: 'Instructions' }
+	];
+</script>
+
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import type { ContextLink, ContextNode, DataAdapter } from '$lib/cp-shared';
@@ -21,18 +35,6 @@
 		nodes: ContextNode[];
 		links: ContextLink[];
 	} = $props();
-
-	// Steps is the way in. Map and Definitions are the book's two pattern templates.
-	// Parked Details lists the detailed attributes parked for the DESIGN stage.
-	// Event Matrix shows the same Events and Concepts as a Business Event Matrix.
-	const tabs = [
-		{ id: 'steps', label: 'Steps' },
-		{ id: 'map', label: 'Map' },
-		{ id: 'definitions', label: 'Definitions' },
-		{ id: 'parked', label: 'Parked Details' },
-		{ id: 'matrix', label: 'Event Matrix' },
-		{ id: 'instructions', label: 'Instructions' }
-	];
 
 	let model = $derived(store.getModel());
 	let dirty = $derived(store.isDirty());
@@ -194,7 +196,7 @@
 
 <!-- Tabs -->
 <div class="flex gap-0 px-4 border-b border-slate-200">
-	{#each tabs as tab}
+	{#each TABS as tab}
 		<button
 			class="flex items-center px-3.5 py-2 text-xs font-medium border-b-2 -mb-px transition-colors {activeTab === tab.id ? 'text-blue-600 border-blue-600' : 'text-slate-400 border-transparent hover:text-slate-600'}"
 			onclick={() => (activeTab = tab.id)}

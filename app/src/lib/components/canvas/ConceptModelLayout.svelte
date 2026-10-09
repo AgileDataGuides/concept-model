@@ -9,7 +9,7 @@
 	// Mode-agnostic: it reads the { nodes, links } it is given and writes only
 	// through the DataAdapter from context, so the same component works in the
 	// standalone app and embedded in the Context Plane. The host picks the view
-	// (the standalone app from its Toolbar tabs).
+	// (the standalone app from its Toolbar tabs, or from a link).
 	import type { ContextNode, ContextLink } from '$lib/cp-shared';
 	import { readView } from '$lib/model/graph-view';
 	import StepsView from './StepsView.svelte';
@@ -22,11 +22,14 @@
 	let {
 		nodes,
 		links = [],
-		view = 'steps'
+		view = 'steps',
+		step = $bindable()
 	}: {
 		nodes: ContextNode[];
 		links?: ContextLink[];
 		view?: 'steps' | 'map' | 'definitions' | 'parked' | 'matrix';
+		/** The selected step on the Steps view. The standalone app binds it to put the step in the page link. */
+		step?: string;
 	} = $props();
 
 	const cm = $derived(readView(nodes, links));
@@ -47,5 +50,5 @@
 {:else if view === 'matrix'}
 	<MatrixView {cm} {nodes} />
 {:else}
-	<StepsView {cm} {nodes} />
+	<StepsView {cm} {nodes} bind:selected={step} />
 {/if}
