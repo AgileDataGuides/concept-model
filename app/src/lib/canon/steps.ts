@@ -5,7 +5,9 @@
 // one-file edit. The book, "an Agile Data Guide to Modeling Business Concepts"
 // by Juha Korpela and Shane Gibson, is still in draft. Step names and
 // questions follow the V4 canon (spreads s20 to s30, V6 s23 for Step 4). The
-// one-line descriptions are the s19 overview cards.
+// one-line descriptions are the s19 overview cards. The canon's Step 8,
+// Surface the Core Business Events, is the Core Business Events tab here, not
+// a step, so the steps after it move up one.
 //
 // Copy rules for anything a person reads: one-l modeling, British spelling,
 // "the organisation" never "the business", GenAI never a bare "AI", no em
@@ -93,16 +95,8 @@ export const STEPS: StepCanon[] = [
 		readMoreUrl: ''
 	},
 	{
-		id: 'events',
-		number: 8,
-		name: 'Surface the Core Business Events',
-		question: 'When does something important happen?',
-		description: "Identify the Concepts which drive moments that matter in the organisation's processes, revealing when something important occurs between Concepts that are connected.",
-		readMoreUrl: ''
-	},
-	{
 		id: 'map',
-		number: 9,
+		number: 8,
 		name: 'Draw the Map',
 		question: 'Does the picture tell the story?',
 		description: 'A simple visual arrangement of the Concepts, connections and Events that represent the narrative and reflect the organisational reality.',
@@ -110,7 +104,7 @@ export const STEPS: StepCanon[] = [
 	},
 	{
 		id: 'questions',
-		number: 10,
+		number: 9,
 		name: 'Gather Business Questions',
 		question: 'What questions do you need the Map to help answer?',
 		description: 'The questions the Model must help answer to ensure it is fit for how it will be used.',
@@ -118,7 +112,7 @@ export const STEPS: StepCanon[] = [
 	},
 	{
 		id: 'walk',
-		number: 11,
+		number: 10,
 		name: 'Walk the Map',
 		question: 'Does the Map survive contact with reality?',
 		description: 'A step-by-step validation using real scenarios and questions to check that the Map matches organisational reality.',
@@ -138,6 +132,15 @@ export function getStep(id: StepId): StepCanon {
 }
 
 // ── Vocabulary ───────────────────────────────────────────────────────
+
+/** The Core Business Events tab: the moments that matter, once Step 8 of the canon. */
+export const CORE_BUSINESS_EVENTS = {
+	name: 'Core Business Events',
+	question: 'When does something important happen?',
+	/** The s19 overview card, word for word, as it read when this was Step 8. */
+	description:
+		"Identify the Concepts which drive moments that matter in the organisation's processes, revealing when something important occurs between Concepts that are connected."
+} as const;
 
 export const PARKED_LIST_NAME = 'Parked';
 

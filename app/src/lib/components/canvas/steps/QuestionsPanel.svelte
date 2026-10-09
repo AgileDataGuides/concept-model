@@ -1,5 +1,5 @@
 <script lang="ts">
-	// Step 10 - Gather Business Questions: the first three to five questions
+	// Step 9 - Gather Business Questions: the first three to five questions
 	// that come quickly, each walked across the Map. A question that cannot
 	// walk is the finding.
 	import { getContext } from 'svelte';

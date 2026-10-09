@@ -454,7 +454,7 @@ export function createConceptModelStore(options: ConceptModelStoreOptions = {}) 
 		markDirty();
 	}
 
-	// ── Business Questions (Step 10) ──
+	// ── Business Questions (Step 9) ──
 	function addBusinessQuestion(name: string): string {
 		const questions = model.businessQuestions ?? [];
 		const id = uniqueId(name, questions.map((q) => q.id));
@@ -548,7 +548,7 @@ export function createConceptModelStore(options: ConceptModelStoreOptions = {}) 
 		}
 
 		if (model.coreBusinessEvents.length > 0 && model.concepts.length > 0) {
-			// The Event Matrix tab's grid: Concepts by Domain in the Steps' order, ✓ involves, ✭ is also the Concept
+			// The Business Event Matrix tab's grid: Concepts by Domain in the Steps' order, ✓ involves, ✭ is also the Concept
 			const inOrder = <T extends { order?: number }>(list: T[]) =>
 				list.map((item, i) => ({ item, at: item.order ?? i + 1 })).sort((a, b) => a.at - b.at).map((x) => x.item);
 			const domains = inOrder(model.domains);
@@ -558,7 +558,7 @@ export function createConceptModelStore(options: ConceptModelStoreOptions = {}) 
 				...concepts.filter((c) => !c.domainId || !domains.some((d) => d.id === c.domainId)).map((c) => ({ c, domain: '' }))
 			];
 			sheets.push({
-				title: 'Event Matrix',
+				title: 'Business Event Matrix',
 				rows: [
 					['Domain', '', ...columns.map((col) => col.domain)],
 					['Core Business Event', 'Concepts', ...columns.map((col) => col.c.name)],

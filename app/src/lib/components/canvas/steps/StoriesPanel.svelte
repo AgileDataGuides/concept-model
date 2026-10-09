@@ -1,6 +1,6 @@
 <script lang="ts">
 	// Step 3 - Capture Business Stories: the expert's own words, kept. Every
-	// later step reuses them, and Step 11 walks the Map back through them.
+	// later step reuses them, and Step 10 walks the Map back through them.
 	import { getContext } from 'svelte';
 	import type { DataAdapter } from '$lib/cp-shared';
 	import type { CmView } from '$lib/model/graph-view';

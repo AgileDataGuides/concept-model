@@ -1,4 +1,4 @@
-// Class strings from design/tokens.md, for the Steps, Map, Definitions and Event Matrix views.
+// Class strings from design/tokens.md, for the Steps, Concept Map, Definitions, Core Business Events and Business Event Matrix views.
 //
 // tokens.md is the authority: if this file and tokens.md ever disagree,
 // tokens.md wins and this file is stale. The app keeps its own copy because
@@ -89,7 +89,7 @@ export const STEP_PANEL = {
 	description: 'text-xs text-slate-500 leading-relaxed',
 	readMore: 'text-xs text-blue-600 hover:underline',
 	body: 'px-6 py-5',
-	/** The header over the Map in Step 9. */
+	/** The header over the Map in Step 8. */
 	bodyTop: 'px-6 pt-5'
 };
 
@@ -213,7 +213,7 @@ export const EVENT_MATRIX = {
 	eventCell: 'sticky left-0 z-10 bg-white px-4 py-2 text-left text-xs font-semibold text-slate-800 border-r border-slate-200',
 	countCell: 'text-center text-xs font-semibold px-3 py-2 border-r border-slate-100',
 	countOk: 'text-slate-700',
-	/** An Event with nothing attached, the Step 8 hint. */
+	/** An Event with nothing attached, the Core Business Events hint. */
 	countWarning: 'text-amber-600',
 	markCell: 'relative p-0 w-[60px] min-w-[60px] border-r border-slate-100',
 	/** Fills the cell, so a click anywhere in it marks or unmarks it. */
@@ -225,7 +225,7 @@ export const EVENT_MATRIX = {
 	summaryCell: 'text-center text-xs font-semibold text-slate-700 px-3 py-2 border-r border-slate-200',
 	/** ✭, the Event is also this Concept, the BEM's star. */
 	star: 'text-amber-500 text-lg',
-	/** The Event's place in the Step 8 order. */
+	/** The Event's place in the Core Business Events order. */
 	rowNumber: 'inline-flex items-center justify-end w-4 shrink-0 text-[10px] text-slate-400 font-mono select-none',
 	/** A row or column name: one click opens the Details editor. */
 	nameButton: 'text-left cursor-pointer hover:underline decoration-dotted underline-offset-2',

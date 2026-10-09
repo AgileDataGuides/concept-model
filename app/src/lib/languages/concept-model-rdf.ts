@@ -111,6 +111,7 @@ const STEP_IDS = [
 	'definitions',
 	'relationships',
 	'relationship-rules',
+	// No longer a step (the Core Business Events have their own tab), kept so an older model's note on it round-trips
 	'events',
 	'map',
 	'questions',
@@ -547,10 +548,10 @@ export function conceptModelToRdf(data: GraphData, rootNodeId?: string): Concept
 		if (rule.inverse && inverse) restrict(target, inverse, source, rule.inverse);
 	}
 
-	// ── Core Business Events (Step 8) ──
+	// ── Core Business Events (their own tab, once Step 8) ──
 	events.forEach(({ node }, i) => {
 		const iri = memberIri(str(node.properties?.sourceId), node.name, 'event');
-		if (i === 0) section(iri, 'Core Business Events (Step 8)');
+		if (i === 0) section(iri, 'Core Business Events');
 		const p = node.properties ?? {};
 		add(iri, RDF_TYPE, namedNode(`${CM}CoreBusinessEvent`));
 		addText(iri, `${RDFS}label`, node.name);
@@ -583,11 +584,11 @@ export function conceptModelToRdf(data: GraphData, rootNodeId?: string): Concept
 		addText(iri, `${SKOS}editorialNote`, node.properties?.notes);
 	});
 
-	// ── Business Questions, walks and the parked list (Steps 10 and 11) ──
+	// ── Business Questions, walks and the parked list (Steps 9 and 10) ──
 	const questionIri = new Map<string, NamedNode>();
 	questions.forEach(({ node }, i) => {
 		const iri = memberIri(str(node.properties?.sourceId), node.name, 'question');
-		if (i === 0) section(iri, 'Business Questions (Step 10)');
+		if (i === 0) section(iri, 'Business Questions (Step 9)');
 		questionIri.set(node.id, iri);
 		add(iri, RDF_TYPE, namedNode(`${CM}BusinessQuestion`));
 		addText(iri, `${RDFS}label`, node.name);
@@ -604,7 +605,7 @@ export function conceptModelToRdf(data: GraphData, rootNodeId?: string): Concept
 		const result = oneOf(w.result, WALK_RESULTS);
 		if (!walked || !result) continue;
 		const iri = memberIri(str(w.id), `walk ${iriLocalName(walked.value)}`, 'walk');
-		if (firstWalk) section(iri, 'Walks (Steps 10 and 11)');
+		if (firstWalk) section(iri, 'Walks (Steps 9 and 10)');
 		firstWalk = false;
 		add(iri, RDF_TYPE, namedNode(`${CM}Walk`));
 		add(iri, `${CM}walked`, walked);

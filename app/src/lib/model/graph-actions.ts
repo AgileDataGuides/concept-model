@@ -173,7 +173,7 @@ export function parkedIdForWalk(walk: Walk): string {
  * Set, change or clear (patch = null) the one Walk for a story or question.
  * Only a stuck walk keeps a resolution. When a walk stops being stuck with
  * Out of scope or Parked, the item it put on the parked list goes in the
- * same write, from Step 10 or Step 11. When the story or question itself is
+ * same write, from Step 9 or Step 10. When the story or question itself is
  * removed, the store's pruneReferences takes the walk and the item together.
  */
 export async function setWalk(

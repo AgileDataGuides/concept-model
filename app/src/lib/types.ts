@@ -1,14 +1,19 @@
 // Native Concept Model JSON, version 2.0.
 //
 // Everything added in 2.0 is optional, so a 1.0 file becomes a valid 2.0
-// model once `migrateModel()` has run on it. The fields map onto the eleven
+// model once `migrateModel()` has run on it. The fields map onto the ten
 // Modeling Business Concepts steps of the Blue Book (see `canon/steps.ts`).
+// The Core Business Events have their own tab, not a step.
 
 export const MODEL_VERSION = '2.0';
 
 export type W = 'who' | 'what' | 'when' | 'where' | 'why' | 'how' | 'how many';
 
-/** The eleven steps, by slug. A slug survives a reordered or renumbered canon. */
+/**
+ * The ten steps, by slug. A slug survives a reordered or renumbered canon.
+ * The Core Business Events were once a step (`events`): a note an older model
+ * kept on it stays in the file, and nothing shows it.
+ */
 export type StepId =
 	| 'scope'
 	| 'subject-matter-expert'
@@ -17,7 +22,6 @@ export type StepId =
 	| 'definitions'
 	| 'relationships'
 	| 'relationship-rules'
-	| 'events'
 	| 'map'
 	| 'questions'
 	| 'walk';
@@ -175,7 +179,7 @@ export interface Point {
 	y: number;
 }
 
-/** Step 9. Positions belong to this Map, never to the shared Concept. */
+/** Step 8. Positions belong to this Map, never to the shared Concept. */
 export interface MapLayout {
 	concepts: Record<string, Point>;
 	events: Record<string, Point>;

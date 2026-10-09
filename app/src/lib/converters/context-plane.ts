@@ -276,7 +276,7 @@ export function conceptModelToContextPlane(model: ConceptModel): { nodes: Contex
 		});
 	});
 
-	// Business Questions (Step 10), the same object the Information Product Canvas uses
+	// Business Questions (Step 9), the same object the Information Product Canvas uses
 	(model.businessQuestions ?? []).forEach((q, i) => {
 		const nodeId = graphId.question(q.id);
 		nodes.push({

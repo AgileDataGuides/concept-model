@@ -1,13 +1,16 @@
 <script module lang="ts">
-	// Steps is the way in. Map and Definitions are the book's two pattern templates.
+	// Steps is the way in. Concept Map and Definitions are the book's two pattern templates.
 	// Parked Details lists the detailed attributes parked for the DESIGN stage.
-	// Event Matrix shows the same Events and Concepts as a Business Event Matrix.
+	// Core Business Events lists the moments that matter, each as who-does-what.
+	// Business Event Matrix shows the same Events and Concepts as a grid.
+	// The ids stay as they were, so a link copied before a rename still opens its tab.
 	export const TABS = [
 		{ id: 'steps', label: 'Steps' },
-		{ id: 'map', label: 'Map' },
+		{ id: 'map', label: 'Concept Map' },
 		{ id: 'definitions', label: 'Definitions' },
 		{ id: 'parked', label: 'Parked Details' },
-		{ id: 'matrix', label: 'Event Matrix' },
+		{ id: 'events', label: 'Core Business Events' },
+		{ id: 'matrix', label: 'Business Event Matrix' },
 		{ id: 'instructions', label: 'Instructions' }
 	];
 </script>

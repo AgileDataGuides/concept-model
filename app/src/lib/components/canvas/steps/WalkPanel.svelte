@@ -1,5 +1,5 @@
 <script lang="ts">
-	// Step 11 - Walk the Map: read each story, then each question, across the
+	// Step 10 - Walk the Map: read each story, then each question, across the
 	// Map, out loud. When the finger gets stuck, decide in the room: draw it,
 	// rule it out of scope, or park it for a future Map.
 	import { getContext } from 'svelte';
@@ -42,7 +42,7 @@
 				id: parkedIdForWalk(walk),
 				text: walk.finding || name,
 				kind: resolution === 'out-of-scope' ? 'out-of-scope' : 'future-map',
-				note: `Step 11, walking "${name}"`
+				note: `Step 10, walking "${name}"`
 			});
 		}
 	}
@@ -50,7 +50,7 @@
 
 <div class="space-y-6 max-w-3xl">
 	{#if cm.stories.length === 0 && cm.questions.length === 0}
-		<p class={EMPTY_HINT}>Nothing to walk yet. Capture stories in Step 3 and questions in Step 10.</p>
+		<p class={EMPTY_HINT}>Nothing to walk yet. Capture stories in Step 3 and questions in Step 9.</p>
 	{/if}
 	{#each subjects as group (group.type)}
 		{#if group.items.length > 0}

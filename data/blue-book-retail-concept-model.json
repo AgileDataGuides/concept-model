@@ -915,19 +915,19 @@
       "id": "delivery-promised-date",
       "text": "Promised date and actual date of a Delivery",
       "kind": "attribute",
-      "note": "Step 11, from the question \"Which Deliveries were late?\""
+      "note": "Step 10, from the question \"Which Deliveries were late?\""
     },
     {
       "id": "return",
       "text": "Return",
       "kind": "future-map",
-      "note": "Step 11, from the story \"A customer returns part of a delivery\". Returns are out of this Scope"
+      "note": "Step 10, from the story \"A customer returns part of a delivery\". Returns are out of this Scope"
     },
     {
       "id": "margin",
       "text": "Margin per Product per Channel",
       "kind": "future-map",
-      "note": "Step 10, needs cost data that lives in Finance"
+      "note": "Step 9, needs cost data that lives in Finance"
     },
     {
       "id": "payment",

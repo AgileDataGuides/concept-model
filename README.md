@@ -1,6 +1,6 @@
 # Concept Model
 
-The companion app for the Blue Book, an Agile Data Guide to Modeling Business Concepts. Capture a Concept Model with a Subject Matter Expert, eleven steps at a time, then read it as a Concept Map, as Definitions and as a Business Event Matrix.
+The companion app for the Blue Book, an Agile Data Guide to Modeling Business Concepts. Capture a Concept Model with a Subject Matter Expert, ten steps at a time, list its Core Business Events, then read it as a Concept Map, as Definitions and as a Business Event Matrix.
 
 A Concept Model describes what we understand about the organisation: the things it cares about (Concepts), how they relate (Relationships) and the moments that matter (Core Business Events), in its own language, written down and agreed.
 
@@ -10,13 +10,15 @@ An [AgileDataGuides](https://agiledataguides.com/agiledata-templates/) Pattern T
 
 | Tab | What it is for |
 |---------|---------|
-| **Steps** | The eleven Modeling Business Concepts steps, down the left with a status for each. Pick any step to capture what it produces. The steps are a checklist, not a wizard |
-| **Map** | The Concept Map, drawn the way the Blue Book draws it: Concepts as blue sticky notes, Domains as pinned sheets of paper, Core Business Events as diamonds, and each Relationship a green curve carrying its verbs, one read from each end once the inverse verb is in, with the Relationship Rule under each verb ("places" over "one or many"). Drag to arrange, turn layers on and off, and click **Export SVG** to save the whole Map as one file |
+| **Steps** | The ten Modeling Business Concepts steps, down the left with a status for each. Pick any step to capture what it produces. The steps are a checklist, not a wizard |
+| **Concept Map** | The Concept Map, drawn the way the Blue Book draws it: Concepts as blue sticky notes, Domains as pinned sheets of paper, Core Business Events as diamonds, and each Relationship a green curve carrying its verbs, one read from each end once the inverse verb is in, with the Relationship Rule under each verb ("places" over "one or many"). Drag to arrange, turn layers on and off, and click **Export SVG** to save the whole Map as one file |
 | **Definitions** | The Definitions: every Concept's Definition in three parts, every Relationship as two sentences, every Core Business Event |
-| **Event Matrix** | The same Model as a Business Event Matrix, with the features of the Business Event Matrix app: a row for each Core Business Event, a column for each Concept under its Domain or 7W, ✓ where the Event involves the Concept and ✭ where the Event is also that Concept. Add, rename, reorder and mark here, and the whole Model follows |
+| **Parked Details** | The detailed attributes parked so far, information about a Concept like Customer email, waiting for the DESIGN stage |
+| **Core Business Events** | The moments that matter, each said as who-does-what: the Concepts each Event involves, the Relationship it sits on, and the Concept it is too, if it is one. These were Step 8 in the book's canon, and have their own tab here |
+| **Business Event Matrix** | The same Model as a Business Event Matrix, with the features of the Business Event Matrix app: a row for each Core Business Event, a column for each Concept under its Domain or 7W, ✓ where the Event involves the Concept and ✭ where the Event is also that Concept. Add, rename, reorder and mark here, and the whole Model follows |
 | **Instructions** | How to run a session, and questions to ask Claude |
 
-The Steps tab lists the eleven steps, each with the question it asks, from identifying the Scope to walking the Map.
+The Steps tab lists the ten steps, each with the question it asks, from identifying the Scope to walking the Map.
 
 ## Try It Online
 
@@ -40,20 +42,20 @@ The app starts at [http://localhost:5116](http://localhost:5116).
 - **Every step reachable at any time**: each step shows how far it has got, and a step can be skipped on purpose, with a note on why
 - **Concepts found in the stories**: read a Business Story beside the Concept list, and each new Concept remembers the story it came from and its Domain
 - **Definitions in three parts**: the nature of the thing, real examples, and the special cases, each agreed or flagged
-- **7W's in the Event Matrix**: give a Concept its 7W (Who, What, When, Where, Why, How or How Many) as you add it in the Event Matrix, or in its Details, and group the matrix by 7W's. Every Concept in the SaaS example has one, and CSV and Excel export it
+- **7W's in the Business Event Matrix**: give a Concept its 7W (Who, What, When, Where, Why, How or How Many) as you add it in the Business Event Matrix, or in its Details, and group the matrix by 7W's. Every Concept in the SaaS example has one, and CSV and Excel export it
 - **Relationship Rules in words**: "Each Customer places one or many Sales Orders." and "Each Sales Order is placed by one Customer." read aloud in both directions
 - **Core Business Events** as who-does-what sentences, each with the Concepts it involves
-- **Event Matrix**: every Core Business Event against every Concept on one grid, with the features and the words of the Business Event Matrix app. Every change made there changes the Model itself, so the Steps, the Map and the Definitions follow. Click a cell to cycle ✓ (the Event involves the Concept) and ✭ (the Event is also that Concept). Add Events, Concepts and Domains above the grid, click a name to rename or delete it, drag to reorder, search, hide the unmarked rows and columns, fold a band away, and group the columns by Domain or by 7W's. A count on each row and column shows an Event that involves no Concept, or a Concept no Event involves
+- **Business Event Matrix**: every Core Business Event against every Concept on one grid, with the features and the words of the Business Event Matrix app. Every change made there changes the Model itself, so the Steps, the Map and the Definitions follow. Click a cell to cycle ✓ (the Event involves the Concept) and ✭ (the Event is also that Concept). Add Events, Concepts and Domains above the grid, click a name to rename or delete it, drag to reorder, search, hide the unmarked rows and columns, fold a band away, and group the columns by Domain or by 7W's. A count on each row and column shows an Event that involves no Concept, or a Concept no Event involves
 - **Walk the Map**: walk each story and Business Question across the Map, and record where it gets stuck and what you did about it
 - **Parked list**: attributes for the DESIGN stage, things out of scope, questions for a future Map
 - **Search and reorder**: the Domain, Concept and Event lists get a search field once they reach five, and you drag items by their grip into the order you want. The Map and the Definitions follow that order
 - **Quiet hints** from the book's rules of thumb, such as ten to twenty Concepts. They never block you
 - **Multiple models**: create, switch between, and delete models. Switching saves your changes first, and if that save fails the current model stays open
-- **Export JSON / CSV / Excel**: JSON holds the whole model and can be imported again. The Excel workbook has a sheet for each part of the Model, the Event Matrix grid included
+- **Export JSON / CSV / Excel**: JSON holds the whole model and can be imported again. The Excel workbook has a sheet for each part of the Model, the Business Event Matrix grid included
 - **Layers on the Map**: switches turn the Domains, Concepts, Relationship Lines, Relationship Verbs, Relationship Rules and Events on and off, so one model draws the picture for each step of the book, from Concepts on their Domains (Step 4), through the verbs (Step 6) and the rule words (Step 7), to the full Map with its Events (Step 8). Nothing moves when a layer goes, and the app remembers your choice in this browser
 - **Export SVG**: the whole Concept Map as one picture file, from any tab, with the layers the Map shows. The page is the same size whichever layers are on, so the pictures for each step line up. It is sharp at any size, has only the Map on a white page, and carries the handwritten font inside, so the handwriting looks the same in any browser, even on a computer without the font. Open it in a browser or put it in a slide or a document. Some slide and drawing tools ignore the font inside the file and use one of their own
 - **Export Turtle / RDF**: the whole model for ontology and knowledge graph tools, as Turtle (`.ttl`) or RDF/XML (`.rdf`, the format Protégé opens). Each Concept is an OWL class and a SKOS concept with its Definition, each Relationship an OWL property in both directions, and each Relationship Rule OWL cardinality restrictions. Everything else rides along, so importing the file gives the same model back
-- **Import**: load JSON, Turtle or RDF/XML as a new model, never over the current one. Files from before the eleven steps (version 1.0) still load, and so does an ontology from Protégé or a SKOS vocabulary: its classes become Concepts and its properties Relationships
+- **Import**: load JSON, Turtle or RDF/XML as a new model, never over the current one. Files from before the steps (version 1.0) still load, and so does an ontology from Protégé or a SKOS vocabulary: its classes become Concepts and its properties Relationships
 
 ## Works With Claude
 
@@ -66,10 +68,10 @@ Save your model and open [Claude Code](https://claude.ai/claude-code) in this pr
 - Step 5: *"Check each Definition for tautologies and for system words like table, flag or status code."*
 - Step 6: *"Which Concepts have no Relationship yet? What verbs connect them in real life?"*
 - Step 7: *"Read each Relationship Rule aloud. Which ones look wrong for this organisation?"*
-- Step 8: *"Which Core Business Events are missing, and which have nothing attached?"*
-- Step 9: *"Which Concepts start the story, and which depend on others? Suggest how to arrange the Map."*
-- Step 10: *"Suggest three to five Business Questions this Map should help answer."*
-- Step 11: *"Walk each story across the Map. Where does it get stuck?"*
+- Step 8: *"Which Concepts start the story, and which depend on others? Suggest how to arrange the Map."*
+- Step 9: *"Suggest three to five Business Questions this Map should help answer."*
+- Step 10: *"Walk each story across the Map. Where does it get stuck?"*
+- Core Business Events: *"Which Core Business Events are missing, and which have nothing attached?"*
 
 No Claude Code? Click **Export JSON** and attach the file in [Claude Chat](https://claude.ai).
 

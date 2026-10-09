@@ -2,8 +2,8 @@
 // hidden by a switch in the Map's top bar. The Blue Book draws one Map and
 // shows more of it at each step: Domains and Concepts in Step 4, the
 // Relationship lines and their verbs in Step 6, the rule words under each
-// verb in Step 7, the Core Business Events in Step 8. So one model gives
-// the figure for every step.
+// verb in Step 7, then the Core Business Events from their own tab. So one
+// model gives the figure for every step.
 //
 // One choice serves every Map on screen and Export SVG, so the file holds
 // what the Map shows. It is a view choice, never part of the model: a

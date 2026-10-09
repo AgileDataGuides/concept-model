@@ -1,5 +1,5 @@
 <script lang="ts">
-	// The Steps tab: the eleven Modeling Business Concepts steps as the way in.
+	// The Steps tab: the ten Modeling Business Concepts steps as the way in.
 	// A rail of steps on the left, the selected step's panel on the right.
 	// A checklist, never a wizard: every step is reachable at any time and no
 	// step blocks another. Each row's status is derived from the data.
@@ -22,7 +22,6 @@
 	import DefinitionsPanel from './steps/DefinitionsPanel.svelte';
 	import RelationshipsPanel from './steps/RelationshipsPanel.svelte';
 	import RulesPanel from './steps/RulesPanel.svelte';
-	import EventsPanel from './steps/EventsPanel.svelte';
 	import QuestionsPanel from './steps/QuestionsPanel.svelte';
 	import WalkPanel from './steps/WalkPanel.svelte';
 	import ParkedPanel from './steps/ParkedPanel.svelte';
@@ -87,7 +86,7 @@
 </script>
 
 <div class="flex h-full min-h-0">
-	<nav class={STEP_RAIL.container} aria-label="The eleven steps">
+	<nav class={STEP_RAIL.container} aria-label="The ten steps">
 		<ul class="py-2">
 			{#each STEPS as s (s.id)}
 				{@const rowStatus = statuses.get(s.id)}
@@ -157,8 +156,6 @@
 						<RelationshipsPanel {cm} />
 					{:else if step.id === 'relationship-rules'}
 						<RulesPanel {cm} />
-					{:else if step.id === 'events'}
-						<EventsPanel {cm} onDetails={openDetails} />
 					{:else if step.id === 'questions'}
 						<QuestionsPanel {cm} />
 					{:else if step.id === 'walk'}

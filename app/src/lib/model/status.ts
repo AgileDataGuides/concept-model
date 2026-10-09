@@ -1,4 +1,5 @@
-// The status line and quiet hints for each step, derived from the data.
+// The status line and quiet hints for each step and for the Core Business
+// Events tab, derived from the data.
 // Nothing here is stored. Hint wording lives in canon/steps.ts.
 
 import type { StepId } from '$lib/types';
@@ -40,6 +41,15 @@ export function isAttached(cm: CmView, eventId: string): boolean {
 /** A legacy cardinality string that never became a full rule. */
 export function toRestate(rel: { rule?: unknown; cardinality?: string }): boolean {
 	return !!rel.cardinality && !hasBothEnds(rel.rule as never);
+}
+
+/** The Core Business Events tab, read the way a step is. The Business Event Matrix shows the same hints. */
+export function eventStatus(cm: CmView): StepStatus {
+	const attached = cm.events.filter((e) => isAttached(cm, e.id)).length;
+	const floating = cm.events.filter((e) => !isAttached(cm, e.id)).map((e) => e.name);
+	const hints = floating.length > 0 ? [HINTS.unattachedEvents(nameList(floating, 3))] : [];
+	const line = cm.events.length === 0 ? 'No Events yet' : `${count(cm.events.length, 'Event')}, ${attached} attached`;
+	return { started: cm.events.length > 0, line, hints };
 }
 
 export function stepStatus(cm: CmView, step: StepId): StepStatus {
@@ -132,14 +142,6 @@ export function stepStatus(cm: CmView, step: StepId): StepStatus {
 				line: total === 0 ? 'No Relationships yet' : parts.join(', '),
 				hints: []
 			};
-		}
-
-		case 'events': {
-			const attached = cm.events.filter((e) => isAttached(cm, e.id)).length;
-			const floating = cm.events.filter((e) => !isAttached(cm, e.id)).map((e) => e.name);
-			const hints = floating.length > 0 ? [HINTS.unattachedEvents(nameList(floating, 3))] : [];
-			const line = cm.events.length === 0 ? 'No Events yet' : `${count(cm.events.length, 'Event')}, ${attached} attached`;
-			return { started: cm.events.length > 0, line, hints };
 		}
 
 		case 'map': {

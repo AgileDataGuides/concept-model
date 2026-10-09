@@ -1,5 +1,5 @@
 <script lang="ts">
-	// The Concept Map (Step 9 and the Map tab): the Concept Model as one
+	// The Concept Map (Step 8 and the Concept Map tab): the Concept Model as one
 	// picture, drawn the way the Blue Book draws it. Concepts are blue sticky
 	// notes, Domains are pinned sheets of paper, Events are diamonds, and every
 	// Relationship is a gentle green curve carrying both its verbs. Plain SVG,

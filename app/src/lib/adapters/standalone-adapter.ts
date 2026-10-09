@@ -208,7 +208,7 @@ export function createStandaloneAdapter(store: ConceptModelStore): { adapter: Da
 				return freshLink(graphId.relationship(relId)) ?? synthetic;
 			}
 
-			// A Core Business Event joining a Concept (Step 8)
+			// A Core Business Event joining a Concept (the Core Business Events tab)
 			if (sourceKind === 'event' && targetKind === 'concept' && input.label === 'event_involves_concept') {
 				const ev = store.getModel().coreBusinessEvents.find((e) => e.id === sourceId);
 				const joined = ev?.conceptIds ?? [];

@@ -16,10 +16,13 @@
 	const store = createConceptModelStore();
 	setContext('cmStore', store);
 
-	// The tab and step live in the link (?tab=steps&step=concepts), so a copied link opens the same place
+	// The tab and step live in the link (?tab=steps&step=concepts), so a copied link opens the same place.
+	// The Core Business Events were once a step, so a link to that step opens their tab.
 	const linkedTab = page.url.searchParams.get('tab');
-	let activeTab = $state<string>(TABS.some((t) => t.id === linkedTab) ? linkedTab! : 'steps');
-	let activeStep = $state<string | undefined>(page.url.searchParams.get('step') ?? undefined);
+	const linkedStep = page.url.searchParams.get('step') ?? undefined;
+	const oldEventsLink = linkedStep === 'events' && (!linkedTab || linkedTab === 'steps');
+	let activeTab = $state<string>(oldEventsLink ? 'events' : TABS.some((t) => t.id === linkedTab) ? linkedTab! : 'steps');
+	let activeStep = $state<string | undefined>(oldEventsLink ? undefined : linkedStep);
 
 	$effect(() => {
 		if (!loaded) return;
@@ -30,7 +33,7 @@
 		else url.searchParams.delete('step');
 		if (url.href !== window.location.href) replaceState(url, page.state);
 	});
-	const canvasView = $derived(activeTab === 'map' || activeTab === 'definitions' || activeTab === 'parked' || activeTab === 'matrix' ? activeTab : 'steps');
+	const canvasView = $derived(activeTab === 'map' || activeTab === 'definitions' || activeTab === 'parked' || activeTab === 'events' || activeTab === 'matrix' ? activeTab : 'steps');
 	let loaded = $state(false);
 	let version = $state(0);
 

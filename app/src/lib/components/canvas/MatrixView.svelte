@@ -1,12 +1,13 @@
 <script lang="ts">
-	// The Event Matrix: the Model's Core Business Events and Concepts as a
-	// Business Event Matrix, with the features and the words of the standalone
+	// The Business Event Matrix tab: the Model's Core Business Events and
+	// Concepts as a Business Event Matrix, with the features and the words of the standalone
 	// BEM app. Every edit writes to the Model's own objects through the
 	// DataAdapter, the same writes the Steps make, so the Steps, the Map and the
 	// Definitions change with it (DESIGN_SYSTEM.md § 18).
 	//   - A cell cycles empty, ✓ (the Event involves the Concept: the
-	//     event_involves_concept link Step 8 writes), ✭ (the Event is also that
-	//     Concept: Step 8's "Is also the Concept", one per Event), empty.
+	//     event_involves_concept link the Core Business Events tab writes), ✭
+	//     (the Event is also that Concept: that tab's "Is also the Concept", one
+	//     per Event), empty.
 	//   - Add an Event, a Concept or a Domain. One click on a name opens the
 	//     Details editor. Drag rows, columns and Domain bands to reorder.
 	//   - Search, Hide unmarked, collapse a band, group by Domain or 7W's.
@@ -15,7 +16,7 @@
 	import type { ContextNode, DataAdapter } from '$lib/cp-shared';
 	import type { CmConcept, CmDomain, CmEvent, CmView } from '$lib/model/graph-view';
 	import { addConcept, joinEvent, moveId, patchNode, setOrder, unjoinEvent } from '$lib/model/graph-actions';
-	import { isAttached, nameList, stepStatus } from '$lib/model/status';
+	import { eventStatus, isAttached, nameList } from '$lib/model/status';
 	import { DEFINITION_PARTS, HINTS, NO_SEVEN_W_LABEL, SEVEN_WS, sevenWLabel } from '$lib/canon/steps';
 	import { partOneText } from '$lib/model/definition';
 	import { colorOf } from '$lib/constants/context-types';
@@ -302,13 +303,13 @@
 
 	// ── Hints and empty states ──
 
-	// The Step 8 hint, so a floating Event reads the same here as in the Steps
-	const hints = $derived(stepStatus(cm, 'events').hints);
+	// The Core Business Events tab's hint, so a floating Event reads the same here as there
+	const hints = $derived(eventStatus(cm).hints);
 
 	const emptyLine = $derived(
 		cm.concepts.length === 0
 			? cm.events.length === 0
-				? 'Nothing in the Event Matrix yet. Add a Concept and a Core Business Event above, or in Steps 4 and 8.'
+				? 'Nothing in the Business Event Matrix yet. Add a Concept and a Core Business Event above, or in Step 4 and on the Core Business Events tab.'
 				: 'No Concepts yet. Add one above, or in Step 4, then mark the ones each Event involves.'
 			: bands.length === 0
 				? hideUnmarked
@@ -319,7 +320,7 @@
 
 	const noRowsLine = $derived(
 		cm.events.length === 0
-			? 'No Core Business Events yet. Add one above, or in Step 8.'
+			? 'No Core Business Events yet. Add one above, or on the Core Business Events tab.'
 			: shownEvents.length === 0
 				? hideUnmarked
 					? 'No Event on screen marks a Concept on screen.'

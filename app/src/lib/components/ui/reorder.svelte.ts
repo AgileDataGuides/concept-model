@@ -10,7 +10,7 @@ export type DropPosition = 'before' | 'after';
  * `onMove` gets the dragged id, the id it was dropped on, and which side.
  * `canDrop` limits where an item may land (Step 4 keeps a Concept in its
  * own Domain group). `axis` is 'y' for a list and 'x' for columns dragged
- * sideways (the Event Matrix's Concept columns and Domain bands).
+ * sideways (the Business Event Matrix's Concept columns and Domain bands).
  */
 export function createReorder(
 	onMove: (dragId: string, targetId: string, position: DropPosition) => unknown,

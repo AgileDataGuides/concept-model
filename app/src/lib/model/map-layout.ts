@@ -1,4 +1,4 @@
-// Geometry for the Map (Step 9). Pure functions, no Svelte.
+// Geometry for the Map (Step 8). Pure functions, no Svelte.
 //
 // The Map is drawn in the Blue Book's style: Concepts are square sticky
 // notes, Domains are sheets of paper around their notes, Relationships are
