@@ -1,19 +1,29 @@
 <script lang="ts">
 	// The parked list: attributes that wait for the DESIGN stage, things ruled
 	// out of scope, questions for a future Map. Each keeps a note on where it
-	// came from.
+	// came from. With details, only the parked detailed attributes: the
+	// Parked Details tab.
 	import { getContext } from 'svelte';
 	import type { DataAdapter } from '$lib/cp-shared';
 	import type { CmView } from '$lib/model/graph-view';
 	import { park, setModelFields } from '$lib/model/graph-actions';
-	import { PARKED_KINDS, PARKED_LIST_NAME } from '$lib/canon/steps';
+	import { PARKED_DETAILS_NAME, PARKED_KINDS, PARKED_LIST_NAME, isParkedDetail } from '$lib/canon/steps';
 	import type { ParkedItem } from '$lib/types';
 	import { CARD, EMPTY_HINT, ROW_ACTIONS, STEP_PANEL, TYPE } from '$lib/ui/tokens';
 	import AddField from '../../ui/AddField.svelte';
 	import ChoiceChips from '../../ui/ChoiceChips.svelte';
 	import EditableText from '../../ui/EditableText.svelte';
 
-	let { cm }: { cm: CmView } = $props();
+	let { cm, details = false }: { cm: CmView; details?: boolean } = $props();
+
+	const title = $derived(details ? PARKED_DETAILS_NAME : PARKED_LIST_NAME);
+	const items = $derived(details ? cm.parked.filter(isParkedDetail) : cm.parked);
+
+	function add(text: string) {
+		return details
+			? park(adapter, cm, { text, kind: 'attribute', note: PARKED_DETAILS_NAME })
+			: park(adapter, cm, { text, kind: 'other', note: 'Parked directly' });
+	}
 
 	const adapter = getContext<DataAdapter>('dataAdapter');
 
@@ -27,18 +37,22 @@
 </script>
 
 <header class="pb-3 mb-4 border-b border-slate-200 space-y-1">
-	<h2 class={STEP_PANEL.question}>{PARKED_LIST_NAME}</h2>
-	<p class={STEP_PANEL.description}>Things that came up and belong somewhere else: information about a Concept for the DESIGN stage, a boundary drawn on purpose, a question for a future Map.</p>
+	<h2 class={STEP_PANEL.question}>{title}</h2>
+	{#if details}
+		<p class={STEP_PANEL.description}>The detailed attributes parked so far: information about a Concept, like Customer name. They wait for the DESIGN stage.</p>
+	{:else}
+		<p class={STEP_PANEL.description}>Things that came up and belong somewhere else: information about a Concept for the DESIGN stage, a boundary drawn on purpose, a question for a future Map.</p>
+	{/if}
 </header>
 
 <div class="space-y-3 max-w-3xl">
-	<h3 class={TYPE.sectionHeader}>{PARKED_LIST_NAME} ({cm.parked.length})</h3>
-	<AddField placeholder="Park something, press Enter" buttonLabel="Park" onAdd={(text) => park(adapter, cm, { text, kind: 'other', note: 'Parked directly' })} />
-	{#if cm.parked.length === 0}
-		<p class={EMPTY_HINT}>Nothing parked yet.</p>
+	<h3 class={TYPE.sectionHeader}>{title} ({items.length})</h3>
+	<AddField placeholder={details ? 'Information about a Concept, like Customer name' : 'Park something, press Enter'} buttonLabel="Park" onAdd={add} />
+	{#if items.length === 0}
+		<p class={EMPTY_HINT}>{details ? 'No detailed attributes parked yet.' : 'Nothing parked yet.'}</p>
 	{:else}
 		<ul class="space-y-2">
-			{#each cm.parked as item (item.id)}
+			{#each items as item (item.id)}
 				<li class="{CARD} p-3 space-y-2">
 					<div class="flex items-start gap-3">
 						<div class="min-w-0 flex-1">
@@ -51,7 +65,9 @@
 						</div>
 						<button type="button" class="{ROW_ACTIONS.danger} shrink-0 pt-0.5" onclick={() => remove(item.id)}>Remove</button>
 					</div>
-					<ChoiceChips options={PARKED_KINDS} value={item.kind} label="Kind of parked item" onChange={(kind) => kind && update(item.id, { kind })} />
+					{#if !details}
+						<ChoiceChips options={PARKED_KINDS} value={item.kind} label="Kind of parked item" onChange={(kind) => kind && update(item.id, { kind })} />
+					{/if}
 					<EditableText
 						value={item.note ?? ''}
 						label="Where it came from"

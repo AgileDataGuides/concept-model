@@ -1,8 +1,9 @@
 <script lang="ts">
-	// THE Concept Model canvas: one Concept Model, four views.
+	// THE Concept Model canvas: one Concept Model, five views.
 	//   - steps:       the eleven Modeling Business Concepts steps, the way in
 	//   - map:         the Concept Map pattern template
 	//   - definitions: the Definitions pattern template
+	//   - parked:      the parked detailed attributes, waiting for the DESIGN stage
 	//   - matrix:      the Core Business Events and Concepts as a Business Event Matrix
 	//
 	// Mode-agnostic: it reads the { nodes, links } it is given and writes only
@@ -15,6 +16,8 @@
 	import MapView from './MapView.svelte';
 	import DefinitionsView from './DefinitionsView.svelte';
 	import MatrixView from './MatrixView.svelte';
+	import ParkedPanel from './steps/ParkedPanel.svelte';
+	import { STEP_PANEL } from '$lib/ui/tokens';
 
 	let {
 		nodes,
@@ -23,7 +26,7 @@
 	}: {
 		nodes: ContextNode[];
 		links?: ContextLink[];
-		view?: 'steps' | 'map' | 'definitions' | 'matrix';
+		view?: 'steps' | 'map' | 'definitions' | 'parked' | 'matrix';
 	} = $props();
 
 	const cm = $derived(readView(nodes, links));
@@ -37,6 +40,10 @@
 	<MapView {cm} />
 {:else if view === 'definitions'}
 	<DefinitionsView {cm} />
+{:else if view === 'parked'}
+	<div class="h-full overflow-y-auto bg-slate-50 {STEP_PANEL.body}">
+		<ParkedPanel {cm} details />
+	</div>
 {:else if view === 'matrix'}
 	<MatrixView {cm} {nodes} />
 {:else}

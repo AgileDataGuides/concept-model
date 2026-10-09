@@ -7,6 +7,7 @@
 	import type { CmConcept, CmView } from '$lib/model/graph-view';
 	import { addConcept, conceptIsReferenced, moveId, park, patchNode, placeConcept, setOrder } from '$lib/model/graph-actions';
 	import { colorOf } from '$lib/constants/context-types';
+	import { isParkedDetail } from '$lib/canon/steps';
 	import { CARD, DRAG_REORDER, EMPTY_HINT, INPUT, ROW_ACTIONS, SEARCH_FILTER, TYPE } from '$lib/ui/tokens';
 	import AddField from '../../ui/AddField.svelte';
 	import EditableText from '../../ui/EditableText.svelte';
@@ -94,9 +95,9 @@
 			<p class={INPUT.label}>A Concept added now links to this story.</p>
 		{/if}
 
-		<h3 class="{TYPE.sectionHeader} pt-4">Park an attribute</h3>
+		<h3 class="{TYPE.sectionHeader} pt-4">Park detailed attributes</h3>
 		<AddField placeholder="Information about a Concept, like Customer name" buttonLabel="Park" onAdd={parkAttribute} />
-		<p class={INPUT.label}>{cm.parked.length} parked so far. Attributes wait for the DESIGN stage.</p>
+		<p class={INPUT.label}>{cm.parked.filter(isParkedDetail).length} detailed attributes parked so far. They wait for the DESIGN stage. See them in the Parked Details tab.</p>
 	</section>
 
 	<section class="lg:col-span-3 space-y-3">

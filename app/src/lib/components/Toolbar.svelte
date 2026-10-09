@@ -23,11 +23,13 @@
 	} = $props();
 
 	// Steps is the way in. Map and Definitions are the book's two pattern templates.
+	// Parked Details lists the detailed attributes parked for the DESIGN stage.
 	// Event Matrix shows the same Events and Concepts as a Business Event Matrix.
 	const tabs = [
 		{ id: 'steps', label: 'Steps' },
 		{ id: 'map', label: 'Map' },
 		{ id: 'definitions', label: 'Definitions' },
+		{ id: 'parked', label: 'Parked Details' },
 		{ id: 'matrix', label: 'Event Matrix' },
 		{ id: 'instructions', label: 'Instructions' }
 	];

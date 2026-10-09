@@ -141,6 +141,14 @@ export function getStep(id: StepId): StepCanon {
 
 export const PARKED_LIST_NAME = 'Parked';
 
+/** The parked detailed attributes only: information about a Concept for the DESIGN stage. */
+export const PARKED_DETAILS_NAME = 'Parked Details';
+
+/** A parked detailed attribute, the kind the Parked Details tab lists. */
+export function isParkedDetail(item: { kind: ParkedKind }): boolean {
+	return item.kind === 'attribute';
+}
+
 /** Step 1: the ways s20 names for slicing an organisation into a Scope. */
 export const SCOPE_SLICES: { id: ScopeSlice; label: string; example: string }[] = [
 	{ id: 'business-process', label: 'Business process', example: 'Order-to-Cash' },
@@ -220,7 +228,7 @@ export const WALK_RESOLUTIONS: { id: WalkResolution; label: string }[] = [
 ];
 
 export const PARKED_KINDS: { id: ParkedKind; label: string }[] = [
-	{ id: 'attribute', label: 'Attribute' },
+	{ id: 'attribute', label: 'Detailed attribute' },
 	{ id: 'out-of-scope', label: 'Out of scope' },
 	{ id: 'future-map', label: 'Future Map' },
 	{ id: 'other', label: 'Other' }
