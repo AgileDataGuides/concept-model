@@ -69,9 +69,9 @@ export interface Concept {
 	description: string;
 	aliases: string[];
 	order?: number;
-	/** Aristotelian helper for part one: the broader category (genus). */
+	/** Aristotle helper for part one: the broader category (genus). */
 	definitionCategory?: string;
-	/** Aristotelian helper for part one: the distinguishing feature (differentia). */
+	/** Aristotle helper for part one: the distinguishing feature (differentia). */
 	definitionDifferentiator?: string;
 	domainId?: string;
 	/** The stories this Concept was found in (Step 4). */

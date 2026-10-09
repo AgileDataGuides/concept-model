@@ -16,7 +16,8 @@
 	import type { CmConcept, CmDomain, CmEvent, CmView } from '$lib/model/graph-view';
 	import { addConcept, joinEvent, moveId, patchNode, setOrder, unjoinEvent } from '$lib/model/graph-actions';
 	import { isAttached, nameList, stepStatus } from '$lib/model/status';
-	import { HINTS, NO_SEVEN_W_LABEL, SEVEN_WS, sevenWLabel } from '$lib/canon/steps';
+	import { DEFINITION_PARTS, HINTS, NO_SEVEN_W_LABEL, SEVEN_WS, sevenWLabel } from '$lib/canon/steps';
+	import { partOneText } from '$lib/model/definition';
 	import { colorOf } from '$lib/constants/context-types';
 	import type { W } from '$lib/types';
 	import { DRAG_REORDER, EMPTY_HINT, EVENT_MATRIX, INPUT, TOGGLE_SWITCH } from '$lib/ui/tokens';
@@ -269,10 +270,11 @@
 		card = { x, y: r.bottom + 4, title, lines: lines.filter((l) => l.text) };
 	}
 
-	/** Part one of the Definition, or the Aristotelian helper when that is all there is. */
+	/** Part one of the Definition, the same text the Definitions tab shows, or the half a helper has so far. */
 	function definitionOf(c: CmConcept): string {
-		if (c.description) return c.description;
-		if (!c.definitionCategory && !c.definitionDifferentiator) return 'No Definition yet.';
+		const text = partOneText(c);
+		if (text) return text;
+		if (!c.definitionCategory && !c.definitionDifferentiator) return DEFINITION_PARTS.empty;
 		const differentiator = (c.definitionDifferentiator || '...').replace(/@\{([^}]+)\}/g, '$1');
 		return `A ${c.definitionCategory || '...'} that ${differentiator}`;
 	}

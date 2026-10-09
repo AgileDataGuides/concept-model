@@ -184,6 +184,27 @@ export const DEFINITION_STATUSES: { id: DefinitionStatus; label: string }[] = [
 ];
 
 /**
+ * The words of a Definition, the same in Step 5, the Definitions tab and the
+ * Details popup. Part one can start from the Aristotle helper (a Customer is
+ * a [broader category] that [distinguishing feature]). Part two asks for real
+ * ones by name, the way fact-based modelling does. Part three says what
+ * counts and what does not.
+ */
+export const DEFINITION_PARTS = {
+	partOne: 'Part one: the nature of the thing',
+	partOnePlaceholder: (name: string) =>
+		`One or two sentences in everyday language. What must be true for something to be a ${name}?`,
+	helper: 'Helper: a broader category and what sets it apart',
+	useSentence: 'Use this sentence',
+	partTwo: 'Part two: examples',
+	partTwoPlaceholder: 'A real one, by name, press Enter',
+	partThree: 'Part three: special cases and points of confusion',
+	partThreePlaceholder: 'What counts, or does not count, press Enter',
+	status: 'Status',
+	empty: 'No Definition yet.'
+} as const;
+
+/**
  * The 7W's: the kind of thing a Concept is. The Business Event Matrix
  * groups its columns by them, in this order and with these labels. The
  * Blue Book's 7W's check (s33) names the same seven, with who, what and

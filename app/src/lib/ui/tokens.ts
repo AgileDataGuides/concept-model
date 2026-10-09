@@ -43,6 +43,9 @@ export const CARD = 'bg-white rounded-lg shadow-sm border border-slate-200';
 /** cards.list_divider, added to a card that holds a list of rows */
 export const CARD_LIST_DIVIDER = 'divide-y divide-slate-100';
 
+/** A Concept named in another Concept's Definition. Keeps the size of the sentence around it. */
+export const CONCEPT_LINK = 'text-blue-600 hover:underline';
+
 /** interactions.click_to_edit_hover */
 export const CLICK_TO_EDIT = 'hover:bg-slate-50';
 

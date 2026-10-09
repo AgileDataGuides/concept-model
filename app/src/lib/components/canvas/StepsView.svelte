@@ -76,7 +76,8 @@
 	const status = $derived(step ? statuses.get(step.id) : undefined);
 
 	// Details opens the app's Details popup: the shared editor (aliases, the
-	// Aristotelian helper, W's, notes) plus a Concept's Domain and stories
+	// three parts of a Definition with the Aristotle helper, the status, W's,
+	// notes) plus a Concept's Domain and stories
 	let detailsId = $state<string | null>(null);
 	const detailsNode = $derived(detailsId ? nodes.find((n) => n.id === detailsId) : undefined);
 

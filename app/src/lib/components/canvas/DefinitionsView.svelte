@@ -2,12 +2,15 @@
 	// The Definitions: the second pattern template, one thing at a time.
 	// Concepts by Domain with the three parts of each Definition, then every
 	// Relationship as its two sentences, then every Core Business Event.
-	// A read view: editing stays in Step 5.
+	// A read view: editing stays in Step 5. A Definition reads in the same
+	// parts, with the same words, as Step 5 and the Details popup.
 	import type { CmConcept, CmView } from '$lib/model/graph-view';
 	import { relationshipSentences, relationshipTriple } from '$lib/model/rules';
-	import { DEFINITION_STATUSES } from '$lib/canon/steps';
+	import { DEFINITION_PARTS, DEFINITION_STATUSES } from '$lib/canon/steps';
+	import { partOneText } from '$lib/model/definition';
 	import type { DefinitionStatus } from '$lib/types';
 	import { CARD, CARD_LIST_DIVIDER, EMPTY_HINT, INPUT, STEP_PANEL, TYPE } from '$lib/ui/tokens';
+	import LinkedText from '../ui/LinkedText.svelte';
 	import StateChip from '../ui/StateChip.svelte';
 
 	let { cm }: { cm: CmView } = $props();
@@ -28,6 +31,13 @@
 
 	function nameOf(conceptId: string): string {
 		return cm.conceptById.get(conceptId)?.name ?? '?';
+	}
+
+	/** A Concept named in another Definition: bring its own Definition into view. */
+	function openConcept(conceptId: string) {
+		const el = document.getElementById(`definition-${conceptId}`);
+		el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		el?.focus({ preventScroll: true });
 	}
 
 	function storyNames(concept: CmConcept): string {
@@ -53,29 +63,33 @@
 				<div class="space-y-2">
 					<h3 class={STEP_PANEL.label}>{group.name}</h3>
 					{#each group.concepts as concept (concept.id)}
-						<article class="{CARD} p-4 space-y-2">
+						{@const partOne = partOneText(concept)}
+						<article id="definition-{concept.id}" tabindex="-1" class="{CARD} p-4 space-y-2 scroll-mt-6 outline-none">
 							<header class="flex items-start justify-between gap-3">
 								<h4 class="text-sm font-semibold text-slate-800">{concept.name}</h4>
 								<StateChip tone={TONE[concept.status]} label={statusLabel(concept.status)} />
 							</header>
-							{#if concept.description}
-								<p class="text-sm text-slate-700 whitespace-pre-wrap">{concept.description}</p>
-							{:else}
-								<p class={EMPTY_HINT}>No Definition yet.</p>
-							{/if}
+							<div>
+								<span class={INPUT.label}>{DEFINITION_PARTS.partOne}</span>
+								{#if partOne}
+									<p class="text-sm text-slate-700 whitespace-pre-wrap"><LinkedText text={partOne} {cm} selfId={concept.id} onOpen={openConcept} /></p>
+								{:else}
+									<p class={EMPTY_HINT}>{DEFINITION_PARTS.empty}</p>
+								{/if}
+							</div>
 							{#if concept.examples.length > 0}
 								<div>
-									<span class={INPUT.label}>For example</span>
+									<span class={INPUT.label}>{DEFINITION_PARTS.partTwo}</span>
 									<ul class="list-disc pl-5 text-sm text-slate-700 space-y-0.5">
-										{#each concept.examples as example, i (i)}<li>{example}</li>{/each}
+										{#each concept.examples as example, i (i)}<li><LinkedText text={example} {cm} selfId={concept.id} onOpen={openConcept} /></li>{/each}
 									</ul>
 								</div>
 							{/if}
 							{#if concept.specialCases.length > 0}
 								<div>
-									<span class={INPUT.label}>Special cases</span>
+									<span class={INPUT.label}>{DEFINITION_PARTS.partThree}</span>
 									<ul class="list-disc pl-5 text-sm text-slate-700 space-y-0.5">
-										{#each concept.specialCases as special, i (i)}<li>{special}</li>{/each}
+										{#each concept.specialCases as special, i (i)}<li><LinkedText text={special} {cm} selfId={concept.id} onOpen={openConcept} /></li>{/each}
 									</ul>
 								</div>
 							{/if}

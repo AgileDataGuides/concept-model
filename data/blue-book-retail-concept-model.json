@@ -19,10 +19,12 @@
       ],
       "examples": [
         "A shopper who bought a kettle on the website last week",
-        "A café that orders cups from the store every month"
+        "A café that orders cups from the store every month",
+        "Fact: Customer 'Harbour Café' places Sales Order 'SO-1042'."
       ],
       "specialCases": [
-        "Someone with an account and no Sales Orders is a prospect, not a Customer"
+        "Someone with an account and no Sales Orders is a prospect, not a Customer",
+        "A Customer who buys on the website and in a store is one Customer, not two"
       ],
       "definitionStatus": "agreed",
       "w": "who"
@@ -39,13 +41,17 @@
       ],
       "examples": [
         "The website",
-        "A physical store"
+        "A physical store",
+        "Fact: Sales Order 'SO-1042' is placed via Channel 'Website'."
       ],
       "specialCases": [
-        "A phone call taken in a store is placed through that store"
+        "A phone call taken in a store is placed through that store",
+        "A courier is not a Channel. It carries Deliveries, it does not take Sales Orders"
       ],
       "definitionStatus": "agreed",
-      "w": "where"
+      "w": "where",
+      "definitionCategory": "Way",
+      "definitionDifferentiator": "a Customer can place a Sales Order with us"
     },
     {
       "id": "sales-order",
@@ -61,13 +67,18 @@
         "s-return"
       ],
       "examples": [
-        "An order for a kettle and two mugs placed on the website this morning"
+        "An order for a kettle and two mugs placed on the website this morning",
+        "A café's monthly order for cups, placed in the store",
+        "Fact: Sales Order 'SO-1042' is placed for Product 'Box of cups'."
       ],
       "specialCases": [
-        "A Sales Order can be fulfilled by more than one Delivery when the Products ship separately"
+        "A Sales Order can be fulfilled by more than one Delivery when the Products ship separately",
+        "A Sales Order the Customer cancels before any Delivery is still a Sales Order, with nothing delivered"
       ],
       "definitionStatus": "agreed",
-      "w": "what"
+      "w": "what",
+      "definitionCategory": "Request",
+      "definitionDifferentiator": "a Customer makes to buy one or many Products, through one Channel"
     },
     {
       "id": "product",
@@ -84,13 +95,17 @@
       "examples": [
         "A kettle",
         "A hammer",
-        "A box of cups"
+        "A box of cups",
+        "Fact: Purchase Order 'PO-0201' reorders Product 'Kettle'."
       ],
       "specialCases": [
-        "The items on the shelf are Products, the count of them is Stock"
+        "The items on the shelf are Products, the count of them is Stock",
+        "A red kettle and a blue kettle are two Products when we keep and sell them separately"
       ],
       "definitionStatus": "agreed",
-      "w": "what"
+      "w": "what",
+      "definitionCategory": "Thing",
+      "definitionDifferentiator": "we sell to Customers and buy from Suppliers"
     },
     {
       "id": "stock",
@@ -99,17 +114,19 @@
       "aliases": [],
       "order": 5,
       "definitionCategory": "Quantity",
-      "definitionDifferentiator": "of a Product held in a Warehouse",
+      "definitionDifferentiator": "counts one Product held in one Warehouse",
       "domainId": "dom-inventory",
       "storyIds": [
         "s-restock"
       ],
       "examples": [
         "Forty kettles in the main warehouse this morning",
-        "Zero of a discontinued toaster"
+        "Zero of a discontinued toaster",
+        "Fact: Warehouse 'Main' stores Stock '40 kettles'."
       ],
       "specialCases": [
-        "Stock is the count, not the items, the items are Products"
+        "Stock is the count, not the items, the items are Products",
+        "Kettles loaded on a Delivery van are no longer Stock in the Warehouse"
       ],
       "definitionStatus": "agreed",
       "w": "how many"
@@ -126,13 +143,17 @@
       ],
       "examples": [
         "The kettle manufacturer",
-        "A wholesaler of kitchenware"
+        "A wholesaler of kitchenware",
+        "Fact: Supplier 'Kitchenware Wholesale' receives Purchase Order 'PO-0201'."
       ],
       "specialCases": [
-        "A Supplier that also buys from us is still a Supplier when it receives a Purchase Order"
+        "A Supplier that also buys from us is still a Supplier when it receives a Purchase Order",
+        "A company we have never sent a Purchase Order to is not yet a Supplier"
       ],
       "definitionStatus": "agreed",
-      "w": "who"
+      "w": "who",
+      "definitionCategory": "Organisation",
+      "definitionDifferentiator": "we buy Products from to restock our Warehouses"
     },
     {
       "id": "purchase-order",
@@ -145,11 +166,18 @@
         "s-restock"
       ],
       "examples": [
-        "A Purchase Order for two hundred kettles raised when Stock ran low"
+        "A Purchase Order for two hundred kettles raised when Stock ran low",
+        "A weekly Purchase Order to the wholesaler for cups and mugs",
+        "Fact: Employee 'Catherine' raises Purchase Order 'PO-0201'."
       ],
-      "specialCases": [],
+      "specialCases": [
+        "A Purchase Order we cancel before the Supplier ships is still a Purchase Order",
+        "Sending faulty Products back to a Supplier is a return, not a Purchase Order"
+      ],
       "definitionStatus": "agreed",
-      "w": "what"
+      "w": "what",
+      "definitionCategory": "Request",
+      "definitionDifferentiator": "we send to a Supplier for one or many Products, to restock"
     },
     {
       "id": "warehouse",
@@ -164,13 +192,17 @@
       ],
       "examples": [
         "The main warehouse",
-        "The north warehouse"
+        "The north warehouse",
+        "Fact: Warehouse 'North' dispatches Delivery 'D-7781'."
       ],
       "specialCases": [
-        "A store's back room that ships online orders counts as a Warehouse"
+        "A store's back room that ships online orders counts as a Warehouse",
+        "A store that only sells over the counter is not a Warehouse"
       ],
       "definitionStatus": "agreed",
-      "w": "where"
+      "w": "where",
+      "definitionCategory": "Place",
+      "definitionDifferentiator": "holds Stock and dispatches Deliveries"
     },
     {
       "id": "warehouse-physical-location",
@@ -183,13 +215,18 @@
         "s-restock"
       ],
       "examples": [
-        "Bedford"
+        "Bedford",
+        "A unit on the industrial park at the edge of town",
+        "Fact: Warehouse 'Main' is located in Warehouse Physical Location 'Bedford'."
       ],
       "specialCases": [
-        "When a Warehouse moves, it gets a new Warehouse Physical Location"
+        "When a Warehouse moves, it gets a new Warehouse Physical Location",
+        "One Warehouse Physical Location holds one Warehouse on this Map"
       ],
       "definitionStatus": "agreed",
-      "w": "where"
+      "w": "where",
+      "definitionCategory": "Address",
+      "definitionDifferentiator": "a Warehouse sits at"
     },
     {
       "id": "customer-delivery-location",
@@ -204,13 +241,17 @@
       ],
       "examples": [
         "A home address",
-        "A café's back door"
+        "A café's back door",
+        "Fact: Customer 'Harbour Café' has Customer Delivery Location 'Back door, 12 Quay Street'."
       ],
       "specialCases": [
-        "A Customer can have several, home and work"
+        "A Customer can have several, home and work",
+        "A store where a Customer collects an order is not a Customer Delivery Location"
       ],
       "definitionStatus": "agreed",
-      "w": "where"
+      "w": "where",
+      "definitionCategory": "Place",
+      "definitionDifferentiator": "a Customer has asked us to deliver to"
     },
     {
       "id": "delivery",
@@ -224,13 +265,18 @@
         "s-return"
       ],
       "examples": [
-        "Two mugs delivered to a home address on Tuesday"
+        "Two mugs delivered to a home address on Tuesday",
+        "Cups for the café, delivered to its back door on Friday",
+        "Fact: Delivery 'D-7781' fulfils Sales Order 'SO-1042'."
       ],
       "specialCases": [
-        "One Sales Order can arrive in several Deliveries, and one Delivery can carry several Sales Orders"
+        "One Sales Order can arrive in several Deliveries, and one Delivery can carry several Sales Orders",
+        "A van run with three stops is three Deliveries, one for each Customer Delivery Location"
       ],
       "definitionStatus": "agreed",
-      "w": "what"
+      "w": "what",
+      "definitionCategory": "Trip",
+      "definitionDifferentiator": "takes Products from a Warehouse to a Customer Delivery Location"
     },
     {
       "id": "employee",
@@ -246,13 +292,17 @@
       ],
       "examples": [
         "Catherine, who raises the Purchase Orders",
-        "A driver who delivers to Customers"
+        "A driver who delivers to Customers",
+        "Fact: Employee 'Sam' delivers Delivery 'D-7781'."
       ],
       "specialCases": [
-        "A contractor who delivers for us is treated as an Employee on this Map"
+        "A contractor who delivers for us is treated as an Employee on this Map",
+        "A Supplier's driver who drops off Products is not an Employee"
       ],
       "definitionStatus": "agreed",
-      "w": "who"
+      "w": "who",
+      "definitionCategory": "Person",
+      "definitionDifferentiator": "works for us and does the work in this Scope"
     },
     {
       "id": "team",
@@ -266,11 +316,17 @@
       ],
       "examples": [
         "The dispatch team",
-        "The north warehouse team"
+        "The north warehouse team",
+        "Fact: Employee 'Priya' leads Team 'Dispatch'."
       ],
-      "specialCases": [],
+      "specialCases": [
+        "An Employee is a member of one Team at a time",
+        "A group that meets for one project is not a Team"
+      ],
       "definitionStatus": "agreed",
-      "w": "who"
+      "w": "who",
+      "definitionCategory": "Group of Employees",
+      "definitionDifferentiator": "do the work together, led by one Employee"
     }
   ],
   "relationships": [

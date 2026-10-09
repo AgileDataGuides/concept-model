@@ -24,7 +24,7 @@ const LS_KEY = 'concept-model-demo-models';
 const SEED_VERSION_KEY = 'concept-model-demo-seed-version';
 
 /** Bump when bundled JSONs change. ISO date, with a suffix for a second change on one day. */
-const SEED_VERSION = '2026-10-09';
+const SEED_VERSION = '2026-10-09b';
 
 const SEEDS: ConceptModel[] = [
 	blueBookRetailSeed as unknown as ConceptModel,

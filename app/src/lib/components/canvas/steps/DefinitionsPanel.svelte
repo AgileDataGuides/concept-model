@@ -6,9 +6,10 @@
 	import type { DataAdapter } from '$lib/cp-shared';
 	import type { CmView } from '$lib/model/graph-view';
 	import { patchNode } from '$lib/model/graph-actions';
-	import { DEFINITION_STATUSES } from '$lib/canon/steps';
+	import { DEFINITION_PARTS, DEFINITION_STATUSES } from '$lib/canon/steps';
+	import { conceptsNamed, definitionSentence, partOneText } from '$lib/model/definition';
 	import type { DefinitionStatus } from '$lib/types';
-	import { BUTTON, CARD, EMPTY_HINT, INPUT, ROW_ACTIONS, STEP_PANEL, STEP_RAIL, TYPE } from '$lib/ui/tokens';
+	import { BUTTON, CARD, CONCEPT_LINK, EMPTY_HINT, INPUT, ROW_ACTIONS, STEP_PANEL, STEP_RAIL, TYPE } from '$lib/ui/tokens';
 	import ChoiceChips from '../../ui/ChoiceChips.svelte';
 	import EditableText from '../../ui/EditableText.svelte';
 	import ListEditor from '../../ui/ListEditor.svelte';
@@ -23,6 +24,16 @@
 
 	const TONE = { draft: 'neutral', agreed: 'positive', flagged: 'warning' } as const;
 	const statusLabel = (status: DefinitionStatus) => DEFINITION_STATUSES.find((s) => s.id === status)?.label ?? 'Draft';
+
+	// The Aristotle helper's sentence, offered for part one while part one is empty,
+	// so it never writes over a Description someone has already agreed
+	const sentence = $derived(current ? definitionSentence(current.name, current.definitionCategory, current.definitionDifferentiator) : '');
+	const offerSentence = $derived(!!sentence && !current?.description.trim());
+
+	// The other Concepts this Definition names, so one click opens each of them
+	const named = $derived(
+		current ? conceptsNamed([partOneText(current), ...current.examples, ...current.specialCases], cm.concepts, current.id) : []
+	);
 
 	function next() {
 		if (!current) return;
@@ -65,38 +76,77 @@
 				</div>
 			</div>
 
-			<div class="space-y-1">
-				<span class={INPUT.label}>Part one: the nature of the thing</span>
+			<div class="space-y-2">
+				<span class={INPUT.label}>{DEFINITION_PARTS.partOne}</span>
 				<EditableText
 					value={current.description}
 					label="The nature of {current.name}"
-					placeholder="One or two sentences in everyday language. What must be true for something to be a {current.name}?"
+					placeholder={DEFINITION_PARTS.partOnePlaceholder(current.name)}
 					multiline
 					onSave={(description) => patchNode(adapter, current.node, {}, { description })}
 				/>
-				{#if current.definitionCategory || current.definitionDifferentiator}
-					<p class="text-[11px] text-slate-500">
-						Helper: a {current.name} is a {current.definitionCategory || '…'} that {current.definitionDifferentiator || '…'}
-					</p>
-				{/if}
+				<div class="space-y-1">
+					<span class={INPUT.label}>{DEFINITION_PARTS.helper}</span>
+					<!-- The same two lines as the Details popup: is a [category], that [feature] -->
+					<div class="flex items-baseline gap-2">
+						<span class="{INPUT.label} shrink-0 w-8">is a</span>
+						<div class="min-w-0 flex-1">
+							<EditableText
+								value={current.definitionCategory ?? ''}
+								label="Broader category for {current.name}"
+								placeholder="broader category"
+								onSave={(definitionCategory) => patchNode(adapter, current.node, { definitionCategory })}
+							/>
+						</div>
+					</div>
+					<div class="flex items-baseline gap-2">
+						<span class="{INPUT.label} shrink-0 w-8">that</span>
+						<div class="min-w-0 flex-1">
+							<EditableText
+								value={current.definitionDifferentiator ?? ''}
+								label="What sets {current.name} apart"
+								placeholder="what sets it apart"
+								onSave={(definitionDifferentiator) => patchNode(adapter, current.node, { definitionDifferentiator })}
+							/>
+						</div>
+					</div>
+					{#if offerSentence}
+						<div class="flex items-start justify-between gap-3">
+							<p class="text-[11px] text-slate-500">{sentence}</p>
+							<button
+								type="button"
+								class="{ROW_ACTIONS.neutral} shrink-0"
+								onclick={() => patchNode(adapter, current.node, {}, { description: sentence })}
+							>{DEFINITION_PARTS.useSentence}</button>
+						</div>
+					{/if}
+				</div>
 			</div>
 
 			<ListEditor
 				items={current.examples}
-				label="Part two: examples"
-				placeholder="A real example, press Enter"
+				label={DEFINITION_PARTS.partTwo}
+				placeholder={DEFINITION_PARTS.partTwoPlaceholder}
 				onChange={(examples) => patchNode(adapter, current.node, { examples })}
 			/>
 
 			<ListEditor
 				items={current.specialCases}
-				label="Part three: special cases and points of confusion"
-				placeholder="A special case, press Enter"
+				label={DEFINITION_PARTS.partThree}
+				placeholder={DEFINITION_PARTS.partThreePlaceholder}
 				onChange={(specialCases) => patchNode(adapter, current.node, { specialCases })}
 			/>
 
+			{#if named.length > 0}
+				<p class="text-[11px] text-slate-500">
+					Refers to
+					{#each named as id, i (id)}{#if i > 0},{/if}
+						<button type="button" class={CONCEPT_LINK} onclick={() => (chosenId = id)}>{cm.conceptById.get(id)?.name}</button>{/each}
+				</p>
+			{/if}
+
 			<div>
-				<span class={INPUT.label}>Status</span>
+				<span class={INPUT.label}>{DEFINITION_PARTS.status}</span>
 				<ChoiceChips
 					options={DEFINITION_STATUSES}
 					value={current.status}

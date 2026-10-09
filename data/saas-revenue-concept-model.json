@@ -7,24 +7,26 @@
     {
       "id": "prospect",
       "name": "Prospect",
-      "description": "A person or organisation that has shown interest in the product but has not yet purchased.",
+      "description": "A Prospect is a person or organisation that has shown interest in the product but has not yet bought a paid Plan.",
       "aliases": [
         "Lead",
         "Potential Customer"
       ],
       "order": 1,
-      "definitionCategory": "Person",
-      "definitionDifferentiator": "has expressed interest but has not yet purchased",
+      "definitionCategory": "Person or organisation",
+      "definitionDifferentiator": "has shown interest in the product but has not yet bought a paid @{Plan}",
       "domainId": "dom-marketing",
       "storyIds": [
         "s-prospect-to-customer"
       ],
       "examples": [
         "Someone who clicked a LinkedIn ad and read the pricing page",
-        "A company that booked a demo but has not started a Trial"
+        "A company that booked a demo but has not started a Trial",
+        "Fact: Prospect 'Jo Lee' clicks on Ad 'Close your month faster'."
       ],
       "specialCases": [
-        "A person on a Trial is still a Prospect until they subscribe to a paid Plan"
+        "A person on a Trial is still a Prospect until they subscribe to a paid Plan",
+        "A Prospect who comes back later through a second Channel keeps the Channel that first brought them"
       ],
       "definitionStatus": "agreed",
       "w": "who"
@@ -32,14 +34,14 @@
     {
       "id": "customer",
       "name": "Customer",
-      "description": "A person or organisation that has an active or past paid subscription.",
+      "description": "A Customer is a person or organisation that has, or has had, a paid Subscription.",
       "aliases": [
         "Client",
         "Subscriber",
         "Account Holder"
       ],
       "order": 2,
-      "definitionCategory": "Person",
+      "definitionCategory": "Person or organisation",
       "definitionDifferentiator": "has purchased at least one @{Subscription}",
       "domainId": "dom-sales",
       "storyIds": [
@@ -49,7 +51,8 @@
       ],
       "examples": [
         "A startup paying monthly for the Starter Plan",
-        "A company that cancelled last year"
+        "A company that cancelled last year",
+        "Fact: Customer 'Acme' subscribes to Subscription 'SUB-0042'."
       ],
       "specialCases": [
         "A Prospect on a free Trial is not a Customer yet",
@@ -61,7 +64,7 @@
     {
       "id": "account",
       "name": "Account",
-      "description": "The container that groups one or more users from the same customer and holds their subscription, billing, and usage.",
+      "description": "An Account is the record that groups the users of one Customer and holds their Subscription, billing and usage.",
       "aliases": [
         "Tenant",
         "Organisation Account"
@@ -74,31 +77,40 @@
         "s-prospect-to-customer"
       ],
       "examples": [
-        "The Acme account, holding five users and one Subscription"
+        "The Acme account, holding five users and one Subscription",
+        "A two-person startup's account, with one user who pays",
+        "Fact: Account 'acme' holds Subscription 'SUB-0042'."
       ],
       "definitionStatus": "agreed",
-      "w": "what"
+      "w": "what",
+      "specialCases": [
+        "A Customer with two Accounts, one for each business unit, is still one Customer",
+        "A user invited to the Acme account is not a Customer in their own right"
+      ]
     },
     {
       "id": "trial",
       "name": "Trial",
-      "description": "A fixed-duration free evaluation period during which a prospect can use the product before committing to a paid plan.",
+      "description": "A Trial is a fixed period of free use that lets a Prospect try the product before choosing a paid Plan.",
       "aliases": [
         "Free Trial",
         "Evaluation Period"
       ],
       "order": 4,
-      "definitionCategory": "Agreement",
-      "definitionDifferentiator": "gives a @{Prospect} time-boxed free access before converting",
+      "definitionCategory": "Period of free use",
+      "definitionDifferentiator": "lets a @{Prospect} try the product before choosing a paid @{Plan}",
       "domainId": "dom-sales",
       "storyIds": [
         "s-prospect-to-customer"
       ],
       "examples": [
-        "A 14-day free Trial of the Pro Plan"
+        "A 14-day free Trial of the Pro Plan",
+        "A Trial that ended last month without a purchase",
+        "Fact: Prospect 'Jo Lee' starts Trial 'TR-311'."
       ],
       "specialCases": [
-        "A Trial that Sales extends is still one Trial"
+        "A Trial that Sales extends is still one Trial",
+        "A free Plan with no end date is not a Trial"
       ],
       "definitionStatus": "agreed",
       "w": "what"
@@ -106,7 +118,7 @@
     {
       "id": "subscription",
       "name": "Subscription",
-      "description": "A recurring commitment by a customer to pay for access to a plan over a billing period.",
+      "description": "A Subscription is a Customer's recurring commitment to pay for a Plan, charged every Billing Period.",
       "aliases": [
         "Recurring Commitment",
         "Contract"
@@ -121,7 +133,9 @@
         "s-cancel-at-renewal"
       ],
       "examples": [
-        "Acme on the monthly Pro Plan, started 1 March"
+        "Acme on the monthly Pro Plan, started 1 March",
+        "A startup's annual Starter Subscription",
+        "Fact: Subscription 'SUB-0042' is on Plan 'Pro'."
       ],
       "specialCases": [
         "An upgrade moves the same Subscription to a new Plan, it does not start a new one",
@@ -133,7 +147,7 @@
     {
       "id": "plan",
       "name": "Plan",
-      "description": "A packaged tier of the product with a specific price, feature set, and usage limits.",
+      "description": "A Plan is a packaged tier of the product with its own price, features and usage limits.",
       "aliases": [
         "Tier",
         "Package",
@@ -149,22 +163,27 @@
       "examples": [
         "Starter",
         "Pro",
-        "Enterprise"
+        "Enterprise",
+        "Fact: Plan 'Pro' packages Product 'Revenue Hub'."
       ],
       "definitionStatus": "agreed",
-      "w": "what"
+      "w": "what",
+      "specialCases": [
+        "A custom price agreed with one Enterprise Customer is a Discount on the Enterprise Plan, not a new Plan",
+        "A retired Plan stays a Plan while Subscriptions are still on it"
+      ]
     },
     {
       "id": "billing-period",
       "name": "Billing Period",
-      "description": "The cadence at which the customer is charged for their subscription (monthly, annual).",
+      "description": "A Billing Period is how often a Subscription is charged, such as monthly or annually.",
       "aliases": [
         "Billing Cycle",
         "Cadence"
       ],
       "order": 7,
-      "definitionCategory": "Time Span",
-      "definitionDifferentiator": "defines when a @{Subscription} is charged",
+      "definitionCategory": "Time span",
+      "definitionDifferentiator": "sets how often a @{Subscription} is charged",
       "domainId": "dom-finance",
       "storyIds": [
         "s-prospect-to-customer",
@@ -172,7 +191,8 @@
       ],
       "examples": [
         "Monthly",
-        "Annual"
+        "Annual",
+        "Fact: Subscription 'SUB-0042' is billed in Billing Period 'Monthly'."
       ],
       "specialCases": [
         "Is a Billing Period the cadence (monthly) or one actual period (March)? The expert has not ruled yet"
@@ -183,7 +203,7 @@
     {
       "id": "invoice",
       "name": "Invoice",
-      "description": "A bill issued to a customer for a billing period of their subscription.",
+      "description": "An Invoice is the bill a Subscription produces for one Billing Period, sent to the Customer.",
       "aliases": [
         "Bill"
       ],
@@ -196,10 +216,13 @@
         "s-upgrade-mid-period"
       ],
       "examples": [
-        "The March invoice for Acme's Pro Subscription"
+        "The March invoice for Acme's Pro Subscription",
+        "The April Invoice that adds an onboarding fee",
+        "Fact: Subscription 'SUB-0042' produces Invoice 'INV-2026-0311'."
       ],
       "specialCases": [
-        "A prorated upgrade charge goes on the next Invoice, not a new one"
+        "A prorated upgrade charge goes on the next Invoice, not a new one",
+        "A credit note that reverses an Invoice is not an Invoice"
       ],
       "definitionStatus": "agreed",
       "w": "what"
@@ -207,42 +230,49 @@
     {
       "id": "payment",
       "name": "Payment",
-      "description": "Money received from a customer in settlement of an invoice.",
+      "description": "A Payment is money received from a Customer to settle an Invoice.",
       "aliases": [
         "Receipt",
         "Transaction"
       ],
       "order": 9,
-      "definitionCategory": "Financial Transaction",
+      "definitionCategory": "Financial transaction",
       "definitionDifferentiator": "settles an @{Invoice} with money from a @{Customer}",
       "domainId": "dom-finance",
       "storyIds": [
         "s-prospect-to-customer"
       ],
       "examples": [
-        "Acme's card payment for the March invoice"
+        "Acme's card payment for the March invoice",
+        "A startup's bank transfer for its annual Invoice",
+        "Fact: Payment 'PAY-8890' settles Invoice 'INV-2026-0311'."
       ],
       "definitionStatus": "agreed",
-      "w": "what"
+      "w": "what",
+      "specialCases": [
+        "One bank transfer that pays two Invoices is two Payments, one for each Invoice",
+        "A card charge that fails is not a Payment"
+      ]
     },
     {
       "id": "recurring-revenue",
       "name": "Recurring Revenue",
-      "description": "Income recognised from active subscriptions, normalised across customers and plans. The basis for MRR and ARR.",
+      "description": "Recurring Revenue is income from active Subscriptions, counted the same way across Customers and Plans. It is the basis for MRR and ARR.",
       "aliases": [
         "Subscription Revenue",
         "Predictable Revenue"
       ],
       "order": 10,
-      "definitionCategory": "Revenue",
-      "definitionDifferentiator": "is generated by active @{Subscription}s on a predictable cadence",
+      "definitionCategory": "Income",
+      "definitionDifferentiator": "comes from active @{Subscription}s on a predictable cadence",
       "domainId": "dom-finance",
       "storyIds": [
         "s-prospect-to-customer",
         "s-cancel-at-renewal"
       ],
       "examples": [
-        "Acme's Pro Subscription for March"
+        "Acme's Pro Subscription for March",
+        "Fact: Subscription 'SUB-0042' generates Recurring Revenue '$499 for March 2026'."
       ],
       "specialCases": [
         "Is Recurring Revenue one amount per Subscription per month, or a running total? It has to be countable to be a Concept"
@@ -253,49 +283,59 @@
     {
       "id": "one-time-revenue",
       "name": "One-Time Revenue",
-      "description": "Income from non-recurring sales (setup fees, add-ons, services). Explicitly excluded from MRR / ARR by this information product's scope.",
+      "description": "One-Time Revenue is income that does not repeat, such as setup fees, add-ons and paid training. SaaS Revenue Metrics leaves it out of MRR and ARR.",
       "aliases": [
         "Non-Recurring Revenue"
       ],
       "order": 11,
-      "definitionCategory": "Revenue",
-      "definitionDifferentiator": "is not generated by an active @{Subscription}",
+      "definitionCategory": "Income",
+      "definitionDifferentiator": "does not repeat, such as a setup fee, an add-on or a service",
       "domainId": "dom-finance",
       "storyIds": [
         "s-upgrade-mid-period"
       ],
       "examples": [
         "An onboarding fee",
-        "A paid training session"
+        "A paid training session",
+        "Fact: Invoice 'INV-2026-0402' includes One-Time Revenue 'Onboarding fee'."
       ],
       "definitionStatus": "draft",
-      "w": "how many"
+      "w": "how many",
+      "specialCases": [
+        "An add-on that renews every month with the Subscription is Recurring Revenue, not One-Time Revenue"
+      ]
     },
     {
       "id": "discount",
       "name": "Discount",
-      "description": "A reduction applied to a subscription's list price. It is included in revenue calculations, per the IP's scope decisions.",
+      "description": "A Discount is a reduction to a Subscription's list price. SaaS Revenue Metrics counts revenue after Discounts.",
       "aliases": [
         "Promotion",
         "Price Adjustment"
       ],
       "order": 12,
-      "definitionCategory": "Price Adjustment",
-      "definitionDifferentiator": "reduces the price of a @{Subscription} for a @{Customer}",
+      "definitionCategory": "Price adjustment",
+      "definitionDifferentiator": "reduces the list price of a @{Subscription}",
       "domainId": "dom-sales",
       "storyIds": [
         "s-upgrade-mid-period"
       ],
       "examples": [
-        "20% off the first year of the Pro Plan"
+        "20% off the first year of the Pro Plan",
+        "A partner's 10% off for as long as they subscribe",
+        "Fact: Discount 'FIRSTYEAR20' is applied to Subscription 'SUB-0042'."
       ],
       "definitionStatus": "draft",
-      "w": "why"
+      "w": "why",
+      "specialCases": [
+        "A refund after a Payment is not a Discount",
+        "Moving to a cheaper Plan is not a Discount"
+      ]
     },
     {
       "id": "channel",
       "name": "Channel",
-      "description": "A source through which a prospect was first reached (ad, referral, organic, direct).",
+      "description": "A Channel is the source that first brought a Prospect to the product, such as an ad, a referral, organic search or a direct visit.",
       "aliases": [
         "Acquisition Channel",
         "Source"
@@ -310,60 +350,86 @@
       "examples": [
         "LinkedIn ads",
         "A partner referral",
-        "Organic search"
+        "Organic search",
+        "Fact: Prospect 'Jo Lee' is acquired through Channel 'LinkedIn ads'."
       ],
       "definitionStatus": "agreed",
-      "w": "where"
+      "w": "where",
+      "specialCases": [
+        "A Prospect has one Channel, the first one, even after visits through others"
+      ]
     },
     {
       "id": "ad",
       "name": "Ad",
-      "description": "A specific marketing creative run on a channel that prospects may click.",
+      "description": "An Ad is one marketing creative that runs on a Channel, which Prospects can click.",
       "aliases": [
         "Advertisement",
         "Campaign Creative"
       ],
       "order": 14,
-      "definitionCategory": "Marketing Asset",
-      "definitionDifferentiator": "is the creative a @{Prospect} clicks on a @{Channel}",
+      "definitionCategory": "Marketing creative",
+      "definitionDifferentiator": "runs on one @{Channel} for @{Prospect}s to click",
       "domainId": "dom-marketing",
       "storyIds": [
         "s-prospect-to-customer"
       ],
       "examples": [
-        "The \"Close your month faster\" LinkedIn campaign creative"
+        "The \"Close your month faster\" LinkedIn campaign creative",
+        "A Google search ad for 'MRR dashboard'",
+        "Fact: Ad 'Close your month faster' runs on Channel 'LinkedIn ads'."
       ],
       "definitionStatus": "agreed",
-      "w": "what"
+      "w": "what",
+      "specialCases": [
+        "The same creative run on two Channels is two Ads, one for each Channel"
+      ]
     },
     {
       "id": "segment",
       "name": "Customer Segment",
-      "description": "A grouping of customers based on demographic attributes, never acquisition cohorts, per the IP's scope decisions.",
+      "description": "A Customer Segment is a group of Customers who share a demographic attribute, such as company size or region. It is never an acquisition cohort.",
       "aliases": [
         "Demographic Segment"
       ],
       "order": 15,
-      "definitionCategory": "Grouping",
-      "definitionDifferentiator": "groups @{Customer}s by demographic attribute",
+      "definitionCategory": "Group of Customers",
+      "definitionDifferentiator": "share a demographic attribute",
       "domainId": "dom-sales",
       "definitionStatus": "draft",
-      "w": "who"
+      "w": "who",
+      "examples": [
+        "Companies with 1–50 employees",
+        "Customers in Australia and New Zealand",
+        "Fact: Customer 'Acme' belongs to Customer Segment '51–200 employees'."
+      ],
+      "specialCases": [
+        "Customers who signed up in March are a cohort, not a Customer Segment",
+        "A Customer can belong to several Customer Segments at once, one for each attribute"
+      ]
     },
     {
       "id": "product",
       "name": "Product",
-      "description": "The SaaS application itself: the thing subscribers subscribe to.",
+      "description": "The Product is the SaaS application itself, the thing Customers subscribe to through a Plan.",
       "aliases": [
         "Service",
         "Offering"
       ],
       "order": 16,
-      "definitionCategory": "Offering",
-      "definitionDifferentiator": "is the SaaS application sold via @{Plan}s",
+      "definitionCategory": "Software application",
+      "definitionDifferentiator": "@{Customer}s subscribe to through a @{Plan}",
       "domainId": "dom-product",
       "definitionStatus": "draft",
-      "w": "what"
+      "w": "what",
+      "examples": [
+        "Revenue Hub, the app itself",
+        "Fact: Plan 'Starter' packages Product 'Revenue Hub'."
+      ],
+      "specialCases": [
+        "An onboarding service sold beside the app is One-Time Revenue, not a Product",
+        "A new feature inside the app is part of the Product, not a new Product"
+      ]
     }
   ],
   "relationships": [
