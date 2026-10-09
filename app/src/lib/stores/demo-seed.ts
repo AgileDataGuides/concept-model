@@ -17,15 +17,17 @@ import { applyDemoSeeds } from '$lib/cp-shared-demo-seed';
 import type { ConceptModel } from '$lib/types';
 
 import saasRevenueSeed from '$data/saas-revenue-concept-model.json';
+import blueBookRetailSeed from '$data/blue-book-retail-concept-model.json';
 
 // Must match LS_KEY in `concept-model.svelte.ts` — the store reads what this seeds.
 const LS_KEY = 'concept-model-demo-models';
 const SEED_VERSION_KEY = 'concept-model-demo-seed-version';
 
 /** Bump when bundled JSONs change. ISO date, with a suffix for a second change on one day. */
-const SEED_VERSION = '2026-10-05';
+const SEED_VERSION = '2026-10-09';
 
 const SEEDS: ConceptModel[] = [
+	blueBookRetailSeed as unknown as ConceptModel,
 	saasRevenueSeed as unknown as ConceptModel
 ];
 

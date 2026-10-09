@@ -1,9 +1,10 @@
-// Turtle and RDF/XML round trips of the SaaS example, through this app's own
+// Turtle and RDF/XML round trips of the SaaS and Blue Book examples, through this app's own
 // converter: the native model to the graph, the graph to RDF, and back.
 
 import { describe, expect, it } from 'vitest';
 import { getLanguage } from '$lib/languages';
 import sample from '../../../../data/saas-revenue-concept-model.json';
+import blueBookSample from '../../../../data/blue-book-retail-concept-model.json';
 import type { ConceptModel } from '$lib/types';
 import { migrateModel } from '$lib/model/migrate';
 import { conceptModelToContextPlane, contextPlaneToConceptModel } from './context-plane';
@@ -52,6 +53,12 @@ describe.each(['turtle', 'rdf-xml'])('%s', (languageId) => {
 		const file = language.export(conceptModelToContextPlane(model));
 		const back = migrateModel(contextPlaneToConceptModel(language.import(file)));
 		expect(comparable(back)).toEqual(comparable(model));
+	});
+
+	it('brings the Blue Book retail example back whole', () => {
+		const blueBook = migrateModel(blueBookSample as unknown as ConceptModel);
+		const back = migrateModel(contextPlaneToConceptModel(language.import(language.export(conceptModelToContextPlane(blueBook)))));
+		expect(comparable(back)).toEqual(comparable(blueBook));
 	});
 
 	it('keeps every id the app minted from a name', () => {

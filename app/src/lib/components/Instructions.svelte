@@ -29,7 +29,7 @@
 	<div class="options">
 		<section class="option-card">
 			<h3>Quick Start: Explore the Example</h3>
-			<p>The app opens on the <strong>SaaS Revenue Concept Model</strong>, which takes every step.</p>
+			<p>The app opens on the <strong>Blue Book Retail Concept Model</strong>, which takes every step: the worked example from the Blue Book, a retailer modeled from order to delivery, with the thirteen Concepts and five Core Business Events the book draws. The <strong>SaaS Revenue Concept Model</strong> sits beside it in the model switcher.</p>
 			<ol>
 				<li>The <strong>Steps</strong> tab lists the eleven steps down the left. Each row says how far that step has got. Click any row to open it.</li>
 				<li>The <strong>Map</strong> tab shows the Concept Map the way the Blue Book draws it: Concepts as sticky notes, Domains as pinned sheets of paper, Core Business Events as diamonds, and the verbs on every line, each with its Relationship Rule under it: read from a Concept, the nearest verb and rule start the sentence, "Customer places one or many" Sales Orders. Drag a Domain by its name to move its whole sheet. The switches at the top of the Map turn its layers on and off: Domains, Concepts, Relationship Lines, Relationship Verbs, Relationship Rules and Events. Relationship Verbs shows the Step 6 verbs, and Relationship Rules shows the Step 7 rule words such as "one or many". Either can show without the other. Turn on only what a step adds to draw that step's picture, such as Domains and Concepts for Step 4. <strong>Export SVG</strong> saves the whole Map as one picture file, with the layers that are on.</li>

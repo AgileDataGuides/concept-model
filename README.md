@@ -22,7 +22,7 @@ The Steps tab lists the eleven steps, each with the question it asks, from ident
 
 **[Launch the Live Demo](https://agiledataguides.github.io/concept-model)**. No install required. The demo runs entirely in your browser. Your data is saved in localStorage and never leaves your device.
 
-The demo opens on the *SaaS Revenue Concept Model*, which takes every step, so you can explore the app straight away.
+The demo opens on the *Blue Book Retail Concept Model*, the worked example from the Blue Book, which takes every step, so you can explore the app straight away. The *SaaS Revenue Concept Model* sits beside it in the model switcher.
 
 ## Install and Run Locally
 

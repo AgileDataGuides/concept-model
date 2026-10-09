@@ -1,0 +1,945 @@
+{
+  "version": "2.0",
+  "id": "blue-book-retail-concept-model",
+  "name": "Blue Book Retail Concept Model",
+  "description": "The worked example from the Blue Book, an Agile Data Guide to Modeling Business Concepts by Juha Korpela and Shane Gibson: a retailer that sells products through a website and physical stores, modeled from order to delivery.",
+  "concepts": [
+    {
+      "id": "customer",
+      "name": "Customer",
+      "description": "A Customer is a person or organisation that has placed at least one Sales Order with us, through any Channel.",
+      "aliases": [],
+      "order": 1,
+      "definitionCategory": "Person or organisation",
+      "definitionDifferentiator": "has placed at least one Sales Order with us",
+      "domainId": "dom-sales",
+      "storyIds": [
+        "s-order",
+        "s-return"
+      ],
+      "examples": [
+        "A shopper who bought a kettle on the website last week",
+        "A café that orders cups from the store every month"
+      ],
+      "specialCases": [
+        "Someone with an account and no Sales Orders is a prospect, not a Customer"
+      ],
+      "definitionStatus": "agreed",
+      "w": "who"
+    },
+    {
+      "id": "channel",
+      "name": "Channel",
+      "description": "A Channel is a way a Customer can place a Sales Order with us.",
+      "aliases": [],
+      "order": 2,
+      "domainId": "dom-sales",
+      "storyIds": [
+        "s-order"
+      ],
+      "examples": [
+        "The website",
+        "A physical store"
+      ],
+      "specialCases": [
+        "A phone call taken in a store is placed through that store"
+      ],
+      "definitionStatus": "agreed",
+      "w": "where"
+    },
+    {
+      "id": "sales-order",
+      "name": "Sales Order",
+      "description": "A Sales Order is a Customer's request to buy one or many Products, placed through one Channel.",
+      "aliases": [
+        "Order"
+      ],
+      "order": 3,
+      "domainId": "dom-sales",
+      "storyIds": [
+        "s-order",
+        "s-return"
+      ],
+      "examples": [
+        "An order for a kettle and two mugs placed on the website this morning"
+      ],
+      "specialCases": [
+        "A Sales Order can be fulfilled by more than one Delivery when the Products ship separately"
+      ],
+      "definitionStatus": "agreed",
+      "w": "what"
+    },
+    {
+      "id": "product",
+      "name": "Product",
+      "description": "A Product is a thing we sell to Customers and buy from Suppliers.",
+      "aliases": [],
+      "order": 4,
+      "domainId": "dom-inventory",
+      "storyIds": [
+        "s-order",
+        "s-restock",
+        "s-return"
+      ],
+      "examples": [
+        "A kettle",
+        "A hammer",
+        "A box of cups"
+      ],
+      "specialCases": [
+        "The items on the shelf are Products, the count of them is Stock"
+      ],
+      "definitionStatus": "agreed",
+      "w": "what"
+    },
+    {
+      "id": "stock",
+      "name": "Stock",
+      "description": "Stock is the quantity of a Product held in a Warehouse.",
+      "aliases": [],
+      "order": 5,
+      "definitionCategory": "Quantity",
+      "definitionDifferentiator": "of a Product held in a Warehouse",
+      "domainId": "dom-inventory",
+      "storyIds": [
+        "s-restock"
+      ],
+      "examples": [
+        "Forty kettles in the main warehouse this morning",
+        "Zero of a discontinued toaster"
+      ],
+      "specialCases": [
+        "Stock is the count, not the items, the items are Products"
+      ],
+      "definitionStatus": "agreed",
+      "w": "how many"
+    },
+    {
+      "id": "supplier",
+      "name": "Supplier",
+      "description": "A Supplier is an organisation we buy Products from to restock our Warehouses.",
+      "aliases": [],
+      "order": 6,
+      "domainId": "dom-inventory",
+      "storyIds": [
+        "s-restock"
+      ],
+      "examples": [
+        "The kettle manufacturer",
+        "A wholesaler of kitchenware"
+      ],
+      "specialCases": [
+        "A Supplier that also buys from us is still a Supplier when it receives a Purchase Order"
+      ],
+      "definitionStatus": "agreed",
+      "w": "who"
+    },
+    {
+      "id": "purchase-order",
+      "name": "Purchase Order",
+      "description": "A Purchase Order is our request to a Supplier for one or many Products, raised by an Employee to restock.",
+      "aliases": [],
+      "order": 7,
+      "domainId": "dom-inventory",
+      "storyIds": [
+        "s-restock"
+      ],
+      "examples": [
+        "A Purchase Order for two hundred kettles raised when Stock ran low"
+      ],
+      "specialCases": [],
+      "definitionStatus": "agreed",
+      "w": "what"
+    },
+    {
+      "id": "warehouse",
+      "name": "Warehouse",
+      "description": "A Warehouse is a place where we hold Stock and dispatch Deliveries from.",
+      "aliases": [],
+      "order": 8,
+      "domainId": "dom-inventory",
+      "storyIds": [
+        "s-restock",
+        "s-return"
+      ],
+      "examples": [
+        "The main warehouse",
+        "The north warehouse"
+      ],
+      "specialCases": [
+        "A store's back room that ships online orders counts as a Warehouse"
+      ],
+      "definitionStatus": "agreed",
+      "w": "where"
+    },
+    {
+      "id": "warehouse-physical-location",
+      "name": "Warehouse Physical Location",
+      "description": "A Warehouse Physical Location is the address a Warehouse sits at.",
+      "aliases": [],
+      "order": 9,
+      "domainId": "dom-inventory",
+      "storyIds": [
+        "s-restock"
+      ],
+      "examples": [
+        "Bedford"
+      ],
+      "specialCases": [
+        "When a Warehouse moves, it gets a new Warehouse Physical Location"
+      ],
+      "definitionStatus": "agreed",
+      "w": "where"
+    },
+    {
+      "id": "customer-delivery-location",
+      "name": "Customer Delivery Location",
+      "description": "A Customer Delivery Location is a place a Customer has asked us to deliver to.",
+      "aliases": [],
+      "order": 10,
+      "domainId": "dom-fulfilment",
+      "storyIds": [
+        "s-order",
+        "s-return"
+      ],
+      "examples": [
+        "A home address",
+        "A café's back door"
+      ],
+      "specialCases": [
+        "A Customer can have several, home and work"
+      ],
+      "definitionStatus": "agreed",
+      "w": "where"
+    },
+    {
+      "id": "delivery",
+      "name": "Delivery",
+      "description": "A Delivery is one trip that takes Products from a Warehouse to a Customer Delivery Location.",
+      "aliases": [],
+      "order": 11,
+      "domainId": "dom-fulfilment",
+      "storyIds": [
+        "s-order",
+        "s-return"
+      ],
+      "examples": [
+        "Two mugs delivered to a home address on Tuesday"
+      ],
+      "specialCases": [
+        "One Sales Order can arrive in several Deliveries, and one Delivery can carry several Sales Orders"
+      ],
+      "definitionStatus": "agreed",
+      "w": "what"
+    },
+    {
+      "id": "employee",
+      "name": "Employee",
+      "description": "An Employee is a person who works for us and does the work in this Scope.",
+      "aliases": [],
+      "order": 12,
+      "domainId": "dom-hr",
+      "storyIds": [
+        "s-order",
+        "s-restock",
+        "s-team-lead"
+      ],
+      "examples": [
+        "Catherine, who raises the Purchase Orders",
+        "A driver who delivers to Customers"
+      ],
+      "specialCases": [
+        "A contractor who delivers for us is treated as an Employee on this Map"
+      ],
+      "definitionStatus": "agreed",
+      "w": "who"
+    },
+    {
+      "id": "team",
+      "name": "Team",
+      "description": "A Team is a group of Employees who do the work together, led by one Employee.",
+      "aliases": [],
+      "order": 13,
+      "domainId": "dom-hr",
+      "storyIds": [
+        "s-team-lead"
+      ],
+      "examples": [
+        "The dispatch team",
+        "The north warehouse team"
+      ],
+      "specialCases": [],
+      "definitionStatus": "agreed",
+      "w": "who"
+    }
+  ],
+  "relationships": [
+    {
+      "id": "r-customer-places-sales-order",
+      "sourceConceptId": "customer",
+      "targetConceptId": "sales-order",
+      "label": "places",
+      "cardinality": "1 : 1..*",
+      "inverseLabel": "is placed by",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "one"
+        }
+      }
+    },
+    {
+      "id": "r-sales-order-placed-via-channel",
+      "sourceConceptId": "sales-order",
+      "targetConceptId": "channel",
+      "label": "is placed via",
+      "cardinality": "1..* : 1",
+      "inverseLabel": "is used to place",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "one"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "many"
+        }
+      }
+    },
+    {
+      "id": "r-sales-order-placed-for-product",
+      "sourceConceptId": "sales-order",
+      "targetConceptId": "product",
+      "label": "is placed for",
+      "cardinality": "1..* : 1..*",
+      "inverseLabel": "is placed on",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "many"
+        }
+      }
+    },
+    {
+      "id": "r-customer-has-delivery-location",
+      "sourceConceptId": "customer",
+      "targetConceptId": "customer-delivery-location",
+      "label": "has",
+      "cardinality": "1 : 1..*",
+      "inverseLabel": "belongs to",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "one"
+        }
+      }
+    },
+    {
+      "id": "r-delivery-fulfils-sales-order",
+      "sourceConceptId": "delivery",
+      "targetConceptId": "sales-order",
+      "label": "fulfils",
+      "cardinality": "1..* : 1..*",
+      "inverseLabel": "is fulfilled by",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "many"
+        }
+      }
+    },
+    {
+      "id": "r-delivery-delivered-to-location",
+      "sourceConceptId": "delivery",
+      "targetConceptId": "customer-delivery-location",
+      "label": "is delivered to",
+      "cardinality": "1..* : 1",
+      "inverseLabel": "receives",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "one"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "many"
+        }
+      }
+    },
+    {
+      "id": "r-delivery-contains-product",
+      "sourceConceptId": "delivery",
+      "targetConceptId": "product",
+      "label": "contains",
+      "cardinality": "1..* : 1..*",
+      "inverseLabel": "is contained in",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "many"
+        }
+      }
+    },
+    {
+      "id": "r-warehouse-dispatches-delivery",
+      "sourceConceptId": "warehouse",
+      "targetConceptId": "delivery",
+      "label": "dispatches",
+      "cardinality": "1 : 1..*",
+      "inverseLabel": "is dispatched from",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "one"
+        }
+      }
+    },
+    {
+      "id": "r-employee-delivers-delivery",
+      "sourceConceptId": "employee",
+      "targetConceptId": "delivery",
+      "label": "delivers",
+      "cardinality": "1 : 1..*",
+      "inverseLabel": "is delivered by",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "one"
+        }
+      }
+    },
+    {
+      "id": "r-warehouse-located-in-location",
+      "sourceConceptId": "warehouse",
+      "targetConceptId": "warehouse-physical-location",
+      "label": "is located in",
+      "cardinality": "1 : 1",
+      "inverseLabel": "holds",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "one"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "one"
+        }
+      }
+    },
+    {
+      "id": "r-warehouse-stores-stock",
+      "sourceConceptId": "warehouse",
+      "targetConceptId": "stock",
+      "label": "stores",
+      "cardinality": "1 : 1..*",
+      "inverseLabel": "is stored in",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "one"
+        }
+      }
+    },
+    {
+      "id": "r-product-added-to-stock",
+      "sourceConceptId": "product",
+      "targetConceptId": "stock",
+      "label": "is added to",
+      "cardinality": "1 : 1..*",
+      "inverseLabel": "contains",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "one"
+        }
+      }
+    },
+    {
+      "id": "r-purchase-order-reorders-product",
+      "sourceConceptId": "purchase-order",
+      "targetConceptId": "product",
+      "label": "reorders",
+      "cardinality": "1..* : 1..*",
+      "inverseLabel": "is reordered by",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "many"
+        }
+      }
+    },
+    {
+      "id": "r-supplier-receives-purchase-order",
+      "sourceConceptId": "supplier",
+      "targetConceptId": "purchase-order",
+      "label": "receives",
+      "cardinality": "1 : 1..*",
+      "inverseLabel": "is raised for",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "one"
+        }
+      }
+    },
+    {
+      "id": "r-employee-raises-purchase-order",
+      "sourceConceptId": "employee",
+      "targetConceptId": "purchase-order",
+      "label": "raises",
+      "cardinality": "1 : 1..*",
+      "inverseLabel": "is raised by",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "many"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "one"
+        }
+      }
+    },
+    {
+      "id": "r-employee-member-of-team",
+      "sourceConceptId": "employee",
+      "targetConceptId": "team",
+      "label": "is a member of",
+      "cardinality": "1..* : 1",
+      "inverseLabel": "has",
+      "rule": {
+        "forward": {
+          "min": "one",
+          "max": "one"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "many"
+        }
+      }
+    },
+    {
+      "id": "r-employee-leads-team",
+      "sourceConceptId": "employee",
+      "targetConceptId": "team",
+      "label": "leads",
+      "cardinality": "1 : 0..1",
+      "inverseLabel": "is led by",
+      "rule": {
+        "forward": {
+          "min": "zero",
+          "max": "one"
+        },
+        "inverse": {
+          "min": "one",
+          "max": "one"
+        }
+      }
+    }
+  ],
+  "coreBusinessEvents": [
+    {
+      "id": "cbe-sales-order",
+      "name": "Customer places a Sales Order for one or many Products via a Channel",
+      "description": "Sales Order",
+      "order": 1,
+      "conceptIds": [
+        "customer",
+        "product",
+        "channel"
+      ],
+      "conceptId": "sales-order"
+    },
+    {
+      "id": "cbe-purchase-order",
+      "name": "Employee raises a Purchase Order for one or many Products with a Supplier",
+      "description": "Purchase Order",
+      "order": 2,
+      "conceptIds": [
+        "employee",
+        "product",
+        "supplier"
+      ],
+      "conceptId": "purchase-order"
+    },
+    {
+      "id": "cbe-restock",
+      "name": "Product is restocked into a Warehouse",
+      "description": "Restock",
+      "order": 3,
+      "conceptIds": [
+        "product",
+        "stock",
+        "warehouse"
+      ],
+      "relationshipId": "r-product-added-to-stock",
+      "notes": "Who makes the restock happen is still an open question in the book."
+    },
+    {
+      "id": "cbe-delivery",
+      "name": "Employee delivers one or many Products from a Warehouse to a Customer Delivery Location",
+      "description": "Delivery",
+      "order": 4,
+      "conceptIds": [
+        "employee",
+        "product",
+        "warehouse",
+        "customer-delivery-location"
+      ],
+      "conceptId": "delivery"
+    },
+    {
+      "id": "cbe-assigned",
+      "name": "Employee is assigned to lead a Team",
+      "description": "Assigned",
+      "order": 5,
+      "conceptIds": [
+        "employee",
+        "team"
+      ],
+      "relationshipId": "r-employee-leads-team"
+    }
+  ],
+  "coreBusinessProcesses": [],
+  "domains": [
+    {
+      "id": "dom-sales",
+      "name": "Sales",
+      "description": "Customers placing Sales Orders through a Channel, the website or a store.",
+      "order": 1
+    },
+    {
+      "id": "dom-inventory",
+      "name": "Inventory",
+      "description": "Products, the Stock held of them in Warehouses, and the Purchase Orders raised with Suppliers to restock.",
+      "order": 2
+    },
+    {
+      "id": "dom-fulfilment",
+      "name": "Fulfilment",
+      "description": "Deliveries that take Products from a Warehouse to a Customer Delivery Location.",
+      "order": 3
+    },
+    {
+      "id": "dom-hr",
+      "name": "Human Resources",
+      "description": "The Employees and Teams doing the work, and nothing more of HR.",
+      "order": 4
+    }
+  ],
+  "scope": {
+    "statement": "Order to delivery for a retailer that sells products through a website and physical stores: customers placing orders, warehouses holding and restocking stock, and employees delivering to the customer. Not finance, not marketing, not HR beyond the people doing the work.",
+    "slicedBy": "business-process"
+  },
+  "participants": [
+    {
+      "id": "p-ops-manager",
+      "name": "Retail Operations Manager",
+      "roles": [
+        "subject-matter-expert",
+        "stakeholder"
+      ],
+      "notes": "Has run stores, managed the warehouse roster, and chased more late deliveries than she cares to remember"
+    },
+    {
+      "id": "p-facilitator",
+      "name": "Facilitator",
+      "roles": [
+        "facilitator"
+      ]
+    },
+    {
+      "id": "p-data-team",
+      "name": "Data Engineer",
+      "roles": [
+        "data-team"
+      ]
+    }
+  ],
+  "stories": [
+    {
+      "id": "s-order",
+      "name": "A customer places an order",
+      "kind": "happy-path",
+      "toldBy": "p-ops-manager",
+      "order": 1,
+      "text": "A customer places an order for one or many products through a channel, the website or a store. They pay for it. The warehouse picks the products and an employee delivers them to the customer's delivery location. When stock runs low, an employee raises a purchase order with a supplier, and the stock gets restocked into a warehouse."
+    },
+    {
+      "id": "s-restock",
+      "name": "Stock runs low and gets restocked",
+      "kind": "happy-path",
+      "toldBy": "p-ops-manager",
+      "order": 2,
+      "text": "Every morning we check the stock of each product in each warehouse. When a product runs low, an employee raises a purchase order with the supplier for that product. The supplier receives the purchase order and ships the products, and they are restocked into the warehouse."
+    },
+    {
+      "id": "s-return",
+      "name": "A customer returns part of a delivery",
+      "kind": "variation",
+      "toldBy": "p-ops-manager",
+      "order": 3,
+      "text": "An order arrives in two deliveries because one product shipped from the other warehouse. The customer keeps the first delivery but returns part of the second one."
+    },
+    {
+      "id": "s-team-lead",
+      "name": "An employee is assigned to lead a team",
+      "kind": "happy-path",
+      "toldBy": "p-ops-manager",
+      "order": 4,
+      "text": "Every employee is a member of a team. When a team needs a new lead, the operations manager assigns one of its employees to lead it."
+    }
+  ],
+  "businessQuestions": [
+    {
+      "id": "q-orders-per-channel",
+      "name": "How many Sales Orders were placed through each Channel last month?",
+      "askedBy": "p-ops-manager",
+      "order": 1
+    },
+    {
+      "id": "q-deliveries-miss-promised-date",
+      "name": "How often do Deliveries miss the promised date?",
+      "askedBy": "p-ops-manager",
+      "order": 2
+    },
+    {
+      "id": "q-restock-time",
+      "name": "How long does a Restock take, from Purchase Order to Stock on the shelf?",
+      "askedBy": "p-ops-manager",
+      "order": 3
+    },
+    {
+      "id": "q-late-deliveries",
+      "name": "Which Deliveries were late?",
+      "askedBy": "p-ops-manager",
+      "order": 4
+    },
+    {
+      "id": "q-margin",
+      "name": "What is the margin per Product per Channel?",
+      "askedBy": "p-ops-manager",
+      "order": 5
+    }
+  ],
+  "walks": [
+    {
+      "id": "walk-order",
+      "subject": {
+        "type": "story",
+        "id": "s-order"
+      },
+      "result": "holds"
+    },
+    {
+      "id": "walk-restock",
+      "subject": {
+        "type": "story",
+        "id": "s-restock"
+      },
+      "result": "holds"
+    },
+    {
+      "id": "walk-return",
+      "subject": {
+        "type": "story",
+        "id": "s-return"
+      },
+      "result": "stuck",
+      "finding": "There is no Return on the Map, so the finger has nowhere to go",
+      "resolution": "out-of-scope"
+    },
+    {
+      "id": "walk-team-lead",
+      "subject": {
+        "type": "story",
+        "id": "s-team-lead"
+      },
+      "result": "holds"
+    },
+    {
+      "id": "walk-orders-per-channel",
+      "subject": {
+        "type": "question",
+        "id": "q-orders-per-channel"
+      },
+      "result": "holds"
+    },
+    {
+      "id": "walk-deliveries-miss",
+      "subject": {
+        "type": "question",
+        "id": "q-deliveries-miss-promised-date"
+      },
+      "result": "stuck",
+      "finding": "Needs a promised date and an actual date: information about a Delivery, for the DESIGN stage",
+      "resolution": "parked"
+    },
+    {
+      "id": "walk-restock-time",
+      "subject": {
+        "type": "question",
+        "id": "q-restock-time"
+      },
+      "result": "holds"
+    },
+    {
+      "id": "walk-late-deliveries",
+      "subject": {
+        "type": "question",
+        "id": "q-late-deliveries"
+      },
+      "result": "stuck",
+      "finding": "Needs a promised date and an actual date: information about a Delivery, for the DESIGN stage",
+      "resolution": "parked"
+    },
+    {
+      "id": "walk-margin",
+      "subject": {
+        "type": "question",
+        "id": "q-margin"
+      },
+      "result": "stuck",
+      "finding": "Needs cost data that lives in Finance, outside this Scope",
+      "resolution": "out-of-scope"
+    }
+  ],
+  "parked": [
+    {
+      "id": "customer-name",
+      "text": "Customer name",
+      "kind": "attribute",
+      "note": "Step 4, from the story \"A customer places an order\". Information about a Customer, not a Concept"
+    },
+    {
+      "id": "delivery-promised-date",
+      "text": "Promised date and actual date of a Delivery",
+      "kind": "attribute",
+      "note": "Step 11, from the question \"Which Deliveries were late?\""
+    },
+    {
+      "id": "return",
+      "text": "Return",
+      "kind": "future-map",
+      "note": "Step 11, from the story \"A customer returns part of a delivery\". Returns are out of this Scope"
+    },
+    {
+      "id": "margin",
+      "text": "Margin per Product per Channel",
+      "kind": "future-map",
+      "note": "Step 10, needs cost data that lives in Finance"
+    },
+    {
+      "id": "payment",
+      "text": "The customer pays for the order",
+      "kind": "out-of-scope",
+      "note": "Step 3, from the story \"A customer places an order\". Payment is finance, not order to delivery"
+    }
+  ],
+  "stepNotes": {
+    "map": {
+      "note": "Sales top left where the story starts, Inventory to the right, Fulfilment below Sales, Human Resources bottom right, as the Blue Book draws it."
+    }
+  },
+  "layout": {
+    "concepts": {
+      "customer": {
+        "x": 180,
+        "y": 135
+      },
+      "channel": {
+        "x": 720,
+        "y": 135
+      },
+      "sales-order": {
+        "x": 450,
+        "y": 345
+      },
+      "product": {
+        "x": 1170,
+        "y": 165
+      },
+      "stock": {
+        "x": 1500,
+        "y": 165
+      },
+      "supplier": {
+        "x": 1950,
+        "y": 135
+      },
+      "purchase-order": {
+        "x": 1800,
+        "y": 390
+      },
+      "warehouse": {
+        "x": 1290,
+        "y": 480
+      },
+      "warehouse-physical-location": {
+        "x": 1650,
+        "y": 480
+      },
+      "customer-delivery-location": {
+        "x": 180,
+        "y": 720
+      },
+      "delivery": {
+        "x": 450,
+        "y": 930
+      },
+      "employee": {
+        "x": 1530,
+        "y": 720
+      },
+      "team": {
+        "x": 1530,
+        "y": 960
+      }
+    },
+    "events": {}
+  }
+}

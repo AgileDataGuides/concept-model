@@ -51,7 +51,10 @@ function emptyModel(id: string, name: string): ConceptModel {
 	};
 }
 
-/** Fallback when there are no saved models at all. The full SaaS example lives in `data/`. */
+/** The model that opens first when none was open before. The Blue Book's retail example, ahead of the SaaS example. */
+const DEFAULT_MODEL_ID = 'blue-book-retail-concept-model';
+
+/** Fallback when there are no saved models at all. The full examples live in `data/`. */
 function makeExampleModel(): ConceptModel {
 	return {
 		...emptyModel('example-concept-model', 'Example Concept Model'),
@@ -208,7 +211,7 @@ export function createConceptModelStore(options: ConceptModelStoreOptions = {}) 
 		} else {
 			savedList = models.map((m) => ({ id: m.id, name: m.name }));
 			const lastId = typeof window !== 'undefined' ? localStorage.getItem('cm-current-id') : null;
-			const found = models.find((m) => m.id === lastId);
+			const found = models.find((m) => m.id === lastId) ?? models.find((m) => m.id === DEFAULT_MODEL_ID);
 			model = found || models[0];
 		}
 		dirty = false;

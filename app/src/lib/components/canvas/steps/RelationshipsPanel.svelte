@@ -96,26 +96,27 @@
 					{@const source = cm.conceptById.get(rel.sourceId)}
 					{@const target = cm.conceptById.get(rel.targetId)}
 					<li class="{CARD} px-3 py-2 flex items-center gap-3">
-						<div class="min-w-0 flex-1 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1">
-							<div class="flex items-center gap-1.5 min-w-0 text-sm text-slate-700">
+						<!-- Three parts: Customer has | Customer Delivery Location | belongs to Customer -->
+						<div class="min-w-0 flex-1 grid grid-cols-1 lg:grid-cols-3 items-center gap-x-4 gap-y-1 text-sm text-slate-700">
+							<div class="flex flex-wrap items-center gap-x-1.5 min-w-0">
 								<span class="font-semibold text-slate-800 shrink-0">{source?.name ?? '?'}</span>
-								<div class="min-w-0 flex-1">
-									<EditableText value={rel.verb} label="Verb" textClass="text-sm italic text-slate-700" onSave={(v) => v && patchLink(adapter, rel.link, {}, v)} />
+								<div class="min-w-0">
+									<EditableText value={rel.verb} label="Verb" textClass="text-sm italic text-slate-700 whitespace-nowrap" onSave={(v) => v && patchLink(adapter, rel.link, {}, v)} />
 								</div>
-								<span class="font-semibold text-slate-800 shrink-0">{target?.name ?? '?'}</span>
 							</div>
-							<div class="flex items-center gap-1.5 min-w-0 text-xs text-slate-500">
-								<span class="shrink-0">{target?.name ?? '?'}</span>
-								<div class="min-w-0 flex-1">
+							<span class="font-semibold text-slate-800 min-w-0 lg:text-center">{target?.name ?? '?'}</span>
+							<!-- The other way, without repeating the Concept just named: belongs to Customer -->
+							<div class="flex flex-wrap items-center lg:justify-end gap-x-1.5 min-w-0">
+								<div class="shrink-0">
 									<EditableText
 										value={rel.inverseVerb}
 										label="Inverse verb"
 										placeholder="add the other way"
-										textClass="text-xs text-slate-600"
+										textClass="text-sm italic text-slate-700 whitespace-nowrap"
 										onSave={(v) => patchLink(adapter, rel.link, { inverseLabel: v })}
 									/>
 								</div>
-								<span class="shrink-0">{source?.name ?? '?'}</span>
+								<span class="font-semibold text-slate-800 shrink-0">{source?.name ?? '?'}</span>
 							</div>
 						</div>
 						<button type="button" class="{ROW_ACTIONS.danger} shrink-0" onclick={() => remove(rel)}>Remove</button>
