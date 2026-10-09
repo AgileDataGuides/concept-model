@@ -1,15 +1,17 @@
 <script lang="ts">
 	// The Search Filter (DESIGN_SYSTEM.md § 14): a small search field over a
 	// list of 5 or more items, filtering by name. The caller decides when to
-	// show it. The border takes the list's entity colour at 40.
+	// show it. The border takes the list's entity colour at 40. Escape clears
+	// it. Enter calls onEnter when the caller gives one.
 	import { SEARCH_FILTER } from '$lib/ui/tokens';
 
 	let {
 		value = $bindable(''),
 		color,
 		label,
-		placeholder = 'Search...'
-	}: { value?: string; color: string; label: string; placeholder?: string } = $props();
+		placeholder = 'Search...',
+		onEnter
+	}: { value?: string; color: string; label: string; placeholder?: string; onEnter?: () => void } = $props();
 </script>
 
 <div class={SEARCH_FILTER.wrapper}>
@@ -25,6 +27,10 @@
 		style="border-color: {color}40;"
 		onkeydown={(e) => {
 			if (e.key === 'Escape') value = '';
+			else if (e.key === 'Enter' && onEnter) {
+				e.preventDefault();
+				onEnter();
+			}
 		}}
 	/>
 	{#if value}

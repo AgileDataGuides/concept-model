@@ -107,7 +107,7 @@
 					</button>
 				</li>
 			{/each}
-			<li class="mt-2 pt-2 border-t border-slate-200">
+			<li class={STEP_RAIL.divider}>
 				<button
 					type="button"
 					aria-current={active === 'parked' ? 'step' : undefined}

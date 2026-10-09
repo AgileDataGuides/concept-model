@@ -42,7 +42,7 @@
 {:else if view === 'map'}
 	<MapView {cm} />
 {:else if view === 'definitions'}
-	<DefinitionsView {cm} />
+	<DefinitionsView {cm} {nodes} />
 {:else if view === 'parked'}
 	<div class="h-full overflow-y-auto bg-slate-50 {STEP_PANEL.body}">
 		<ParkedPanel {cm} details />

@@ -62,7 +62,25 @@ export const STEP_RAIL = {
 	dotEmpty: 'mt-1 w-2 h-2 shrink-0 rounded-full border border-slate-300',
 	dotSkipped: 'mt-1.5 w-2 h-0.5 shrink-0 rounded bg-slate-400',
 	/** The same rows as a list picker inside a panel (Step 5). */
-	listContainer: 'rounded-lg border border-slate-200 bg-slate-50 overflow-hidden'
+	listContainer: 'rounded-lg border border-slate-200 bg-slate-50 overflow-hidden',
+	/** The line over the last rows of a rail (the parked list, the Definitions' Relationships and Events). */
+	divider: 'mt-2 pt-2 border-t border-slate-200'
+};
+
+/** tokens.md definitions_rail: the step rail's rows down the left of the Definitions tab (DESIGN_SYSTEM.md § 18). */
+export const DEFINITIONS_RAIL = {
+	/** The Search Filter's place at the top of the rail. It stays in view while the rail scrolls. */
+	search: 'sticky top-0 z-10 px-3 pt-1 pb-2 bg-slate-50 border-b border-slate-200',
+	/** Around a Domain name (typography.label_table_header) over its Concept rows. */
+	group: 'px-3 pt-3 pb-1',
+	/** Around the rail's empty-state lines ("No Concepts yet.", "No Concept matches."), level with the rows. */
+	hint: 'px-3 py-2',
+	/** The card a jump landed on, until the reader scrolls by hand or jumps elsewhere (interactions.selection_ring). */
+	jumped: 'ring-2 ring-blue-500 ring-offset-1',
+	/** Pixels left above a card after a jump. */
+	jumpGap: 16,
+	/** Pixels below the top of the Definitions: the last card above this line is the one being read. */
+	readLine: 48
 };
 
 export const STEP_PANEL = {
