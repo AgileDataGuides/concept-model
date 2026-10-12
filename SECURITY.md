@@ -11,7 +11,7 @@ The Concept Model app is a **local-only dev tool**. It is designed to run on you
 
 The dev server binds to `127.0.0.1:5116` and the SvelteKit `+server.ts` API routes write JSON files directly to `data/`. There is no authentication. Anyone who can reach the port can read, overwrite, or delete your concept models.
 
-If you need to share a concept model, use the **Export JSON / CSV / Excel** buttons and share the downloaded files — never the server.
+If you need to share a concept model, use the **Export** menu (JSON, CSV, Excel, SVG, Turtle or RDF) and share the downloaded files, never the server.
 
 ## Supported versions
 

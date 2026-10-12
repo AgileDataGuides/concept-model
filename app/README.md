@@ -11,7 +11,7 @@ An [AgileDataGuides](https://agiledataguides.com/agiledata-templates/) Pattern T
 | Tab | What it is for |
 |---------|---------|
 | **Steps** | The ten Modeling Business Concepts steps, down the left with a status for each. Pick any step to capture what it produces. The steps are a checklist, not a wizard |
-| **Concept Map** | The Concept Map, drawn the way the Blue Book draws it: Concepts as blue sticky notes, Domains as pinned sheets of paper, Core Business Events as diamonds, and each Relationship a green curve carrying its verbs, one read from each end once the inverse verb is in, with the Relationship Rule under each verb ("places" over "one or many"). Drag to arrange, turn layers on and off, and click **Export SVG** to save the whole Map as one file |
+| **Concept Map** | The Concept Map, drawn the way the Blue Book draws it: Concepts as blue sticky notes, Domains as pinned sheets of paper, Core Business Events as diamonds, and each Relationship a green curve carrying its verbs, one read from each end once the inverse verb is in, with the Relationship Rule under each verb ("places" over "one or many"). Drag to arrange, turn layers on and off, and click **Export**, then **SVG**, to save the whole Map as one file |
 | **Definitions** | The Definitions: every Concept's Definition in three parts, every Relationship as two sentences, every Core Business Event |
 | **Other: Parked Details** | The detailed attributes parked so far, information about a Concept like Customer email, waiting for the DESIGN stage |
 | **Other: Core Business Events** | The moments that matter, each said as who-does-what: the Concepts each Event involves, the Relationship it sits on, and the Concept it is too, if it is one. These were Step 8 in the book's canon, and have their own page here |
@@ -53,10 +53,11 @@ The app starts at [http://localhost:5116](http://localhost:5116).
 - **Search and reorder**: the Domain, Concept and Event lists get a search field once they reach five, and you drag items by their grip into the order you want. The Map and the Definitions follow that order
 - **Quiet hints** from the book's rules of thumb, such as ten to twenty Concepts. They never block you
 - **Multiple models**: create, switch between, and delete models. Switching saves your changes first, and if that save fails the current model stays open
-- **Export JSON / CSV / Excel**: JSON holds the whole model and can be imported again. The Excel workbook has a sheet for each part of the Model, the Business Event Matrix grid included
+- **Export menu**: one Export button opens every format in four groups, Model, Spreadsheet, Picture and Standards, each with one line on what its file is for
+- **JSON / CSV / Excel**: JSON holds the whole model and can be imported again. The Excel workbook has a sheet for each part of the Model, the Business Event Matrix grid included
 - **Layers on the Map**: switches turn the Domains, Concepts, Relationship Lines, Relationship Verbs, Relationship Rules and Events on and off, so one model draws the picture for each step of the book, from Concepts on their Domains (Step 4), through the verbs (Step 6) and the rule words (Step 7), to the full Map with its Events (Step 8). Nothing moves when a layer goes, and the app remembers your choice in this browser
-- **Export SVG**: the whole Concept Map as one picture file, from any tab, with the layers the Map shows. The page is the same size whichever layers are on, so the pictures for each step line up. It is sharp at any size, has only the Map on a white page, and carries the handwritten font inside, so the handwriting looks the same in any browser, even on a computer without the font. Open it in a browser or put it in a slide or a document. Some slide and drawing tools ignore the font inside the file and use one of their own
-- **Export Turtle / RDF**: the whole model for ontology and knowledge graph tools, as Turtle (`.ttl`) or RDF/XML (`.rdf`, the format Protégé opens). Each Concept is an OWL class and a SKOS concept with its Definition, each Relationship an OWL property in both directions, and each Relationship Rule OWL cardinality restrictions. Everything else rides along, so importing the file gives the same model back
+- **SVG**: the whole Concept Map as one picture file, from any tab, with the layers the Map shows. The page is the same size whichever layers are on, so the pictures for each step line up. It is sharp at any size, has only the Map on a white page, and carries the handwritten font inside, so the handwriting looks the same in any browser, even on a computer without the font. Open it in a browser or put it in a slide or a document. Some slide and drawing tools ignore the font inside the file and use one of their own
+- **Turtle / RDF**: the whole model for ontology and knowledge graph tools, as Turtle (`.ttl`) or RDF/XML (`.rdf`, the format Protégé opens). Each Concept is an OWL class and a SKOS concept with its Definition, each Relationship an OWL property in both directions, and each Relationship Rule OWL cardinality restrictions. Everything else rides along, so importing the file gives the same model back
 - **Import**: load JSON, Turtle or RDF/XML as a new model, never over the current one. Files from before the steps (version 1.0) still load, and so does an ontology from Protégé or a SKOS vocabulary: its classes become Concepts and its properties Relationships
 
 ## Works With Claude
@@ -75,7 +76,7 @@ Save your model and open [Claude Code](https://claude.ai/claude-code) in this pr
 - Step 10: *"Walk each story across the Map. Where does it get stuck?"*
 - Core Business Events: *"Which Core Business Events are missing, and which have nothing attached?"*
 
-No Claude Code? Click **Export JSON** and attach the file in [Claude Chat](https://claude.ai).
+No Claude Code? Click **Export**, then **JSON**, and attach the file in [Claude Chat](https://claude.ai).
 
 ## Data Storage
 
@@ -95,7 +96,7 @@ A model can name the people in a session. Use role titles if the file will be sh
 
 **Demo mode**: The [live demo](https://agiledataguides.github.io/concept-model) is a static site with no server or backend. All data stays in your browser's localStorage and never leaves your device. There is nothing to attack: no API, no database, no file system access.
 
-If you need to share your work, use the **Export** buttons to download files and share them manually.
+If you need to share your work, use the **Export** menu to download files and share them manually.
 
 ## Tech Stack
 
