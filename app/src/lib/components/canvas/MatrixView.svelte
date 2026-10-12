@@ -309,7 +309,7 @@
 	const emptyLine = $derived(
 		cm.concepts.length === 0
 			? cm.events.length === 0
-				? 'Nothing in the Business Event Matrix yet. Add a Concept and a Core Business Event above, or in Step 4 and on the Core Business Events tab.'
+				? 'Nothing in the Business Event Matrix yet. Add a Concept and a Core Business Event above, or in Step 4 and under Other, in Core Business Events.'
 				: 'No Concepts yet. Add one above, or in Step 4, then mark the ones each Event involves.'
 			: bands.length === 0
 				? hideUnmarked
@@ -320,7 +320,7 @@
 
 	const noRowsLine = $derived(
 		cm.events.length === 0
-			? 'No Core Business Events yet. Add one above, or on the Core Business Events tab.'
+			? 'No Core Business Events yet. Add one above, or under Other, in Core Business Events.'
 			: shownEvents.length === 0
 				? hideUnmarked
 					? 'No Event on screen marks a Concept on screen.'

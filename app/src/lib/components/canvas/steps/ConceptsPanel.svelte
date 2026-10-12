@@ -97,7 +97,7 @@
 
 		<h3 class="{TYPE.sectionHeader} pt-4">Park detailed attributes</h3>
 		<AddField placeholder="Information about a Concept, like Customer name" buttonLabel="Park" onAdd={parkAttribute} />
-		<p class={INPUT.label}>{cm.parked.filter(isParkedDetail).length} detailed attributes parked so far. They wait for the DESIGN stage. See them in the Parked Details tab.</p>
+		<p class={INPUT.label}>{cm.parked.filter(isParkedDetail).length} detailed attributes parked so far. They wait for the DESIGN stage. See them under Other, in Parked Details.</p>
 	</section>
 
 	<section class="lg:col-span-3 space-y-3">

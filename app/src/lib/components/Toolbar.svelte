@@ -1,18 +1,24 @@
 <script module lang="ts">
 	// Steps is the way in. Concept Map and Definitions are the book's two pattern templates.
-	// Parked Details lists the detailed attributes parked for the DESIGN stage.
-	// Core Business Events lists the moments that matter, each as who-does-what.
-	// Business Event Matrix shows the same Events and Concepts as a grid.
-	// The ids stay as they were, so a link copied before a rename still opens its tab.
-	export const TABS = [
+	// These three are the pages a reader of the Blue Book uses, so they are the top tabs.
+	// The Other menu holds the rest:
+	//   Parked Details lists the detailed attributes parked for the DESIGN stage.
+	//   Core Business Events lists the moments that matter, each as who-does-what.
+	//   Business Event Matrix shows the same Events and Concepts as a grid.
+	// The ids stay as they were, so a link copied before a rename or a move still opens its page.
+	export const MAIN_TABS = [
 		{ id: 'steps', label: 'Steps' },
 		{ id: 'map', label: 'Concept Map' },
-		{ id: 'definitions', label: 'Definitions' },
+		{ id: 'definitions', label: 'Definitions' }
+	];
+	export const OTHER_TABS = [
 		{ id: 'parked', label: 'Parked Details' },
 		{ id: 'events', label: 'Core Business Events' },
-		{ id: 'matrix', label: 'Business Event Matrix' },
-		{ id: 'instructions', label: 'Instructions' }
+		{ id: 'matrix', label: 'Business Event Matrix' }
 	];
+	const INSTRUCTIONS_TAB = { id: 'instructions', label: 'Instructions' };
+	/** Every page a link can name, in the order the tab bar shows them. */
+	export const TABS = [...MAIN_TABS, ...OTHER_TABS, INSTRUCTIONS_TAB];
 </script>
 
 <script lang="ts">
@@ -24,6 +30,7 @@
 	import { readView } from '$lib/model/graph-view';
 	import { mapSvg } from '$lib/components/canvas/map-svg';
 	import { shownLayers } from '$lib/components/canvas/map-layers.svelte';
+	import { TIER3_TABS } from '$lib/ui/tokens';
 
 	const store = getContext<ConceptModelStore>('cmStore');
 	const adapter = getContext<DataAdapter>('dataAdapter');
@@ -43,6 +50,29 @@
 	let dirty = $derived(store.isDirty());
 
 	let saving = $state(false);
+
+	// The Other menu: open or shut, and which of its pages is open, if any.
+	// A disclosure, not an ARIA menu, so Tab moves through its three buttons.
+	let otherOpen = $state(false);
+	let otherTrigger = $state<HTMLButtonElement | null>(null);
+	const activeOther = $derived(OTHER_TABS.find((t) => t.id === activeTab));
+
+	function openTab(id: string) {
+		activeTab = id;
+		otherOpen = false;
+	}
+
+	function handleWindowClick(e: MouseEvent) {
+		if (otherOpen && !(e.target as HTMLElement).closest('[data-other-menu]')) otherOpen = false;
+	}
+
+	// Escape closes the menu. From inside it, focus goes back on Other, so a keyboard
+	// user keeps their place. From a field on the page, focus stays in the field.
+	function handleWindowKeydown(e: KeyboardEvent) {
+		if (!otherOpen || e.key !== 'Escape') return;
+		otherOpen = false;
+		if ((e.target as HTMLElement).closest?.('[data-other-menu]')) otherTrigger?.focus();
+	}
 
 	// Name editing
 	let editingName = $state(false);
@@ -197,12 +227,32 @@
 	</div>
 </div>
 
-<!-- Tabs -->
+<svelte:window onclick={handleWindowClick} onkeydown={handleWindowKeydown} />
+
+<!-- Tabs: the book's three pages, the Other menu, then Instructions -->
+{#snippet tab(t: { id: string; label: string })}
+	<button class="{TIER3_TABS.wrapper} {activeTab === t.id ? TIER3_TABS.active : TIER3_TABS.inactive}" onclick={() => openTab(t.id)}>{t.label}</button>
+{/snippet}
 <div class="flex gap-0 px-4 border-b border-slate-200">
-	{#each TABS as tab}
+	{#each MAIN_TABS as t (t.id)}{@render tab(t)}{/each}
+	<div class="relative" data-other-menu>
 		<button
-			class="flex items-center px-3.5 py-2 text-xs font-medium border-b-2 -mb-px transition-colors {activeTab === tab.id ? 'text-blue-600 border-blue-600' : 'text-slate-400 border-transparent hover:text-slate-600'}"
-			onclick={() => (activeTab = tab.id)}
-		>{tab.label}</button>
-	{/each}
+			bind:this={otherTrigger}
+			class="{TIER3_TABS.wrapper} {activeOther ? TIER3_TABS.active : TIER3_TABS.inactive}"
+			aria-expanded={otherOpen}
+			aria-controls="other-menu"
+			onclick={() => (otherOpen = !otherOpen)}
+		>
+			Other{#if activeOther}: {activeOther.label}{/if}
+			<svg class="{TIER3_TABS.menuChevron} {otherOpen ? 'rotate-180' : ''}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+		</button>
+		{#if otherOpen}
+			<div id="other-menu" class={TIER3_TABS.menuPanel}>
+				{#each OTHER_TABS as t (t.id)}
+					<button class="{TIER3_TABS.menuItem} {activeTab === t.id ? TIER3_TABS.menuItemActive : TIER3_TABS.menuItemInactive}" aria-current={activeTab === t.id ? 'page' : undefined} onclick={() => openTab(t.id)}>{t.label}</button>
+				{/each}
+			</div>
+		{/if}
+	</div>
+	{@render tab(INSTRUCTIONS_TAB)}
 </div>

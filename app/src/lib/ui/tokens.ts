@@ -129,7 +129,13 @@ export const ROW_ACTIONS = {
 export const TIER3_TABS = {
 	wrapper: 'flex items-center px-3.5 py-2 text-xs font-medium border-b-2 -mb-px transition-colors',
 	active: 'text-blue-600 border-blue-600',
-	inactive: 'text-slate-400 border-transparent hover:text-slate-600'
+	inactive: 'text-slate-400 border-transparent hover:text-slate-600',
+	// A tab that opens a menu of further tabs: the Switcher Dropdown panel, at tab text size
+	menuChevron: 'w-3 h-3 ml-1 transition-transform',
+	menuPanel: 'absolute top-full left-0 mt-1.5 bg-white rounded-xl border border-slate-200 shadow-xl z-50 py-1 min-w-[200px]',
+	menuItem: 'w-full text-left px-4 py-2 text-xs transition-colors',
+	menuItemActive: 'bg-slate-100 font-semibold text-slate-800',
+	menuItemInactive: 'text-slate-600 hover:bg-slate-50'
 };
 
 export const TOGGLE_SWITCH = {

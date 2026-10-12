@@ -13,10 +13,12 @@ An [AgileDataGuides](https://agiledataguides.com/agiledata-templates/) Pattern T
 | **Steps** | The ten Modeling Business Concepts steps, down the left with a status for each. Pick any step to capture what it produces. The steps are a checklist, not a wizard |
 | **Concept Map** | The Concept Map, drawn the way the Blue Book draws it: Concepts as blue sticky notes, Domains as pinned sheets of paper, Core Business Events as diamonds, and each Relationship a green curve carrying its verbs, one read from each end once the inverse verb is in, with the Relationship Rule under each verb ("places" over "one or many"). Drag to arrange, turn layers on and off, and click **Export SVG** to save the whole Map as one file |
 | **Definitions** | The Definitions: every Concept's Definition in three parts, every Relationship as two sentences, every Core Business Event |
-| **Parked Details** | The detailed attributes parked so far, information about a Concept like Customer email, waiting for the DESIGN stage |
-| **Core Business Events** | The moments that matter, each said as who-does-what: the Concepts each Event involves, the Relationship it sits on, and the Concept it is too, if it is one. These were Step 8 in the book's canon, and have their own tab here |
-| **Business Event Matrix** | The same Model as a Business Event Matrix, with the features of the Business Event Matrix app: a row for each Core Business Event, a column for each Concept under its Domain or 7W, ✓ where the Event involves the Concept and ✭ where the Event is also that Concept. Add, rename, reorder and mark here, and the whole Model follows |
+| **Other: Parked Details** | The detailed attributes parked so far, information about a Concept like Customer email, waiting for the DESIGN stage |
+| **Other: Core Business Events** | The moments that matter, each said as who-does-what: the Concepts each Event involves, the Relationship it sits on, and the Concept it is too, if it is one. These were Step 8 in the book's canon, and have their own page here |
+| **Other: Business Event Matrix** | The same Model as a Business Event Matrix, with the features of the Business Event Matrix app: a row for each Core Business Event, a column for each Concept under its Domain or 7W, ✓ where the Event involves the Concept and ✭ where the Event is also that Concept. Add, rename, reorder and mark here, and the whole Model follows |
 | **Instructions** | How to run a session, and questions to ask Claude |
+
+Steps, Concept Map and Definitions are the pages the Blue Book works through, so they are the tabs. The **Other** tab opens a menu of the other three pages, and names the one you have open.
 
 The Steps tab lists the ten steps, each with the question it asks, from identifying the Scope to walking the Map.
 
