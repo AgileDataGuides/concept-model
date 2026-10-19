@@ -93,6 +93,17 @@ export const STEP_PANEL = {
 	bodyTop: 'px-6 pt-5'
 };
 
+/** tokens.md step_nav: Back and Next under the selected step (DESIGN_SYSTEM.md § 18 Step Nav). */
+export const STEP_NAV = {
+	bar: 'shrink-0 flex items-center justify-between gap-3 px-6 py-2.5 border-t border-slate-200 bg-white',
+	/** buttons.secondary_slate, with room for the arrow */
+	button:
+		'inline-flex items-center gap-1.5 min-w-0 px-3 py-1.5 text-sm font-medium rounded-lg bg-white text-slate-600 border border-slate-300 hover:bg-slate-50 transition-colors',
+	label: 'truncate',
+	/** Heroicons outline arrow-left / arrow-right */
+	icon: 'w-4 h-4 shrink-0'
+};
+
 export const CHOICE_CHIPS = {
 	wrapper: 'inline-flex flex-wrap gap-1',
 	base: 'px-2 py-0.5 text-[11px] font-medium rounded-md border transition-colors',

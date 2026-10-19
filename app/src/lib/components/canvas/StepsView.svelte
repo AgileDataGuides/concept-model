@@ -2,7 +2,8 @@
 	// The Steps tab: the ten Modeling Business Concepts steps as the way in.
 	// A rail of steps on the left, the selected step's panel on the right.
 	// A checklist, never a wizard: every step is reachable at any time and no
-	// step blocks another. Each row's status is derived from the data.
+	// step blocks another. Back and Next under the panel move one step either
+	// way and lock nothing. Each row's status is derived from the data.
 	import { getContext } from 'svelte';
 	import type { ContextNode, DataAdapter } from '$lib/cp-shared';
 	import type { CmView } from '$lib/model/graph-view';
@@ -10,7 +11,7 @@
 	import { stepStatus } from '$lib/model/status';
 	import { PARKED_LIST_NAME, STEPS, getStep, stepLabel } from '$lib/canon/steps';
 	import type { StepId } from '$lib/types';
-	import { STEP_PANEL, STEP_RAIL } from '$lib/ui/tokens';
+	import { STEP_NAV, STEP_PANEL, STEP_RAIL } from '$lib/ui/tokens';
 	import QuietHint from '../ui/QuietHint.svelte';
 	import DetailsPopup from '../ui/DetailsPopup.svelte';
 	import MapView from './MapView.svelte';
@@ -70,6 +71,18 @@
 		}
 	}
 
+	// Back and Next: the steps either side of this one. The parked list is not a step, so it has neither
+	const stepIndex = $derived(STEPS.findIndex((s) => s.id === active));
+	const previous = $derived(stepIndex > 0 ? STEPS[stepIndex - 1] : undefined);
+	const next = $derived(stepIndex >= 0 && stepIndex < STEPS.length - 1 ? STEPS[stepIndex + 1] : undefined);
+
+	// A step opens at its top, whether it was picked on the rail or with Back and Next
+	let scroller = $state<HTMLElement>();
+	$effect(() => {
+		void active;
+		scroller?.scrollTo({ top: 0 });
+	});
+
 	const statuses = $derived(new Map(STEPS.map((s) => [s.id, stepStatus(cm, s.id)])));
 	const step = $derived(active === 'parked' ? null : getStep(active));
 	const status = $derived(step ? statuses.get(step.id) : undefined);
@@ -126,14 +139,17 @@
 	<section class="flex-1 min-w-0 flex flex-col overflow-hidden bg-slate-50">
 		{#if step && status}
 			{#if step.id === 'map'}
-				<div class="{STEP_PANEL.bodyTop} shrink-0">
-					<StepHeader {step} note={cm.stepNotes[step.id]} onChange={(note) => setStepNote(adapter, cm, step.id, note)} />
-				</div>
-				<div class="flex-1 min-h-96 border-t border-slate-200">
-					<MapView {cm} />
+				<!-- Scrolls on a short window, so the Map keeps its height and Back and Next stay in view -->
+				<div class="flex-1 min-h-0 overflow-y-auto flex flex-col">
+					<div class="{STEP_PANEL.bodyTop} shrink-0">
+						<StepHeader {step} note={cm.stepNotes[step.id]} onChange={(note) => setStepNote(adapter, cm, step.id, note)} />
+					</div>
+					<div class="flex-1 min-h-96 border-t border-slate-200">
+						<MapView {cm} />
+					</div>
 				</div>
 			{:else}
-				<div class="flex-1 overflow-y-auto {STEP_PANEL.body}">
+				<div bind:this={scroller} class="flex-1 overflow-y-auto {STEP_PANEL.body}">
 					<StepHeader {step} note={cm.stepNotes[step.id]} onChange={(note) => setStepNote(adapter, cm, step.id, note)} />
 					{#if status.hints.length > 0}
 						<div class="space-y-1 mb-4">
@@ -163,6 +179,7 @@
 					{/if}
 				</div>
 			{/if}
+			{@render stepNav()}
 		{:else}
 			<div class="flex-1 overflow-y-auto {STEP_PANEL.body}">
 				<ParkedPanel {cm} />
@@ -170,6 +187,31 @@
 		{/if}
 	</section>
 </div>
+
+{#snippet stepNav()}
+	<nav class={STEP_NAV.bar} aria-label="Move between steps">
+		{#if previous}
+			{@const to = previous}
+			<button type="button" class={STEP_NAV.button} title="Back: {stepLabel(to)}" onclick={() => select(to.id)}>
+				<svg class={STEP_NAV.icon} fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+				</svg>
+				<span class={STEP_NAV.label}>Back: {stepLabel(to)}</span>
+			</button>
+		{:else}
+			<span></span>
+		{/if}
+		{#if next}
+			{@const to = next}
+			<button type="button" class={STEP_NAV.button} title="Next: {stepLabel(to)}" onclick={() => select(to.id)}>
+				<span class={STEP_NAV.label}>Next: {stepLabel(to)}</span>
+				<svg class={STEP_NAV.icon} fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+				</svg>
+			</button>
+		{/if}
+	</nav>
+{/snippet}
 
 {#if detailsNode}
 	<DetailsPopup node={detailsNode} {nodes} {cm} onClose={() => (detailsId = null)} />
