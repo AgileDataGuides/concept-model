@@ -27,6 +27,8 @@ export interface CmConcept {
 	examples: string[];
 	specialCases: string[];
 	status: DefinitionStatus;
+	/** What people disagree on. Read it only while the status is disagreement. */
+	disagreement?: string;
 	order: number;
 	w?: W;
 	notes?: string;
@@ -156,6 +158,7 @@ export function readView(nodes: ContextNode[], links: ContextLink[]): CmView {
 				examples: strList(p.examples),
 				specialCases: strList(p.specialCases),
 				status: (str(p.definitionStatus) as DefinitionStatus | undefined) ?? 'draft',
+				disagreement: str(p.definitionDisagreement),
 				order: typeof p.order === 'number' ? p.order : i + 1,
 				w: str(p.w) as W | undefined,
 				notes: str(p.notes),

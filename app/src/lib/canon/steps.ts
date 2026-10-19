@@ -183,7 +183,8 @@ export const STORY_KINDS: { id: StoryKind; label: string }[] = [
 export const DEFINITION_STATUSES: { id: DefinitionStatus; label: string }[] = [
 	{ id: 'draft', label: 'Draft' },
 	{ id: 'agreed', label: 'Agreed' },
-	{ id: 'flagged', label: 'Flagged' }
+	{ id: 'flagged', label: 'Flagged' },
+	{ id: 'disagreement', label: 'Disagreement' }
 ];
 
 /**
@@ -204,6 +205,9 @@ export const DEFINITION_PARTS = {
 	partThree: 'Part three: special cases and points of confusion',
 	partThreePlaceholder: 'What counts, or does not count, press Enter',
 	status: 'Status',
+	disagreement: 'What is the disagreement?',
+	disagreementPlaceholder: 'Who means what by this word, and where they differ',
+	disagreementEmpty: 'Nobody has said what the disagreement is yet.',
 	empty: 'No Definition yet.'
 } as const;
 

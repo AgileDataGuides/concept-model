@@ -43,7 +43,7 @@ The app starts at [http://localhost:5116](http://localhost:5116).
 - **Built for a live session**: put it on a shared screen, type a name, press Enter and keep going. Nothing has to be complete before you save
 - **Every step reachable at any time**: each step shows how far it has got, and a step can be skipped on purpose, with a note on why
 - **Concepts found in the stories**: read a Business Story beside the Concept list, and each new Concept remembers the story it came from and its Domain
-- **Definitions in three parts**: the nature of the thing, real examples, and the special cases, each agreed or flagged
+- **Definitions in three parts**: the nature of the thing, real examples, and the special cases, each agreed, flagged or in disagreement, with a line on what the disagreement is
 - **7W's in the Business Event Matrix**: give a Concept its 7W (Who, What, When, Where, Why, How or How Many) as you add it in the Business Event Matrix, or in its Details, and group the matrix by 7W's. Every Concept in the SaaS example has one, and CSV and Excel export it
 - **Relationship Rules in words**: "Each Customer places one or many Sales Orders." and "Each Sales Order is placed by one Customer." read aloud in both directions
 - **Core Business Events** as who-does-what sentences, each with the Concepts it involves

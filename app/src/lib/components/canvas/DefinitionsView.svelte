@@ -32,7 +32,7 @@
 	let detailsId = $state<string | null>(null);
 	const detailsNode = $derived(detailsId ? nodes.find((n) => n.id === detailsId) : undefined);
 
-	const TONE = { draft: 'neutral', agreed: 'positive', flagged: 'warning' } as const;
+	const TONE = { draft: 'neutral', agreed: 'positive', flagged: 'warning', disagreement: 'negative' } as const;
 	const statusLabel = (status: DefinitionStatus) => DEFINITION_STATUSES.find((s) => s.id === status)?.label ?? 'Draft';
 
 	const groups = $derived.by(() => {
@@ -282,6 +282,16 @@
 										<ul class="list-disc pl-5 text-sm text-slate-700 space-y-0.5">
 											{#each concept.specialCases as special, i (i)}<li><LinkedText text={special} {cm} selfId={concept.id} onOpen={openConcept} /></li>{/each}
 										</ul>
+									</div>
+								{/if}
+								{#if concept.status === 'disagreement'}
+									<div>
+										<span class={INPUT.label}>{DEFINITION_PARTS.disagreement}</span>
+										{#if concept.disagreement}
+											<p class="text-sm text-slate-700 whitespace-pre-wrap"><LinkedText text={concept.disagreement} {cm} selfId={concept.id} onOpen={openConcept} /></p>
+										{:else}
+											<p class={EMPTY_HINT}>{DEFINITION_PARTS.disagreementEmpty}</p>
+										{/if}
 									</div>
 								{/if}
 								{#if concept.aliases.length > 0 || concept.storyIds.length > 0}

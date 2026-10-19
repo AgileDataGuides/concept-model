@@ -30,10 +30,11 @@
 	let domainId = $state(untrack(() => (concept?.domainId && cm.domainById.has(concept.domainId) ? concept.domainId : '')));
 	let storyIds = $state<string[]>(untrack(() => concept?.storyIds.filter((id) => cm.storyById.has(id)) ?? []));
 
-	// Parts two and three and the status, held here until Save, like every other field
+	// Parts two and three, the status and the disagreement, held here until Save, like every other field
 	let examples = $state<string[]>(untrack(() => [...(concept?.examples ?? [])]));
 	let specialCases = $state<string[]>(untrack(() => [...(concept?.specialCases ?? [])]));
 	let status = $state<DefinitionStatus>(untrack(() => concept?.status ?? 'draft'));
+	let disagreement = $state(untrack(() => concept?.disagreement ?? ''));
 
 	const threePart = $derived({
 		partOne: DEFINITION_PARTS.partOne,
@@ -58,6 +59,7 @@
 		if (!sameLines(concept.examples, examples)) parts.examples = examples;
 		if (!sameLines(concept.specialCases, specialCases)) parts.specialCases = specialCases;
 		if (concept.status !== status) parts.definitionStatus = status;
+		if ((concept.disagreement ?? '') !== disagreement.trim()) parts.definitionDisagreement = disagreement.trim();
 		const place: { domainId?: string; storyIds?: string[] } = {};
 		if ((concept.domainId ?? '') !== domainId) place.domainId = domainId || undefined;
 		if (!sameStories(concept.storyIds, storyIds)) place.storyIds = storyIds;
@@ -99,6 +101,18 @@
 				<span class={INPUT.label}>{DEFINITION_PARTS.status}</span>
 				<ChoiceChips options={DEFINITION_STATUSES} value={status} label="Definition status for {node.name}" onChange={(s) => s && (status = s)} />
 			</div>
+			{#if status === 'disagreement'}
+				<div>
+					<label class={INPUT.label} for="cm-details-disagreement">{DEFINITION_PARTS.disagreement}</label>
+					<textarea
+						id="cm-details-disagreement"
+						class={INPUT.textarea}
+						rows="3"
+						placeholder={DEFINITION_PARTS.disagreementPlaceholder}
+						bind:value={disagreement}
+					></textarea>
+				</div>
+			{/if}
 		</div>
 	{/snippet}
 	{#snippet extraFields()}

@@ -122,10 +122,11 @@ export const STATE_CHIPS = {
 	base: 'inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold border',
 	neutral: 'bg-slate-50 text-slate-600 border-slate-200',
 	positive: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-	warning: 'bg-amber-50 text-amber-700 border-amber-200'
+	warning: 'bg-amber-50 text-amber-700 border-amber-200',
+	negative: 'bg-red-50 text-red-700 border-red-200'
 };
 
-export type StateTone = 'neutral' | 'positive' | 'warning';
+export type StateTone = 'neutral' | 'positive' | 'warning' | 'negative';
 
 export const HINT = {
 	quiet: 'flex items-start gap-1.5 text-[11px] text-slate-500 leading-snug',

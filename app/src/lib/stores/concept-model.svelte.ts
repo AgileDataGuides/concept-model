@@ -488,6 +488,8 @@ export function createConceptModelStore(options: ConceptModelStoreOptions = {}) 
 	const storyName = (id: string) => (model.stories ?? []).find((s) => s.id === id)?.name ?? id;
 	const labelOf = <T extends string>(list: { id: T; label: string }[], id?: T) => (id ? (list.find((x) => x.id === id)?.label ?? id) : '');
 	const statusOf = (c: Concept) => labelOf(DEFINITION_STATUSES, c.definitionStatus ?? 'draft');
+	// A disagreement that has been settled stays in the file, but not in the export
+	const disagreementOf = (c: Concept) => (c.definitionStatus === 'disagreement' ? c.definitionDisagreement || '' : '');
 
 	function conceptRows(): string[][] {
 		return model.concepts.map((c) => [
@@ -498,6 +500,7 @@ export function createConceptModelStore(options: ConceptModelStoreOptions = {}) 
 			(c.examples ?? []).join('; '),
 			(c.specialCases ?? []).join('; '),
 			statusOf(c),
+			disagreementOf(c),
 			(c.storyIds ?? []).map(storyName).join('; '),
 			(c.aliases || []).join(', '),
 			c.definitionCategory || '',
@@ -505,7 +508,7 @@ export function createConceptModelStore(options: ConceptModelStoreOptions = {}) 
 		]);
 	}
 
-	const CONCEPT_HEADERS = ['Concept Name', 'Domain', '7W', 'Definition', 'Examples', 'Special Cases', 'Status', 'Stories', 'Aliases', 'Definition Category', 'Definition Differentiator'];
+	const CONCEPT_HEADERS = ['Concept Name', 'Domain', '7W', 'Definition', 'Examples', 'Special Cases', 'Status', 'Disagreement', 'Stories', 'Aliases', 'Definition Category', 'Definition Differentiator'];
 
 	function exportAsCsv(): string {
 		const csvEscape = (val: string) => `"${val.replace(/"/g, '""')}"`;

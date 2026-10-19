@@ -273,7 +273,8 @@
         "One Sales Order can arrive in several Deliveries, and one Delivery can carry several Sales Orders",
         "A van run with three stops is three Deliveries, one for each Customer Delivery Location"
       ],
-      "definitionStatus": "agreed",
+      "definitionStatus": "disagreement",
+      "definitionDisagreement": "Dispatch staff say a Delivery happens when the Products for a Sales Order are in the van and the van has left the Warehouse. The Retail Operations Manager says a Delivery happens when the Products reach the Customer. Until they agree, a Sales Order on a van that has not arrived yet is delivered in one report and not delivered in the other.",
       "w": "what",
       "definitionCategory": "Trip",
       "definitionDifferentiator": "takes Products from a Warehouse to a Customer Delivery Location"

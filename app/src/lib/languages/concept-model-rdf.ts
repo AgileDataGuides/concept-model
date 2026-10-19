@@ -96,7 +96,7 @@ interface Point {
 
 // The code lists. A value outside its list is dropped on import.
 const SEVEN_WS = ['who', 'what', 'when', 'where', 'why', 'how', 'how many'];
-const DEFINITION_STATUSES = ['draft', 'agreed', 'flagged'];
+const DEFINITION_STATUSES = ['draft', 'agreed', 'flagged', 'disagreement'];
 const SCOPE_SLICES = ['business-process', 'value-chain', 'organisational-design', 'business-capability', 'other'];
 const PARTICIPANT_ROLES = ['subject-matter-expert', 'facilitator', 'data-team', 'stakeholder'];
 const STORY_KINDS = ['happy-path', 'variation'];
@@ -473,6 +473,7 @@ export function conceptModelToRdf(data: GraphData, rootNodeId?: string): Concept
 		addText(iri, `${CM}definitionCategory`, p.definitionCategory);
 		addText(iri, `${CM}definitionDifferentiator`, p.definitionDifferentiator);
 		addText(iri, `${CM}definitionStatus`, oneOf(p.definitionStatus, DEFINITION_STATUSES));
+		addText(iri, `${CM}definitionDisagreement`, p.definitionDisagreement);
 		addText(iri, `${CM}sevenW`, oneOf(p.w, SEVEN_WS));
 		addInteger(iri, `${CM}order`, p.order);
 		addText(iri, `${SKOS}editorialNote`, p.notes);
@@ -780,6 +781,7 @@ export function rdfToConceptModel(triples: Triple[]): GraphData {
 			examples: texts(s, `${SKOS}example`),
 			specialCases: texts(s, `${SKOS}scopeNote`),
 			definitionStatus: oneOf(text(s, `${CM}definitionStatus`), DEFINITION_STATUSES),
+			definitionDisagreement: text(s, `${CM}definitionDisagreement`),
 			w: oneOf(text(s, `${CM}sevenW`), SEVEN_WS),
 			notes: text(s, `${SKOS}editorialNote`, `${SKOS}note`),
 			storyIris: iris(s, `${CM}foundInStory`).map((o) => o.value),
@@ -1146,6 +1148,7 @@ export function rdfToConceptModel(triples: Triple[]): GraphData {
 				examples: c.examples.length ? c.examples : undefined,
 				specialCases: c.specialCases.length ? c.specialCases : undefined,
 				definitionStatus: c.definitionStatus,
+				definitionDisagreement: c.definitionDisagreement,
 				w: c.w,
 				notes: c.notes
 			},
@@ -1287,6 +1290,7 @@ const PROPERTY_MAP: Record<string, Record<string, string>> = {
 		definitionCategory: 'cm:definitionCategory',
 		definitionDifferentiator: 'cm:definitionDifferentiator',
 		definitionStatus: 'cm:definitionStatus',
+		definitionDisagreement: 'cm:definitionDisagreement',
 		w: 'cm:sevenW',
 		order: 'cm:order'
 	},

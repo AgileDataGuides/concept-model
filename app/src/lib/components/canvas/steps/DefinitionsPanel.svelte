@@ -1,7 +1,8 @@
 <script lang="ts">
 	// Step 5 - Agree the Definitions: for each Concept, the book's three parts.
 	// Part one, the nature of the thing, is the Concept's description, which
-	// also feeds the Business Glossary. Agree the easy ones, flag the hard ones.
+	// also feeds the Business Glossary. Agree the easy ones, flag the hard ones,
+	// and where people mean different things, say what the disagreement is.
 	import { getContext } from 'svelte';
 	import type { DataAdapter } from '$lib/cp-shared';
 	import type { CmView } from '$lib/model/graph-view';
@@ -22,7 +23,7 @@
 	let chosenId = $state('');
 	const current = $derived(cm.conceptById.get(chosenId) ?? cm.concepts[0]);
 
-	const TONE = { draft: 'neutral', agreed: 'positive', flagged: 'warning' } as const;
+	const TONE = { draft: 'neutral', agreed: 'positive', flagged: 'warning', disagreement: 'negative' } as const;
 	const statusLabel = (status: DefinitionStatus) => DEFINITION_STATUSES.find((s) => s.id === status)?.label ?? 'Draft';
 
 	// The Aristotle helper's sentence, offered for part one while part one is empty,
@@ -154,6 +155,19 @@
 					onChange={(status) => status && patchNode(adapter, current.node, { definitionStatus: status })}
 				/>
 			</div>
+
+			{#if current.status === 'disagreement'}
+				<div>
+					<span class={INPUT.label}>{DEFINITION_PARTS.disagreement}</span>
+					<EditableText
+						value={current.disagreement ?? ''}
+						label="The disagreement on {current.name}"
+						placeholder={DEFINITION_PARTS.disagreementPlaceholder}
+						multiline
+						onSave={(definitionDisagreement) => patchNode(adapter, current.node, { definitionDisagreement })}
+					/>
+				</div>
+			{/if}
 		</section>
 	</div>
 {/if}

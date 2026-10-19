@@ -277,7 +277,8 @@
       "specialCases": [
         "Is Recurring Revenue one amount per Subscription per month, or a running total? It has to be countable to be a Concept"
       ],
-      "definitionStatus": "flagged",
+      "definitionStatus": "disagreement",
+      "definitionDisagreement": "Finance counts Recurring Revenue when an Invoice is paid. RevOps counts it when a Subscription starts. Until they agree, the MRR each team reports will not match.",
       "w": "how many"
     },
     {

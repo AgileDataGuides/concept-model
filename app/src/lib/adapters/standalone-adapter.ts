@@ -117,7 +117,7 @@ export function createStandaloneAdapter(store: ConceptModelStore): { adapter: Da
 				case 'concept':
 					store.updateConcept(sourceId, {
 						...common,
-						...pick<Concept>(props, ['aliases', 'order', 'definitionCategory', 'definitionDifferentiator', 'examples', 'specialCases', 'definitionStatus', 'w', 'notes'])
+						...pick<Concept>(props, ['aliases', 'order', 'definitionCategory', 'definitionDifferentiator', 'examples', 'specialCases', 'definitionStatus', 'definitionDisagreement', 'w', 'notes'])
 					});
 					break;
 				case 'event': {

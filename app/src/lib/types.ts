@@ -30,7 +30,7 @@ export type ScopeSlice = 'business-process' | 'value-chain' | 'organisational-de
 /** The book's three modeling roles (s32), plus the Stakeholders who bring the Business Questions (s29). */
 export type ParticipantRole = 'subject-matter-expert' | 'facilitator' | 'data-team' | 'stakeholder';
 export type StoryKind = 'happy-path' | 'variation';
-export type DefinitionStatus = 'draft' | 'agreed' | 'flagged';
+export type DefinitionStatus = 'draft' | 'agreed' | 'flagged' | 'disagreement';
 export type WalkResult = 'holds' | 'stuck';
 export type WalkResolution = 'drawn' | 'out-of-scope' | 'parked';
 export type ParkedKind = 'attribute' | 'out-of-scope' | 'future-map' | 'other';
@@ -86,6 +86,8 @@ export interface Concept {
 	specialCases?: string[];
 	/** Absent reads as draft. */
 	definitionStatus?: DefinitionStatus;
+	/** What people disagree on, while the status is disagreement. Kept if the status moves on. */
+	definitionDisagreement?: string;
 	w?: W;
 	notes?: string;
 }

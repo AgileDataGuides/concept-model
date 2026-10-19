@@ -155,6 +155,7 @@ export function conceptModelToContextPlane(model: ConceptModel): { nodes: Contex
 				examples: plain(concept.examples),
 				specialCases: plain(concept.specialCases),
 				definitionStatus: concept.definitionStatus,
+				definitionDisagreement: concept.definitionDisagreement,
 				w: concept.w,
 				notes: concept.notes
 			},
@@ -361,6 +362,7 @@ export function contextPlaneToConceptModel(
 			examples: strList(p.examples),
 			specialCases: strList(p.specialCases),
 			definitionStatus: str(p.definitionStatus) as Concept['definitionStatus'],
+			definitionDisagreement: str(p.definitionDisagreement),
 			w: str(p.w) as Concept['w'],
 			notes: str(p.notes)
 		};

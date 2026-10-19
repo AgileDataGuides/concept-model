@@ -108,6 +108,7 @@ export function stepStatus(cm: CmView, step: StepId): StepStatus {
 		case 'definitions': {
 			const agreed = cm.concepts.filter((c) => c.status === 'agreed').length;
 			const flagged = cm.concepts.filter((c) => c.status === 'flagged').length;
+			const disagreed = cm.concepts.filter((c) => c.status === 'disagreement').length;
 			const hints: string[] = [];
 			for (const c of cm.concepts) {
 				const word = softwareWordIn(c.description);
@@ -117,7 +118,9 @@ export function stepStatus(cm: CmView, step: StepId): StepStatus {
 				(c) => c.status !== 'draft' || c.description || c.examples.length > 0 || c.specialCases.length > 0
 			);
 			const line =
-				concepts === 0 ? 'No Concepts to define yet' : `${agreed} of ${concepts} agreed${flagged > 0 ? `, ${flagged} flagged` : ''}`;
+				concepts === 0
+					? 'No Concepts to define yet'
+					: `${agreed} of ${concepts} agreed${flagged > 0 ? `, ${flagged} flagged` : ''}${disagreed > 0 ? `, ${disagreed} in disagreement` : ''}`;
 			return { started, line, hints };
 		}
 
