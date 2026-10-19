@@ -1,16 +1,21 @@
 <script lang="ts">
 	// Type, press Enter, keep going. The field keeps the cursor after each add,
-	// so a Facilitator can capture a run of names on a shared screen.
+	// so a Facilitator can capture a run of names on a shared screen. Choices
+	// for the new item (Step 2's roles) go in `children`, on a line above the
+	// field, so they are seen before Enter and any number of them fits.
+	import type { Snippet } from 'svelte';
 	import { BUTTON, INPUT } from '$lib/ui/tokens';
 
 	let {
 		placeholder,
 		onAdd,
-		buttonLabel = 'Add'
+		buttonLabel = 'Add',
+		children
 	}: {
 		placeholder: string;
 		onAdd: (text: string) => unknown;
 		buttonLabel?: string;
+		children?: Snippet;
 	} = $props();
 
 	let value = $state('');
@@ -34,15 +39,26 @@
 	}
 </script>
 
-<div class="flex items-center gap-2">
-	<input
-		bind:this={inputEl}
-		bind:value
-		type="text"
-		{placeholder}
-		aria-label={placeholder}
-		class={INPUT.text}
-		onkeydown={handleKeydown}
-	/>
-	<button type="button" class="{BUTTON.add} shrink-0" onclick={submit}>{buttonLabel}</button>
-</div>
+{#snippet field()}
+	<div class="flex items-center gap-2">
+		<input
+			bind:this={inputEl}
+			bind:value
+			type="text"
+			{placeholder}
+			aria-label={placeholder}
+			class={INPUT.text}
+			onkeydown={handleKeydown}
+		/>
+		<button type="button" class="{BUTTON.add} shrink-0" onclick={submit}>{buttonLabel}</button>
+	</div>
+{/snippet}
+
+{#if children}
+	<div class="space-y-2">
+		{@render children()}
+		{@render field()}
+	</div>
+{:else}
+	{@render field()}
+{/if}

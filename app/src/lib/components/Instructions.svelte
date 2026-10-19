@@ -58,6 +58,7 @@
 			<ul>
 				<li><strong>The steps are a checklist, not a wizard.</strong> Loop freely. A story sparks a Concept, the Concept needs a Definition, the Definition surfaces a Relationship.</li>
 				<li><strong>Type a name, press Enter, keep going.</strong> Every add field keeps the cursor, and nothing has to be complete before you Save.</li>
+				<li><strong>Pick the roles first in Step 2.</strong> The roles sit on the line above the name field. Pick them, type the name and press Enter, and the person arrives with those roles. The roles then clear for the next person.</li>
 				<li><strong>Skip on purpose.</strong> A step can be marked skipped, with a note on why, so it is dropped knowingly rather than by accident.</li>
 				<li><strong>Park what belongs elsewhere.</strong> Information about a Concept ("Customer name") is a detailed attribute. Park it in Step 4 and it waits for the DESIGN stage, listed under Other, in Parked Details. Out of scope and future Map items go on the Parked list with them.</li>
 				<li><strong>Quiet hints</strong> show the book's rules of thumb, like ten to twenty Concepts, when the Model drifts outside them. They never stop you.</li>
