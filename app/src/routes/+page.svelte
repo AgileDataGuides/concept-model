@@ -33,7 +33,9 @@
 		else url.searchParams.delete('step');
 		if (url.href !== window.location.href) replaceState(url, page.state);
 	});
-	const canvasView = $derived(activeTab === 'map' || activeTab === 'definitions' || activeTab === 'parked' || activeTab === 'events' || activeTab === 'matrix' ? activeTab : 'steps');
+	const CANVAS_VIEWS = ['map', 'definitions', 'parked', 'events', 'matrix', 'roles'] as const;
+	type CanvasView = (typeof CANVAS_VIEWS)[number] | 'steps';
+	const canvasView = $derived<CanvasView>((CANVAS_VIEWS as readonly string[]).includes(activeTab) ? (activeTab as CanvasView) : 'steps');
 	let loaded = $state(false);
 	let version = $state(0);
 

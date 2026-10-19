@@ -866,6 +866,14 @@
       "notes": "Knows billing and revenue recognition"
     },
     {
+      "id": "p-customer-success-manager",
+      "name": "Customer Success Manager",
+      "roles": [
+        "stakeholder"
+      ],
+      "notes": "Owns renewals and the conversations before a customer churns"
+    },
+    {
       "id": "p-revops-analyst",
       "name": "RevOps Analyst",
       "roles": [
@@ -886,6 +894,10 @@
       "name": "A prospect becomes a paying customer",
       "kind": "happy-path",
       "toldBy": "p-cro",
+      "stakeholderIds": [
+        "p-finance-analyst",
+        "p-customer-success-manager"
+      ],
       "order": 1,
       "text": "A prospect clicks on one of our ads on a channel like LinkedIn and signs up for a free trial. During the trial they set up their account and invite their team.\nBefore the trial ends they subscribe to a paid plan. From then on, every billing period produces an invoice, the customer pays it, and the subscription generates recurring revenue every month."
     },
@@ -894,6 +906,9 @@
       "name": "A customer upgrades mid-period",
       "kind": "variation",
       "toldBy": "p-finance-analyst",
+      "stakeholderIds": [
+        "p-cro"
+      ],
       "order": 2,
       "text": "Halfway through a billing period, a customer moves from the Starter plan to the Pro plan. The subscription changes plan straight away, and the next invoice carries a prorated charge for the rest of the period. The discount they had on Starter no longer applies."
     },
@@ -902,6 +917,10 @@
       "name": "A customer cancels at renewal",
       "kind": "variation",
       "toldBy": "p-cro",
+      "stakeholderIds": [
+        "p-finance-analyst",
+        "p-customer-success-manager"
+      ],
       "order": 3,
       "text": "A customer decides not to renew. They cancel before the end of the billing period, and the subscription stays active until the period ends. No new invoice is produced and the recurring revenue stops, but they are still a customer in our history."
     }

@@ -5,6 +5,7 @@
 	//   Parked Details lists the detailed attributes parked for the DESIGN stage.
 	//   Core Business Events lists the moments that matter, each as who-does-what.
 	//   Business Event Matrix shows the same Events and Concepts as a grid.
+	//   Role Matrix shows the Subject Matter Experts and Stakeholders each Concept came from.
 	// The ids stay as they were, so a link copied before a rename or a move still opens its page.
 	export const MAIN_TABS = [
 		{ id: 'steps', label: 'Steps' },
@@ -14,7 +15,8 @@
 	export const OTHER_TABS = [
 		{ id: 'parked', label: 'Parked Details' },
 		{ id: 'events', label: 'Core Business Events' },
-		{ id: 'matrix', label: 'Business Event Matrix' }
+		{ id: 'matrix', label: 'Business Event Matrix' },
+		{ id: 'roles', label: 'Role Matrix' }
 	];
 	const INSTRUCTIONS_TAB = { id: 'instructions', label: 'Instructions' };
 	/** Every page a link can name, in the order the tab bar shows them. */
@@ -53,7 +55,7 @@
 	let saving = $state(false);
 
 	// The Other menu: open or shut, and which of its pages is open, if any.
-	// A disclosure, not an ARIA menu, so Tab moves through its three buttons.
+	// A disclosure, not an ARIA menu, so Tab moves through its buttons.
 	let otherOpen = $state(false);
 	let otherTrigger = $state<HTMLButtonElement | null>(null);
 	const activeOther = $derived(OTHER_TABS.find((t) => t.id === activeTab));

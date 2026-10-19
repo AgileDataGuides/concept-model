@@ -269,3 +269,28 @@ export const EVENT_MATRIX = {
 		'how many': { band: 'bg-orange-50 text-orange-500 border-orange-200', header: 'bg-orange-50 text-orange-500 border-orange-200 border-t-orange-500' }
 	} as Record<W, { band: string; header: string }>
 };
+
+/**
+ * tokens.md role_matrix: the Role Matrix page's marks, person headers and
+ * Domain rows. The rest of that page takes EVENT_MATRIX (DESIGN_SYSTEM.md
+ * § 18 Role Matrix).
+ */
+export const ROLE_MATRIX = {
+	/** EVENT_MATRIX.wrapper, but as wide as the table, since a Model has few people. */
+	wrapper: 'w-fit max-w-full overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm',
+	/** EVENT_MATRIX.table without min-w-full, so a few people columns do not stretch the Concept column. */
+	table: 'w-auto border-collapse text-sm',
+	/** Fills the read-only cell, so its hover reads anywhere in it. */
+	mark: 'absolute inset-0 flex items-center justify-center gap-1 cursor-default',
+	/** T, told a story the Concept came from. */
+	told: 'text-xs font-bold text-emerald-600',
+	/** S, a Stakeholder of a story the Concept came from. */
+	stakeholder: 'text-xs font-bold text-sky-600',
+	/** A person's column header: their name, often a role title. Wraps, so a long one stays narrow. */
+	personHeader:
+		'px-3 py-2 text-xs font-semibold text-center align-bottom min-w-[110px] border-r border-t-2 bg-slate-50 text-slate-700 border-slate-200 border-t-slate-400',
+	/** A Domain row's name, in view when the table scrolls sideways. Colours from EVENT_MATRIX.bandDomain or bandNoDomain. */
+	bandRowLabel: 'sticky left-0 z-10 px-4 py-1.5 text-left text-[11px] font-bold uppercase tracking-wider whitespace-nowrap border-r border-b',
+	/** The rest of a Domain row, across the people columns. */
+	bandRowFill: 'border-b'
+};

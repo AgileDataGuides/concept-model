@@ -1,11 +1,12 @@
 <script lang="ts">
-	// THE Concept Model canvas: one Concept Model, six views.
+	// THE Concept Model canvas: one Concept Model, seven views.
 	//   - steps:       the ten Modeling Business Concepts steps, the way in
 	//   - map:         the Concept Map pattern template
 	//   - definitions: the Definitions pattern template
 	//   - parked:      the parked detailed attributes, waiting for the DESIGN stage
 	//   - events:      the Core Business Events, each said as who-does-what
 	//   - matrix:      the Core Business Events and Concepts as a Business Event Matrix
+	//   - roles:       the Subject Matter Experts and Stakeholders each Concept came from
 	//
 	// Mode-agnostic: it reads the { nodes, links } it is given and writes only
 	// through the DataAdapter from context, so the same component works in the
@@ -18,6 +19,7 @@
 	import DefinitionsView from './DefinitionsView.svelte';
 	import EventsView from './EventsView.svelte';
 	import MatrixView from './MatrixView.svelte';
+	import RoleMatrixView from './RoleMatrixView.svelte';
 	import ParkedPanel from './steps/ParkedPanel.svelte';
 	import { STEP_PANEL } from '$lib/ui/tokens';
 
@@ -29,7 +31,7 @@
 	}: {
 		nodes: ContextNode[];
 		links?: ContextLink[];
-		view?: 'steps' | 'map' | 'definitions' | 'parked' | 'events' | 'matrix';
+		view?: 'steps' | 'map' | 'definitions' | 'parked' | 'events' | 'matrix' | 'roles';
 		/** The selected step on the Steps view. The standalone app binds it to put the step in the page link. */
 		step?: string;
 	} = $props();
@@ -53,6 +55,8 @@
 	<EventsView {cm} {nodes} />
 {:else if view === 'matrix'}
 	<MatrixView {cm} {nodes} />
+{:else if view === 'roles'}
+	<RoleMatrixView {cm} {nodes} />
 {:else}
 	<StepsView {cm} {nodes} bind:selected={step} />
 {/if}
