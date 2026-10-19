@@ -58,7 +58,8 @@
         "A Prospect on a free Trial is not a Customer yet",
         "A Customer who cancels stays a Customer, with no active Subscription"
       ],
-      "definitionStatus": "agreed",
+      "definitionStatus": "disagreement",
+      "definitionDisagreement": "RevOps counts a Customer from the day a paid Subscription starts. Finance counts them only once their first Invoice is paid. Until they agree, the Customer count each team reports will not match.",
       "w": "who"
     },
     {
@@ -255,42 +256,16 @@
       ]
     },
     {
-      "id": "recurring-revenue",
-      "name": "Recurring Revenue",
-      "description": "Recurring Revenue is income from active Subscriptions, counted the same way across Customers and Plans. It is the basis for MRR and ARR.",
+      "id": "one-time-charge",
+      "name": "One-Time Charge",
+      "description": "A One-Time Charge is a fee on an Invoice that does not repeat, such as a setup fee, a paid training session or the prorated charge for an upgrade mid-period. SaaS Revenue Metrics leaves it out of MRR and ARR.",
       "aliases": [
-        "Subscription Revenue",
-        "Predictable Revenue"
+        "One-Off Fee",
+        "Non-Recurring Charge"
       ],
       "order": 10,
-      "definitionCategory": "Income",
-      "definitionDifferentiator": "comes from active @{Subscription}s on a predictable cadence",
-      "domainId": "dom-finance",
-      "storyIds": [
-        "s-prospect-to-customer",
-        "s-cancel-at-renewal"
-      ],
-      "examples": [
-        "Acme's Pro Subscription for March",
-        "Fact: Subscription 'SUB-0042' generates Recurring Revenue '$499 for March 2026'."
-      ],
-      "specialCases": [
-        "Is Recurring Revenue one amount per Subscription per month, or a running total? It has to be countable to be a Concept"
-      ],
-      "definitionStatus": "disagreement",
-      "definitionDisagreement": "Finance counts Recurring Revenue when an Invoice is paid. RevOps counts it when a Subscription starts. Until they agree, the MRR each team reports will not match.",
-      "w": "how many"
-    },
-    {
-      "id": "one-time-revenue",
-      "name": "One-Time Revenue",
-      "description": "One-Time Revenue is income that does not repeat, such as setup fees, add-ons and paid training. SaaS Revenue Metrics leaves it out of MRR and ARR.",
-      "aliases": [
-        "Non-Recurring Revenue"
-      ],
-      "order": 11,
-      "definitionCategory": "Income",
-      "definitionDifferentiator": "does not repeat, such as a setup fee, an add-on or a service",
+      "definitionCategory": "Charge",
+      "definitionDifferentiator": "appears once on an @{Invoice}, such as a setup fee, a paid service or a prorated upgrade",
       "domainId": "dom-finance",
       "storyIds": [
         "s-upgrade-mid-period"
@@ -298,12 +273,12 @@
       "examples": [
         "An onboarding fee",
         "A paid training session",
-        "Fact: Invoice 'INV-2026-0402' includes One-Time Revenue 'Onboarding fee'."
+        "Fact: Invoice 'INV-2026-0402' includes One-Time Charge 'Onboarding fee'."
       ],
       "definitionStatus": "draft",
-      "w": "how many",
+      "w": "what",
       "specialCases": [
-        "An add-on that renews every month with the Subscription is Recurring Revenue, not One-Time Revenue"
+        "An add-on that renews every month with the Subscription is part of the Subscription, not a One-Time Charge"
       ]
     },
     {
@@ -314,7 +289,7 @@
         "Promotion",
         "Price Adjustment"
       ],
-      "order": 12,
+      "order": 11,
       "definitionCategory": "Price adjustment",
       "definitionDifferentiator": "reduces the list price of a @{Subscription}",
       "domainId": "dom-sales",
@@ -341,7 +316,7 @@
         "Acquisition Channel",
         "Source"
       ],
-      "order": 13,
+      "order": 12,
       "definitionCategory": "Source",
       "definitionDifferentiator": "first brought a @{Prospect} to the product",
       "domainId": "dom-marketing",
@@ -368,7 +343,7 @@
         "Advertisement",
         "Campaign Creative"
       ],
-      "order": 14,
+      "order": 13,
       "definitionCategory": "Marketing creative",
       "definitionDifferentiator": "runs on one @{Channel} for @{Prospect}s to click",
       "domainId": "dom-marketing",
@@ -393,7 +368,7 @@
       "aliases": [
         "Demographic Segment"
       ],
-      "order": 15,
+      "order": 14,
       "definitionCategory": "Group of Customers",
       "definitionDifferentiator": "share a demographic attribute",
       "domainId": "dom-sales",
@@ -417,7 +392,7 @@
         "Service",
         "Offering"
       ],
-      "order": 16,
+      "order": 15,
       "definitionCategory": "Software application",
       "definitionDifferentiator": "@{Customer}s subscribe to through a @{Plan}",
       "domainId": "dom-product",
@@ -428,7 +403,7 @@
         "Fact: Plan 'Starter' packages Product 'Revenue Hub'."
       ],
       "specialCases": [
-        "An onboarding service sold beside the app is One-Time Revenue, not a Product",
+        "An onboarding service sold beside the app is a One-Time Charge, not a Product",
         "A new feature inside the app is part of the Product, not a new Product"
       ]
     }
@@ -669,24 +644,6 @@
       }
     },
     {
-      "id": "r-subscription-generates-mrr",
-      "sourceConceptId": "subscription",
-      "targetConceptId": "recurring-revenue",
-      "label": "generates",
-      "cardinality": "1 : 0..*",
-      "inverseLabel": "is generated by",
-      "rule": {
-        "forward": {
-          "min": "zero",
-          "max": "many"
-        },
-        "inverse": {
-          "min": "one",
-          "max": "one"
-        }
-      }
-    },
-    {
       "id": "r-discount-applied-to-sub",
       "sourceConceptId": "discount",
       "targetConceptId": "subscription",
@@ -726,7 +683,7 @@
     {
       "id": "r-invoice-includes-one-time",
       "sourceConceptId": "invoice",
-      "targetConceptId": "one-time-revenue",
+      "targetConceptId": "one-time-charge",
       "label": "includes",
       "cardinality": "1 : 0..*",
       "inverseLabel": "is included in",
@@ -887,7 +844,7 @@
     }
   ],
   "scope": {
-    "statement": "Lead to revenue for a SaaS subscription company: from the first ad a prospect clicks, through trial and subscription, to the invoices, payments and recurring revenue that MRR, ARR and churn are counted from.",
+    "statement": "Lead to revenue for a SaaS subscription company: from the first ad a prospect clicks, through trial and subscription, to the invoices and payments that MRR, ARR and churn are counted from.",
     "slicedBy": "business-process"
   },
   "participants": [
@@ -1061,6 +1018,12 @@
       "note": "Step 4, from the story \"A prospect becomes a paying customer\""
     },
     {
+      "id": "recurring-revenue-metric",
+      "text": "Recurring Revenue: a metric counted from Subscriptions and Invoices, not a Concept. Define it, with MRR and ARR, in the Business Glossary",
+      "kind": "other",
+      "note": "Step 4, from the story \"A prospect becomes a paying customer\""
+    },
+    {
       "id": "sales-tax",
       "text": "Sales tax on Invoices",
       "kind": "out-of-scope",
@@ -1081,7 +1044,7 @@
   ],
   "stepNotes": {
     "map": {
-      "note": "Arranged by Domain, so the story reads left to right from the first ad click to recognised revenue."
+      "note": "Arranged by Domain, so the story reads left to right from the first ad click to the paid Invoice."
     }
   },
   "layout": {
@@ -1142,11 +1105,7 @@
         "x": 1995,
         "y": 330
       },
-      "recurring-revenue": {
-        "x": 1695,
-        "y": 525
-      },
-      "one-time-revenue": {
+      "one-time-charge": {
         "x": 1995,
         "y": 525
       }

@@ -98,6 +98,7 @@
 				<li><strong>New Model</strong> creates a blank model alongside the others.</li>
 				<li><strong>Import</strong> loads a JSON file as a NEW model, never over the current one. Files from before the steps (version 1.0) load too: a cardinality like <code>1 : 1..*</code> becomes a Relationship Rule, and anything that cannot be read without guessing shows in Step 7 as "To restate".</li>
 				<li><strong>Import</strong> also reads Turtle (<code>.ttl</code>) and RDF/XML (<code>.rdf</code>, <code>.owl</code>). A file this app exported comes back whole. An ontology from another tool, such as Protégé, or a SKOS vocabulary becomes a new model: each class or SKOS concept is a Concept, each object property between two of them is a Relationship with its rule read from the cardinality restrictions, and each SKOS collection is a Domain. Protégé can also save a <code>.owl</code> file as OWL/XML. This app does not read OWL/XML, so save the file as RDF/XML or Turtle first.</li>
+				<li>A file from the Context Plane can hold Metrics, such as Recurring Revenue: a count or amount worked out from Concepts. This app shows Concepts only, in the Blue Book's sense, so <strong>Import</strong> leaves every Metric out, with the Relationships and Core Business Event links that pointed at it. Define a Metric in the Business Glossary instead.</li>
 				<li><strong>Delete</strong> (red, in the dark header) removes the current model.</li>
 			</ul>
 			<h4>Saving and Exporting</h4>

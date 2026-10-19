@@ -1,5 +1,6 @@
 import { MODEL_VERSION, type ConceptModel } from '$lib/types';
 import { parseLegacyCardinality } from './rules';
+import { withoutMetrics } from './concept-kind';
 
 /**
  * Bring a saved Concept Model up to the current version. Runs on every load
@@ -9,6 +10,9 @@ import { parseLegacyCardinality } from './rules';
  * when both ends parse without guessing. Anything else stays as text, and
  * Step 7 shows it as "To restate". Every 2.0 field is optional, so nothing
  * else needs converting.
+ *
+ * On every version, a Concept the Context Plane flagged Metric is dropped,
+ * with everything that pointed at it (see `concept-kind.ts`).
  */
 export function migrateModel(raw: ConceptModel): ConceptModel {
 	const model: ConceptModel = {
@@ -30,5 +34,5 @@ export function migrateModel(raw: ConceptModel): ConceptModel {
 		model.version = MODEL_VERSION;
 	}
 
-	return model;
+	return withoutMetrics(model);
 }

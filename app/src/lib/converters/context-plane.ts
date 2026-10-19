@@ -13,6 +13,7 @@ import type {
 	Walk
 } from '$lib/types';
 import { MODEL_VERSION } from '$lib/types';
+import { isMetric } from '$lib/model/concept-kind';
 
 // Native Concept Model JSON <-> Context Plane { nodes, links }.
 //
@@ -324,7 +325,9 @@ export function contextPlaneToConceptModel(
 	const labelled = (label: string) => nodes.filter((n) => getNodeLabels(n).includes(label));
 
 	const modelNode = labelled('cm_model')[0];
-	const conceptNodes = labelled('global_concept');
+	// A Concept the Context Plane flagged Metric never reaches this app (model/concept-kind.ts)
+	const metricNodeIds = new Set(labelled('global_concept').filter((n) => isMetric(n.properties)).map((n) => n.id));
+	const conceptNodes = labelled('global_concept').filter((n) => !metricNodeIds.has(n.id));
 	const eventNodes = labelled('global_core_business_event');
 	const processNodes = labelled('global_core_business_process');
 	const domainNodes = labelled('global_domain');
@@ -333,7 +336,7 @@ export function contextPlaneToConceptModel(
 	// Graph id -> native id, for every node and every Relationship link
 	const nativeIdOf = new Map<string, string>();
 	for (const n of nodes) nativeIdOf.set(n.id, str(n.properties?.sourceId) ?? n.id);
-	const toNativeId = (gid: string) => nativeIdOf.get(gid);
+	const toNativeId = (gid: string) => (metricNodeIds.has(gid) ? undefined : nativeIdOf.get(gid));
 
 	const conceptNodeIds = new Set(conceptNodes.map((n) => n.id));
 	const relationshipLinks = links.filter(

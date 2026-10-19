@@ -475,6 +475,8 @@ export function conceptModelToRdf(data: GraphData, rootNodeId?: string): Concept
 		addText(iri, `${CM}definitionStatus`, oneOf(p.definitionStatus, DEFINITION_STATUSES));
 		addText(iri, `${CM}definitionDisagreement`, p.definitionDisagreement);
 		addText(iri, `${CM}sevenW`, oneOf(p.w, SEVEN_WS));
+		// Only a Metric says so. The standalone Concept Model drops it on import.
+		addText(iri, `${CM}conceptKind`, p.conceptKind === 'metric' ? 'metric' : undefined);
 		addInteger(iri, `${CM}order`, p.order);
 		addText(iri, `${SKOS}editorialNote`, p.notes);
 		for (const storyId of strList(placement.storyIds)) {
@@ -783,6 +785,7 @@ export function rdfToConceptModel(triples: Triple[]): GraphData {
 			definitionStatus: oneOf(text(s, `${CM}definitionStatus`), DEFINITION_STATUSES),
 			definitionDisagreement: text(s, `${CM}definitionDisagreement`),
 			w: oneOf(text(s, `${CM}sevenW`), SEVEN_WS),
+			conceptKind: text(s, `${CM}conceptKind`) === 'metric' ? ('metric' as const) : undefined,
 			notes: text(s, `${SKOS}editorialNote`, `${SKOS}note`),
 			storyIris: iris(s, `${CM}foundInStory`).map((o) => o.value),
 			at: position(s)
@@ -1150,6 +1153,7 @@ export function rdfToConceptModel(triples: Triple[]): GraphData {
 				definitionStatus: c.definitionStatus,
 				definitionDisagreement: c.definitionDisagreement,
 				w: c.w,
+				conceptKind: c.conceptKind,
 				notes: c.notes
 			},
 			...stamp
@@ -1292,6 +1296,7 @@ const PROPERTY_MAP: Record<string, Record<string, string>> = {
 		definitionStatus: 'cm:definitionStatus',
 		definitionDisagreement: 'cm:definitionDisagreement',
 		w: 'cm:sevenW',
+		conceptKind: 'cm:conceptKind (written for a Metric only)',
 		order: 'cm:order'
 	},
 	relationship: {
