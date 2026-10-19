@@ -39,7 +39,12 @@
 
 	function remove(person: Participant) {
 		const told = cm.stories.filter((s) => s.toldBy === person.id).length;
-		if (told > 0 && !confirm(`Remove ${person.name}? ${told} stories will no longer say who told them.`)) return;
+		const stakeholderOf = cm.stories.filter((s) => s.stakeholderIds?.includes(person.id)).length;
+		const lost = [
+			...(told > 0 ? [`${told} ${told === 1 ? 'story' : 'stories'} will no longer say who told them`] : []),
+			...(stakeholderOf > 0 ? [`${stakeholderOf} ${stakeholderOf === 1 ? 'story' : 'stories'} will no longer list them as a Stakeholder`] : [])
+		];
+		if (lost.length > 0 && !confirm(`Remove ${person.name}? ${lost.join(', and ')}.`)) return;
 		return save(cm.participants.filter((p) => p.id !== person.id));
 	}
 </script>

@@ -311,6 +311,12 @@ export function createConceptModelStore(options: ConceptModelStoreOptions = {}) 
 		}
 		for (const s of model.stories ?? []) {
 			if (s.toldBy && !participantIds.has(s.toldBy)) delete s.toldBy;
+			if (s.stakeholderIds) {
+				// A story's teller is never also one of its Stakeholders
+				const kept = s.stakeholderIds.filter((id) => participantIds.has(id) && id !== s.toldBy);
+				if (kept.length > 0) s.stakeholderIds = kept;
+				else delete s.stakeholderIds;
+			}
 		}
 		for (const q of model.businessQuestions ?? []) {
 			if (q.askedBy && !participantIds.has(q.askedBy)) delete q.askedBy;
@@ -608,8 +614,14 @@ export function createConceptModelStore(options: ConceptModelStoreOptions = {}) 
 			sheets.push({
 				title: 'Business Stories',
 				rows: [
-					['Title', 'Kind', 'Told By', 'Story'],
-					...(model.stories ?? []).map((s) => [s.name, labelOf(STORY_KINDS, s.kind), personName(s.toldBy), s.text])
+					['Title', 'Kind', 'Told By', 'Stakeholders', 'Story'],
+					...(model.stories ?? []).map((s) => [
+						s.name,
+						labelOf(STORY_KINDS, s.kind),
+						personName(s.toldBy),
+						(s.stakeholderIds ?? []).map(personName).filter(Boolean).join(', '),
+						s.text
+					])
 				]
 			});
 		}

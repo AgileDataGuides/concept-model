@@ -431,6 +431,11 @@ export function conceptModelToRdf(data: GraphData, rootNodeId?: string): Concept
 		addText(iri, `${CM}storyKind`, oneOf(s.kind, STORY_KINDS));
 		const teller = participantIri.get(str(s.toldBy) ?? '');
 		if (teller) add(iri, `${CM}toldBy`, teller);
+		// The story's Stakeholders: the other Step 2 people it matters to, one triple each
+		for (const id of strList(s.stakeholderIds)) {
+			const stakeholder = participantIri.get(id);
+			if (stakeholder) add(iri, `${CM}stakeholder`, stakeholder);
+		}
 		addInteger(iri, `${CM}order`, s.order);
 	});
 
@@ -998,12 +1003,22 @@ export function rdfToConceptModel(triples: Triple[]): GraphData {
 		const id = nativeId(storyIds, s, name, 'story');
 		storyOf.set(termKey(s), id);
 		const toldBy = personOf(s, `${CM}toldBy`);
+		const stakeholderIds = [
+			...new Set(
+				index
+					.objects(s, `${CM}stakeholder`)
+					.filter((o) => o.termType !== 'Literal')
+					.map((o) => participantOf.get(termKey(o)))
+					.filter((id): id is string => !!id)
+			)
+		];
 		return {
 			id,
 			name,
 			text: text(s, `${CM}storyText`) ?? '',
 			kind: oneOf(text(s, `${CM}storyKind`), STORY_KINDS) ?? 'happy-path',
 			...(toldBy ? { toldBy } : {}),
+			...(stakeholderIds.length > 0 ? { stakeholderIds } : {}),
 			order: integer(s, `${CM}order`) ?? i + 1
 		};
 	});

@@ -148,6 +148,8 @@ export interface BusinessStory {
 	kind: StoryKind;
 	/** A participant id. */
 	toldBy?: string;
+	/** Participant ids: the Stakeholders, the other people from Step 2 this story matters to. */
+	stakeholderIds?: string[];
 	order?: number;
 }
 

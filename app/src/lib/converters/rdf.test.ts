@@ -61,6 +61,20 @@ describe.each(['turtle', 'rdf-xml'])('%s', (languageId) => {
 		expect(comparable(back)).toEqual(comparable(blueBook));
 	});
 
+	it("keeps a story's Stakeholders", () => {
+		const people = model.participants ?? [];
+		const withStakeholders: ConceptModel = {
+			...model,
+			stories: (model.stories ?? []).map((s, i) =>
+				i === 0 ? { ...s, stakeholderIds: people.filter((p) => p.id !== s.toldBy).slice(0, 2).map((p) => p.id) } : s
+			)
+		};
+		expect(withStakeholders.stories?.[0].stakeholderIds?.length).toBe(2);
+		const back = migrateModel(contextPlaneToConceptModel(language.import(language.export(conceptModelToContextPlane(withStakeholders)))));
+		expect(back.stories?.[0].stakeholderIds).toEqual(withStakeholders.stories?.[0].stakeholderIds);
+		expect(comparable(back)).toEqual(comparable(withStakeholders));
+	});
+
 	it('keeps every id the app minted from a name', () => {
 		const back = contextPlaneToConceptModel(language.import(language.export(conceptModelToContextPlane(model))));
 		expect(back.id).toBe(model.id);

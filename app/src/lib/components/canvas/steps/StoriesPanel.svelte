@@ -1,6 +1,8 @@
 <script lang="ts">
 	// Step 3 - Capture Business Stories: the expert's own words, kept. Every
 	// later step reuses them, and Step 10 walks the Map back through them.
+	// Each story names who told it and, from the Step 2 list, the other
+	// people it matters to, its Stakeholders.
 	import { getContext } from 'svelte';
 	import type { DataAdapter } from '$lib/cp-shared';
 	import type { CmView } from '$lib/model/graph-view';
@@ -11,6 +13,7 @@
 	import AddField from '../../ui/AddField.svelte';
 	import ChoiceChips from '../../ui/ChoiceChips.svelte';
 	import EditableText from '../../ui/EditableText.svelte';
+	import MultiChoiceChips from '../../ui/MultiChoiceChips.svelte';
 
 	let { cm }: { cm: CmView } = $props();
 
@@ -30,6 +33,22 @@
 		return save([...cm.stories, { id, name, text: '', kind, order: cm.stories.length + 1 }]);
 	}
 
+	/** The Step 2 people a story's Stakeholders are picked from: everyone but its teller. */
+	function stakeholderOptions(story: BusinessStory) {
+		return cm.participants.filter((p) => p.id !== story.toldBy).map((p) => ({ id: p.id, label: p.name }));
+	}
+
+	/** The story's Stakeholders without its teller, which an imported file can still list. */
+	function stakeholdersOf(story: BusinessStory): string[] {
+		return (story.stakeholderIds ?? []).filter((id) => id !== story.toldBy);
+	}
+
+	/** A new teller leaves the Stakeholders, so nobody is listed twice. */
+	function setTeller(story: BusinessStory, toldBy: string | undefined) {
+		const stakeholderIds = (story.stakeholderIds ?? []).filter((id) => id !== toldBy);
+		return update(story.id, { toldBy, stakeholderIds: stakeholderIds.length > 0 ? stakeholderIds : undefined });
+	}
+
 	function remove(story: BusinessStory) {
 		const found = cm.concepts.filter((c) => c.storyIds.includes(story.id)).length;
 		if (found > 0 && !confirm(`Remove the story "${story.name}"? ${found} Concepts will no longer say they came from it.`)) return;
@@ -45,6 +64,7 @@
 	{:else}
 		<ul class="space-y-3">
 			{#each cm.stories as story (story.id)}
+				{@const options = stakeholderOptions(story)}
 				<li class="{CARD} p-3 space-y-2">
 					<div class="flex items-start gap-3">
 						<div class="min-w-0 flex-1">
@@ -68,7 +88,7 @@
 								<select
 									class={INPUT.select}
 									value={story.toldBy ?? ''}
-									onchange={(e) => update(story.id, { toldBy: e.currentTarget.value || undefined })}
+									onchange={(e) => setTeller(story, e.currentTarget.value || undefined)}
 								>
 									<option value="">Not recorded</option>
 									{#each cm.participants as person (person.id)}
@@ -78,6 +98,17 @@
 							</label>
 						{/if}
 					</div>
+					{#if options.length > 0}
+						<div>
+							<span class={INPUT.label}>Stakeholders</span>
+							<MultiChoiceChips
+								{options}
+								values={stakeholdersOf(story)}
+								label="Stakeholders of the story {story.name}"
+								onChange={(ids) => update(story.id, { stakeholderIds: ids.length > 0 ? ids : undefined })}
+							/>
+						</div>
+					{/if}
 					<EditableText
 						value={story.text}
 						label="Story in the expert's words"
