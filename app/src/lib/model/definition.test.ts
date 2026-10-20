@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { conceptsNamed, definitionSentence, linkConcepts, partOneText } from './definition';
+import { conceptNamed, conceptsNamed, definitionSentence, linkConcepts, markConcepts, partOneText } from './definition';
 
 describe('definitionSentence', () => {
 	it('writes the Aristotle sentence from the two halves', () => {
@@ -105,5 +105,45 @@ describe('linkConcepts', () => {
 
 	it('names each Concept once across all parts', () => {
 		expect(conceptsNamed(['A Customer and a Channel.', 'Another Customer, a Sales Order.'], concepts, 'line')).toEqual(['customer', 'channel', 'order']);
+	});
+});
+
+describe('markConcepts', () => {
+	const concepts = [
+		{ id: 'c-invoice', name: 'Invoice', aliases: ['Bill'] },
+		{ id: 'c-sales-order', name: 'Sales Order', aliases: [] }
+	];
+
+	it('marks every mention, by name, alias or simple plural, in any case', () => {
+		const parts = markConcepts('An invoice per Sales Order. Invoices and bills go out monthly.', concepts);
+		expect(parts.filter((p) => p.conceptId).map((p) => [p.text, p.conceptId])).toEqual([
+			['invoice', 'c-invoice'],
+			['Sales Order', 'c-sales-order'],
+			['Invoices', 'c-invoice'],
+			['bills', 'c-invoice']
+		]);
+		expect(parts.map((p) => p.text).join('')).toBe('An invoice per Sales Order. Invoices and bills go out monthly.');
+	});
+});
+
+describe('conceptNamed', () => {
+	const concepts = [
+		{ id: 'c-ad', name: 'Ad', aliases: [] },
+		{ id: 'c-invoice', name: 'Invoice', aliases: ['Bill'] },
+		{ id: 'c-a', name: 'Account', aliases: ['Client'] },
+		{ id: 'c-b', name: 'Customer', aliases: ['Client'] }
+	];
+
+	it('names a Concept by its name, an alias or a simple plural, in any case', () => {
+		expect(conceptNamed('ads', concepts)).toBe('c-ad');
+		expect(conceptNamed('Invoices', concepts)).toBe('c-invoice');
+		expect(conceptNamed(' bill ', concepts)).toBe('c-invoice');
+	});
+
+	it('names nothing for part of a phrase, another word, or a name two Concepts share', () => {
+		expect(conceptNamed('ads campaign', concepts)).toBeUndefined();
+		expect(conceptNamed('Order', concepts)).toBeUndefined();
+		expect(conceptNamed('client', concepts)).toBeUndefined();
+		expect(conceptNamed('', concepts)).toBeUndefined();
 	});
 });

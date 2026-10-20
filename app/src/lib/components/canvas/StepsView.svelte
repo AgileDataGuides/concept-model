@@ -92,9 +92,12 @@
 	// notes) plus a Concept's Domain and stories
 	let detailsId = $state<string | null>(null);
 	const detailsNode = $derived(detailsId ? nodes.find((n) => n.id === detailsId) : undefined);
+	// The story the popup was opened from, in Step 4 By story, so it can offer "Link to story"
+	let detailsStoryId = $state<string | undefined>();
 
-	function openDetails(nodeId: string) {
+	function openDetails(nodeId: string, storyId?: string) {
 		detailsId = nodeId;
+		detailsStoryId = storyId;
 	}
 </script>
 
@@ -214,5 +217,11 @@
 {/snippet}
 
 {#if detailsNode}
-	<DetailsPopup node={detailsNode} {nodes} {cm} onClose={() => (detailsId = null)} />
+	<DetailsPopup
+		node={detailsNode}
+		{nodes}
+		{cm}
+		story={detailsStoryId ? cm.storyById.get(detailsStoryId) : undefined}
+		onClose={() => (detailsId = null)}
+	/>
 {/if}

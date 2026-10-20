@@ -121,6 +121,42 @@ export function linkConcepts(text: string, concepts: ConceptRef[], selfId: strin
 	return parts;
 }
 
+/**
+ * Split a Business Story's text at every mention of a Concept, by its name, an
+ * alias or a simple plural, so Step 4 can mark the nouns already found. Unlike
+ * a Definition, every mention is marked, not only the first.
+ */
+export function markConcepts(text: string, concepts: ConceptRef[]): TextPart[] {
+	const { idByTerm, pattern } = matcherFor(concepts);
+	if (!text || !pattern) return [{ text }];
+	const parts: TextPart[] = [];
+	let from = 0;
+	for (const m of text.matchAll(pattern)) {
+		const id = idByTerm.get(m[1].toLowerCase());
+		if (!id) continue;
+		if (m.index > from) parts.push({ text: text.slice(from, m.index) });
+		parts.push({ text: m[0], conceptId: id });
+		from = m.index + m[0].length;
+	}
+	if (from < text.length) parts.push({ text: text.slice(from) });
+	return parts;
+}
+
+/**
+ * The Concept a whole phrase names, by the same rule markConcepts marks it:
+ * its name or an alias, in any case, or a simple plural ("Invoices"). A name
+ * two Concepts share names neither.
+ */
+export function conceptNamed(phrase: string, concepts: ConceptRef[]): string | undefined {
+	const { idByTerm, pattern } = matcherFor(concepts);
+	const text = phrase.trim();
+	if (!text || !pattern) return undefined;
+	for (const m of text.matchAll(pattern)) {
+		if (m.index === 0 && m[0].length === text.length) return idByTerm.get(m[1].toLowerCase());
+	}
+	return undefined;
+}
+
 /** The other Concepts a Definition names, in the order it first names them. */
 export function conceptsNamed(texts: string[], concepts: ConceptRef[], selfId: string): string[] {
 	const ids: string[] = [];

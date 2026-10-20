@@ -1,7 +1,8 @@
 <script lang="ts">
 	// Step 4 - Identify the Concepts: read a story, add its nouns. A new Concept
 	// links to the story on screen and goes into the chosen Domain. Information
-	// about a Concept ("Customer name") is parked, not added.
+	// about a Concept ("Customer name") is parked, not added. Two views: By
+	// story (ConceptsByStory, the default) and All Concepts, grouped by Domain.
 	import { getContext } from 'svelte';
 	import type { DataAdapter } from '$lib/cp-shared';
 	import type { CmConcept, CmView } from '$lib/model/graph-view';
@@ -10,14 +11,44 @@
 	import { isParkedDetail } from '$lib/canon/steps';
 	import { CARD, DRAG_REORDER, EMPTY_HINT, INPUT, ROW_ACTIONS, SEARCH_FILTER, TYPE } from '$lib/ui/tokens';
 	import AddField from '../../ui/AddField.svelte';
+	import ChoiceChips from '../../ui/ChoiceChips.svelte';
+	import ConceptsByStory from './ConceptsByStory.svelte';
 	import EditableText from '../../ui/EditableText.svelte';
 	import MultiChoiceChips from '../../ui/MultiChoiceChips.svelte';
 	import SearchFilter from '../../ui/SearchFilter.svelte';
 	import { createReorder } from '../../ui/reorder.svelte';
 
-	let { cm, onDetails }: { cm: CmView; onDetails: (nodeId: string) => void } = $props();
+	let { cm, onDetails }: { cm: CmView; onDetails: (nodeId: string, storyId?: string) => void } = $props();
 
 	const adapter = getContext<DataAdapter>('dataAdapter');
+
+	// By story or All Concepts: a per-viewer convenience, remembered in this browser
+	type View = 'story' | 'all';
+	const VIEW_KEY = 'cm-concepts-view';
+	const VIEWS: { id: View; label: string }[] = [
+		{ id: 'story', label: 'By story' },
+		{ id: 'all', label: 'All Concepts' }
+	];
+
+	function rememberedView(): View {
+		try {
+			return localStorage.getItem(VIEW_KEY) === 'all' ? 'all' : 'story';
+		} catch {
+			return 'story';
+		}
+	}
+
+	let view = $state<View>(rememberedView());
+
+	function setView(next: View | undefined) {
+		if (!next) return;
+		view = next;
+		try {
+			localStorage.setItem(VIEW_KEY, next);
+		} catch {
+			// no storage: the choice lasts until reload
+		}
+	}
 
 	let chosenStoryId = $state('');
 	let chosenDomainId = $state('');
@@ -78,6 +109,13 @@
 	}
 </script>
 
+<div class="mb-4">
+	<ChoiceChips options={VIEWS} value={view} label="Show the Concepts" onChange={setView} />
+</div>
+
+{#if view === 'story'}
+	<ConceptsByStory {cm} {onDetails} />
+{:else}
 <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
 	<section class="lg:col-span-2 space-y-2">
 		<h3 class={TYPE.sectionHeader}>Read a story</h3>
@@ -198,3 +236,4 @@
 		{/each}
 	</section>
 </div>
+{/if}

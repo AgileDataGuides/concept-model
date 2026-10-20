@@ -106,6 +106,18 @@ export const STEP_NAV = {
 	icon: 'w-4 h-4 shrink-0'
 };
 
+/** tokens.md story_text: a Business Story read in Step 4 (DESIGN_SYSTEM.md § 18 Concepts by story). */
+export const STORY_TEXT = {
+	body: 'bg-white rounded-lg shadow-sm border border-slate-200 p-3 text-sm text-slate-700 whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto',
+	/** A Concept already in this story, the Concept sticky-note blue */
+	found: 'rounded-sm bg-blue-100 text-slate-900 hover:bg-blue-200 transition-colors',
+	/** A Concept the text names that is not in this story yet: a light box, no fill */
+	named: 'rounded-sm px-1 ring-1 ring-blue-300 hover:bg-blue-50 transition-colors',
+	/** The Details popup's "Link to story", opened from such a mark */
+	linkBox: 'rounded-lg border border-blue-200 bg-blue-50 p-3 mb-3 flex flex-wrap items-center justify-between gap-2',
+	linkText: 'text-xs text-slate-700'
+};
+
 export const CHOICE_CHIPS = {
 	wrapper: 'inline-flex flex-wrap gap-1',
 	base: 'px-2 py-0.5 text-[11px] font-medium rounded-md border transition-colors',

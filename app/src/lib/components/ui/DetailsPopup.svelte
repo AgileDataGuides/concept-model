@@ -5,7 +5,9 @@
 	// and the status. Then, for a Concept, the details Step 4 shows: its
 	// Domain and the stories it came from. They sit where DESIGN_SYSTEM § 10 puts type-specific fields,
 	// save with the popup's Save through placeConcept (the write Step 4 makes),
-	// and Cancel drops them, like every other field.
+	// and Cancel drops them, like every other field. Opened from a story in
+	// Step 4 that does not hold the Concept, it starts with "Link to
+	// story", which links it at once (the shared editor's topFields).
 	import { getContext, untrack } from 'svelte';
 	import type { ContextNode, DataAdapter } from '$lib/cp-shared';
 	import ConceptCardEditModal from '$lib/components/canvas/ConceptCardEditModal.svelte';
@@ -13,13 +15,26 @@
 	import { patchNode, placeConcept } from '$lib/model/graph-actions';
 	import { definitionSentence } from '$lib/model/definition';
 	import { DEFINITION_PARTS, DEFINITION_STATUSES } from '$lib/canon/steps';
-	import type { DefinitionStatus } from '$lib/types';
-	import { INPUT } from '$lib/ui/tokens';
+	import type { BusinessStory, DefinitionStatus } from '$lib/types';
+	import { BUTTON, INPUT, STORY_TEXT } from '$lib/ui/tokens';
 	import ChoiceChips from './ChoiceChips.svelte';
 	import ListEditor from './ListEditor.svelte';
 	import MultiChoiceChips from './MultiChoiceChips.svelte';
 
-	let { node, nodes, cm, onClose }: { node: ContextNode; nodes: ContextNode[]; cm: CmView; onClose: () => void } = $props();
+	let {
+		node,
+		nodes,
+		cm,
+		story,
+		onClose
+	}: {
+		node: ContextNode;
+		nodes: ContextNode[];
+		cm: CmView;
+		/** The story the popup was opened from, in Step 4 By story. */
+		story?: BusinessStory;
+		onClose: () => void;
+	} = $props();
 
 	const adapter = getContext<DataAdapter>('dataAdapter');
 
@@ -43,6 +58,16 @@
 		useSentence: DEFINITION_PARTS.useSentence,
 		sentence: definitionSentence
 	});
+
+	// Linked from here at once, so the story's chip below shows it and Save keeps it
+	let linkedToStory = $state(false);
+
+	async function linkToStory() {
+		if (!concept || !story) return;
+		await placeConcept(adapter, concept, { storyIds: [...concept.storyIds, story.id] });
+		if (!storyIds.includes(story.id)) storyIds = [...storyIds, story.id];
+		linkedToStory = true;
+	}
 
 	const storyOptions = $derived(cm.stories.map((s) => ({ id: s.id, label: s.name })));
 
@@ -88,6 +113,18 @@
 	threePart={concept ? threePart : undefined}
 	wOptional
 >
+	{#snippet topFields()}
+		{#if concept && story && (linkedToStory || !concept.storyIds.includes(story.id))}
+			<div class={STORY_TEXT.linkBox}>
+				{#if linkedToStory}
+					<p class={STORY_TEXT.linkText}>Linked to the story "{story.name}".</p>
+				{:else}
+					<p class={STORY_TEXT.linkText}>{node.name} is not in the story "{story.name}" yet.</p>
+					<button type="button" class={BUTTON.add} onclick={linkToStory}>Link to story</button>
+				{/if}
+			</div>
+		{/if}
+	{/snippet}
 	{#snippet definitionParts()}
 		<div class="mt-3 space-y-3">
 			<ListEditor items={examples} label={DEFINITION_PARTS.partTwo} placeholder={DEFINITION_PARTS.partTwoPlaceholder} onChange={(lines) => (examples = lines)} />

@@ -57,6 +57,7 @@
 		onSaved,
 		onDeleted,
 		extraFields,
+		topFields,
 		definitionParts,
 		threePart,
 		wOptional = false
@@ -72,6 +73,10 @@
 		 *  and before Notes (DESIGN_SYSTEM § 10). The app keeps their values and
 		 *  writes them in onSaved, so Save and Cancel cover them too. */
 		extraFields?: Snippet;
+		/** An app's own action for the place it was opened from, drawn under the
+		 *  title and before Name (DESIGN_SYSTEM § 10), such as the Concept
+		 *  Model's "Link to story". It acts at once, not on Save. */
+		topFields?: Snippet;
 		/** The three-part Definition, for an app that defines Concepts that way
 		 *  (the Concept Model). For a Concept it labels the Description as part
 		 *  one, puts the category + differentiator helper under it (before the
@@ -322,6 +327,10 @@
 		role="presentation"
 	>
 		<h3 class="text-sm font-bold text-slate-700 mb-3">{typeLabel} Details</h3>
+
+		{#if topFields}
+			{@render topFields()}
+		{/if}
 
 		<label class="block text-xs font-medium text-slate-500 mb-1" for="bem-edit-name">Name</label>
 		<input
