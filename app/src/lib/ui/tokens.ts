@@ -90,7 +90,9 @@ export const STEP_PANEL = {
 	readMore: 'text-xs text-blue-600 hover:underline',
 	body: 'px-6 py-5',
 	/** The header over the Map in Step 8. */
-	bodyTop: 'px-6 pt-5'
+	bodyTop: 'px-6 pt-5',
+	/** The app's own guidance line under the book's description, where a step needs more help. */
+	guide: 'text-xs text-slate-700 leading-relaxed'
 };
 
 /** tokens.md step_nav: Back and Next under the selected step (DESIGN_SYSTEM.md § 18 Step Nav). */

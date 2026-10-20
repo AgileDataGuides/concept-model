@@ -1,7 +1,8 @@
 <script lang="ts">
 	// The same header on every step panel: the label, the book's question, the
-	// one-line description, a read-more link when one exists, and the switch
-	// that marks a step skipped on purpose, with a note on why.
+	// one-line description, a read-more link when one exists, the app's own
+	// guide line where a step has one, and the switch that marks a step
+	// skipped on purpose, with a note on why.
 	import { stepLabel, type StepCanon } from '$lib/canon/steps';
 	import type { StepNote } from '$lib/types';
 	import { STEP_PANEL } from '$lib/ui/tokens';
@@ -31,6 +32,9 @@
 				<a href={step.readMoreUrl} target="_blank" rel="noopener" class={STEP_PANEL.readMore}>Read more</a>
 			{/if}
 		</p>
+		{#if step.guide}
+			<p class={STEP_PANEL.guide}>{step.guide}</p>
+		{/if}
 		<div class="pt-1 max-w-xl">
 			<EditableText
 				value={note?.note ?? ''}

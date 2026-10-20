@@ -35,6 +35,8 @@ export interface StepCanon {
 	description: string;
 	/** Empty until the page exists. The book still writes agiledataguides.com/XXXX. */
 	readMoreUrl: string;
+	/** The app's own guidance under the book's description, where a step needs more help. Not book canon. */
+	guide?: string;
 }
 
 export const STEPS: StepCanon[] = [
@@ -68,7 +70,9 @@ export const STEPS: StepCanon[] = [
 		name: 'Identify the Concepts',
 		question: 'What things does the organisation care about?',
 		description: 'The nouns that appear in the story which represent things the organisation counts, manages, or tracks.',
-		readMoreUrl: ''
+		readMoreUrl: '',
+		guide:
+			'Domains from Step 1 are the big areas of the organisation. Concepts are the next level down: the things inside each Domain that the organisation counts, manages or tracks. Work one story at a time. Read it, add its nouns as Concepts, and put each one in its Domain.'
 	},
 	{
 		id: 'definitions',
