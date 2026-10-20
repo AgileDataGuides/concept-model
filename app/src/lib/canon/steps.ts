@@ -148,13 +148,29 @@ export const CORE_BUSINESS_EVENTS = {
 
 export const PARKED_LIST_NAME = 'Parked';
 
-/** The parked detailed attributes only: information about a Concept for the DESIGN stage. */
+/** The parked details only, for the DESIGN stage: detailed attributes (information about a Concept) and measurements (something counted or measured). */
 export const PARKED_DETAILS_NAME = 'Parked Details';
 
-/** A parked detailed attribute, the kind the Parked Details tab lists. */
+/** A parked detail, a kind the Parked Details tab lists: a detailed attribute or a measurement. */
 export function isParkedDetail(item: { kind: ParkedKind }): boolean {
-	return item.kind === 'attribute';
+	return item.kind === 'attribute' || item.kind === 'measurement';
 }
+
+/** The two sections of the Parked Details tab, in this order. */
+export const PARKED_DETAIL_SECTIONS: { kind: 'attribute' | 'measurement'; heading: string; empty: string }[] = [
+	{ kind: 'attribute', heading: 'Detailed attributes', empty: 'No detailed attributes parked yet.' },
+	{ kind: 'measurement', heading: 'Measurements', empty: 'No measurements parked yet.' }
+];
+
+/** The Parked Details tab's one add field, for either kind. */
+export const PARKED_DETAIL_ADD = {
+	parkAs: 'Park as',
+	placeholder: 'A detail, like Customer name, or a measurement, like Order value, press Enter',
+	show: 'Show',
+	all: 'All',
+	searchLabel: 'Search the parked details',
+	noMatch: 'Nothing parked matches.'
+} as const;
 
 /** Step 1: the ways s20 names for slicing an organisation into a Scope. */
 export const SCOPE_SLICES: { id: ScopeSlice; label: string; example: string }[] = [
@@ -261,6 +277,7 @@ export const WALK_RESOLUTIONS: { id: WalkResolution; label: string }[] = [
 
 export const PARKED_KINDS: { id: ParkedKind; label: string }[] = [
 	{ id: 'attribute', label: 'Detailed attribute' },
+	{ id: 'measurement', label: 'Measurement' },
 	{ id: 'out-of-scope', label: 'Out of scope' },
 	{ id: 'future-map', label: 'Future Map' },
 	{ id: 'other', label: 'Other' }

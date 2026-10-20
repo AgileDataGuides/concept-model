@@ -14,7 +14,7 @@ export interface StepStatus {
 	hints: string[];
 }
 
-function count(n: number, singular: string, plural = `${singular}s`): string {
+export function count(n: number, singular: string, plural = `${singular}s`): string {
 	return `${n} ${n === 1 ? singular : plural}`;
 }
 

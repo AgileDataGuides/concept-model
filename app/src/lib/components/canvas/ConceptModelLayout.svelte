@@ -3,7 +3,7 @@
 	//   - steps:       the ten Modeling Business Concepts steps, the way in
 	//   - map:         the Concept Map pattern template
 	//   - definitions: the Definitions pattern template
-	//   - parked:      the parked detailed attributes, waiting for the DESIGN stage
+	//   - parked:      the parked detailed attributes and measurements, waiting for the DESIGN stage
 	//   - events:      the Core Business Events, each said as who-does-what
 	//   - matrix:      the Core Business Events and Concepts as a Business Event Matrix
 	//   - roles:       the Subject Matter Experts and Stakeholders each Concept came from

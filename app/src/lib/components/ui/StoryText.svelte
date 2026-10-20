@@ -2,11 +2,12 @@
 	// A Business Story read in Step 4 (tokens.md story_text). Every mention of
 	// a Concept is marked: solid when it is in this story, a light box when
 	// the text names it but it is not in this story yet. A click opens it. Select
-	// words in the story and two buttons appear under it: add them as a
-	// Concept, or park them as a detailed attribute. A selection that names an
-	// existing Concept offers that Concept instead of a new one.
+	// words in the story and buttons appear under it: add them as a Concept,
+	// or park them as a detailed attribute or a measurement. A selection that
+	// names an existing Concept offers that Concept instead of a new one.
 	import type { Attachment } from 'svelte/attachments';
 	import type { CmView } from '$lib/model/graph-view';
+	import type { ParkedKind } from '$lib/types';
 	import { conceptNamed, markConcepts } from '$lib/model/definition';
 	import { BUTTON, INPUT, STORY_TEXT, TYPE } from '$lib/ui/tokens';
 
@@ -27,7 +28,7 @@
 		onAdd: (name: string) => unknown;
 		/** Link an existing Concept to this story. */
 		onLink: (conceptId: string) => unknown;
-		onPark: (text: string) => unknown;
+		onPark: (text: string, kind: ParkedKind) => unknown;
 		onOpen: (conceptId: string) => void;
 	} = $props();
 
@@ -94,7 +95,8 @@
 			{/if}
 		{:else}
 			<button type="button" class={BUTTON.add} onclick={() => act(() => onAdd(picked))}>Add "{picked}" as a Concept</button>
-			<button type="button" class={BUTTON.secondary} onclick={() => act(() => onPark(picked))}>Park as a detailed attribute</button>
+			<button type="button" class={BUTTON.secondary} onclick={() => act(() => onPark(picked, 'attribute'))}>Park as a detailed attribute</button>
+			<button type="button" class={BUTTON.secondary} onclick={() => act(() => onPark(picked, 'measurement'))}>Park as a measurement</button>
 		{/if}
 	</div>
 {:else if text}

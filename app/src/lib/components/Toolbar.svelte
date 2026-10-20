@@ -2,7 +2,7 @@
 	// Steps is the way in. Concept Map and Definitions are the book's two pattern templates.
 	// These three are the pages a reader of the Blue Book uses, so they are the top tabs.
 	// The Other menu holds the rest:
-	//   Parked Details lists the detailed attributes parked for the DESIGN stage.
+	//   Parked Details lists the detailed attributes and measurements parked for the DESIGN stage.
 	//   Core Business Events lists the moments that matter, each as who-does-what.
 	//   Business Event Matrix shows the same Events and Concepts as a grid.
 	//   Role Matrix shows the Subject Matter Experts and Stakeholders each Concept came from.

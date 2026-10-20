@@ -8,6 +8,7 @@
 	import type { DataAdapter } from '$lib/cp-shared';
 	import type { CmConcept, CmView } from '$lib/model/graph-view';
 	import { addConcept, park, placeConcept } from '$lib/model/graph-actions';
+	import type { ParkedKind } from '$lib/types';
 	import { BUTTON, CARD, EMPTY_HINT, INPUT, ROW_ACTIONS, TYPE } from '$lib/ui/tokens';
 	import AddField from '../../ui/AddField.svelte';
 	import ConceptPicker from '../../ui/ConceptPicker.svelte';
@@ -50,8 +51,8 @@
 		return placeConcept(adapter, concept, { storyIds: concept.storyIds.filter((id) => id !== story.id) });
 	}
 
-	function parkAttribute(text: string) {
-		return park(adapter, cm, { text, kind: 'attribute', note: story ? `Step 4, from the story "${story.name}"` : 'Step 4' });
+	function parkDetail(text: string, kind: ParkedKind = 'attribute') {
+		return park(adapter, cm, { text, kind, note: story ? `Step 4, from the story "${story.name}"` : 'Step 4' });
 	}
 </script>
 
@@ -80,7 +81,7 @@
 		<div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
 			<section class="lg:col-span-3 space-y-2">
 				<h3 class={TYPE.sectionHeader}>{story.name}</h3>
-				<StoryText text={story.text} {cm} inStory={inStoryIds} onAdd={addNew} onLink={link} onPark={parkAttribute} onOpen={(conceptId) => onDetails(conceptId, story.id)} />
+				<StoryText text={story.text} {cm} inStory={inStoryIds} onAdd={addNew} onLink={link} onPark={parkDetail} onOpen={(conceptId) => onDetails(conceptId, story.id)} />
 			</section>
 
 			<section class="lg:col-span-2 space-y-3">
@@ -143,7 +144,7 @@
 				{/if}
 
 				<h3 class="{TYPE.sectionHeader} pt-2">Park detailed attributes</h3>
-				<AddField placeholder="Information about a Concept, like Customer name" buttonLabel="Park" onAdd={parkAttribute} />
+				<AddField placeholder="Information about a Concept, like Customer name" buttonLabel="Park" onAdd={(text) => parkDetail(text)} />
 			</section>
 		</div>
 	</div>

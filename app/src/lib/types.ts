@@ -33,7 +33,7 @@ export type StoryKind = 'happy-path' | 'variation';
 export type DefinitionStatus = 'draft' | 'agreed' | 'flagged' | 'disagreement';
 export type WalkResult = 'holds' | 'stuck';
 export type WalkResolution = 'drawn' | 'out-of-scope' | 'parked';
-export type ParkedKind = 'attribute' | 'out-of-scope' | 'future-map' | 'other';
+export type ParkedKind = 'attribute' | 'measurement' | 'out-of-scope' | 'future-map' | 'other';
 
 /** One end of a Relationship Rule: the minimum (could there be none?) and the maximum (one or many). */
 export interface RuleEnd {

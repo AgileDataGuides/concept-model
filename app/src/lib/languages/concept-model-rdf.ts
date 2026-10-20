@@ -102,7 +102,7 @@ const PARTICIPANT_ROLES = ['subject-matter-expert', 'facilitator', 'data-team', 
 const STORY_KINDS = ['happy-path', 'variation'];
 const WALK_RESULTS = ['holds', 'stuck'];
 const WALK_RESOLUTIONS = ['drawn', 'out-of-scope', 'parked'];
-const PARKED_KINDS = ['attribute', 'out-of-scope', 'future-map', 'other'];
+const PARKED_KINDS = ['attribute', 'measurement', 'out-of-scope', 'future-map', 'other'];
 const STEP_IDS = [
 	'scope',
 	'subject-matter-expert',

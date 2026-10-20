@@ -75,6 +75,21 @@ describe.each(['turtle', 'rdf-xml'])('%s', (languageId) => {
 		expect(comparable(back)).toEqual(comparable(withStakeholders));
 	});
 
+	it('keeps a parked measurement apart from a parked detailed attribute', () => {
+		const withMeasurement: ConceptModel = {
+			...model,
+			parked: [
+				...(model.parked ?? []),
+				{ id: 'parked-order-value', text: 'Order value', kind: 'measurement', note: 'Step 4' },
+				{ id: 'parked-customer-email', text: 'Customer email', kind: 'attribute', note: 'Step 4' }
+			]
+		};
+		const back = migrateModel(contextPlaneToConceptModel(language.import(language.export(conceptModelToContextPlane(withMeasurement)))));
+		const kindOf = (text: string) => back.parked?.find((p) => p.text === text)?.kind;
+		expect(kindOf('Order value')).toBe('measurement');
+		expect(kindOf('Customer email')).toBe('attribute');
+	});
+
 	it('keeps every id the app minted from a name', () => {
 		const back = contextPlaneToConceptModel(language.import(language.export(conceptModelToContextPlane(model))));
 		expect(back.id).toBe(model.id);
